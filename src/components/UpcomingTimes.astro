@@ -16,34 +16,35 @@
 	}
 
 	.loading-state,
-	.error-state {
+	.upcoming-times :global(.error-state) {
 		color: var(--color-text-muted);
 		margin: 0;
 	}
 
-	.upcoming-times .parasha {
+	.upcoming-times :global(.parasha) {
 		font-weight: 700;
 		color: var(--color-primary);
 		margin: 0;
 		font-size: 1.15rem;
 	}
 
-	.times {
+	.upcoming-times :global(.times) {
 		display: flex;
 		gap: 1.5rem;
 		flex-wrap: wrap;
+		margin: 0;
 	}
 
-	.times div {
+	.upcoming-times :global(.times div) {
 		text-align: center;
 	}
 
-	.times dt {
+	.upcoming-times :global(.times dt) {
 		color: var(--color-text-muted);
 		font-size: 0.85rem;
 	}
 
-	.times dd {
+	.upcoming-times :global(.times dd) {
 		margin: 0;
 		font-weight: 700;
 		font-size: 1.3rem;

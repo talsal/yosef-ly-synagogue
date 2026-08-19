@@ -7,12 +7,12 @@
 
 <style>
 	.loading-state,
-	.error-state {
+	.holiday-list :global(.error-state) {
 		color: var(--color-text-muted);
 		margin: 0;
 	}
 
-	.holiday-list ul {
+	.holiday-list :global(ul) {
 		list-style: none;
 		margin: 0;
 		padding: 0;
@@ -20,7 +20,7 @@
 		gap: 0.5rem;
 	}
 
-	.holiday-list li {
+	.holiday-list :global(li) {
 		display: flex;
 		justify-content: space-between;
 		gap: 1rem;
@@ -28,7 +28,7 @@
 		border-bottom: 1px dashed var(--color-border);
 	}
 
-	.holiday-list .date {
+	.holiday-list :global(.date) {
 		color: var(--color-text-muted);
 	}
 </style>
