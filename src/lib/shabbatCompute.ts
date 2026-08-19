@@ -7,11 +7,10 @@
  * מחושבים כהפרש קבוע מיציאת שבת, כך שהלוח מתעדכן אוטומטית משבוע לשבוע לפי
  * העונה. זמני הבוקר (שיעור/שחרית/קידוש) אינם תלויים בשקיעה ולכן קבועים.
  *
- * TODO: תורני הקידוש משתנים כל שבוע בין חברי הקהילה ולא ניתנים לחישוב —
- * יש לעדכן ידנית כל שבוע ב-CURRENT_KIDDUSH_TORANIM (src/data/prayerTimes.ts).
+ * תורני הקידוש מחושבים ממחזור קבוע וחוזר — ראו src/data/toranim.ts.
  */
 
-import { CURRENT_KIDDUSH_TORANIM } from '../data/prayerTimes';
+import { getToranimForShabbat } from '../data/toranim';
 
 const OFFSET_MINUTES = {
 	minchaArvitEarly: -72, // ליל שבת: מנחה וערבית מוקדמות, לפני כניסת שבת
@@ -55,14 +54,23 @@ function formatTime(date: Date): string {
 	}).format(date);
 }
 
+function toIsraelIsoDate(date: Date): string {
+	// en-CA נותן yyyy-mm-dd
+	return new Intl.DateTimeFormat('en-CA', { timeZone: 'Asia/Jerusalem' }).format(date);
+}
+
 export function computeWeeklySchedule(candleLighting: Date, havdalah: Date): WeeklySchedule {
+	const shabbatDate = toIsraelIsoDate(addMinutes(candleLighting, 24 * 60));
+	const toranim = getToranimForShabbat(shabbatDate);
+	const toranimText = toranim ? toranim.join(' – ') : 'יעודכן ע"י הוועד';
+
 	return {
 		mincha_arvit_early: formatTime(addMinutes(candleLighting, OFFSET_MINUTES.minchaArvitEarly)),
 		shir_hashirim_time: formatTime(addMinutes(candleLighting, OFFSET_MINUTES.shirHashirim)),
 		mincha_candle_time: formatTime(candleLighting),
 		shiur_before_shacharit: `${FIXED_MORNING.shiurBeforeShacharit.time} – ${FIXED_MORNING.shiurBeforeShacharit.teacher}`,
 		shacharit_time: FIXED_MORNING.shacharit,
-		kiddush_toranim: `${FIXED_MORNING.kiddush} – ${CURRENT_KIDDUSH_TORANIM || 'יעודכן ע"י הוועד'}`,
+		kiddush_toranim: `${FIXED_MORNING.kiddush} – ${toranimText}`,
 		shiur_after_kiddush: `${FIXED_MORNING.shiurAfterKiddush.time} – ${FIXED_MORNING.shiurAfterKiddush.teacher}`,
 		shiur_afternoon: formatTime(addMinutes(havdalah, OFFSET_MINUTES.shiurAfternoon)),
 		mincha_shabbat: formatTime(addMinutes(havdalah, OFFSET_MINUTES.minchaShabbat)),
