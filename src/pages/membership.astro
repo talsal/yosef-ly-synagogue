@@ -1,0 +1,48 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { SITE_NAME, withBase } from '../data/site';
+---
+
+<BaseLayout title="חברות בבית הכנסת" description={`איך מצטרפים לקהילת ${SITE_NAME}`}>
+	<div class="container section">
+		<h1>חברות בבית הכנסת</h1>
+
+		<div class="grid">
+			<div class="card">
+				<h2>חברים רשמיים</h2>
+				<p>
+					חברי הקהילה הרשמיים הם מי שנרשמו כחברים בעמותה, ונהנים מזכויות ומחובות החברות &ndash;
+					לרבות השתתפות בהחלטות ובאסיפות הקהילה.
+					<!-- TODO: להשלים פירוט מדויק של זכויות/חובות חברות רשמית -->
+				</p>
+			</div>
+			<div class="card">
+				<h2>מתפללים נוספים</h2>
+				<p>
+					כל מי שמתפלל ומשתתף בפעילות בית הכנסת בקביעות, גם ללא רישום רשמי כחבר עמותה, הוא חלק
+					מהקהילה ומוזמן להשתתף בכל הפעילויות.
+				</p>
+			</div>
+		</div>
+
+		<div class="card join">
+			<h2>איך מצטרפים</h2>
+			<p>
+				מוזמנים לבוא להתפלל אתנו, ולפנות אלינו דרך עמוד <a href={withBase('/contact')}>יצירת קשר</a> לפרטים
+				נוספים על הצטרפות כחבר רשמי.
+			</p>
+		</div>
+	</div>
+</BaseLayout>
+
+<style>
+	.grid {
+		display: grid;
+		gap: 1.5rem;
+		grid-template-columns: repeat(auto-fit, minmax(16rem, 1fr));
+	}
+
+	.join {
+		margin-top: 1.5rem;
+	}
+</style>

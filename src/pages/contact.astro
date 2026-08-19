@@ -1,0 +1,70 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { CONTACT, NEIGHBORHOOD, SITE_NAME } from '../data/site';
+---
+
+<BaseLayout title="יצירת קשר ומיקום" description={`פרטי יצירת קשר ומיקום של ${SITE_NAME}`}>
+	<div class="container section">
+		<h1>יצירת קשר ומיקום</h1>
+
+		<div class="grid">
+			<div class="card">
+				<h2>פרטי התקשרות</h2>
+				<!-- TODO: להשלים טלפון, מייל וקישור וואטסאפ אמיתיים -->
+				<dl class="details">
+					<div><dt>כתובת</dt><dd>{CONTACT.address}</dd></div>
+					<div><dt>טלפון</dt><dd>{CONTACT.phone || 'יעודכן בקרוב'}</dd></div>
+					<div><dt>מייל</dt><dd>{CONTACT.email || 'יעודכן בקרוב'}</dd></div>
+					<div><dt>וואטסאפ</dt><dd>{CONTACT.whatsapp || 'יעודכן בקרוב'}</dd></div>
+				</dl>
+			</div>
+
+			<div class="card">
+				<h2>מיקום</h2>
+				<p>{NEIGHBORHOOD}</p>
+				<!-- TODO: להטמיע מפה (Google Maps) עם הכתובת המדויקת -->
+				<div class="map-placeholder">מפה תתווסף כאן</div>
+			</div>
+		</div>
+	</div>
+</BaseLayout>
+
+<style>
+	.grid {
+		display: grid;
+		gap: 1.5rem;
+		grid-template-columns: repeat(auto-fit, minmax(16rem, 1fr));
+	}
+
+	.details {
+		margin: 1rem 0 0;
+	}
+
+	.details div {
+		display: flex;
+		justify-content: space-between;
+		gap: 1rem;
+		padding-block: 0.4rem;
+		border-bottom: 1px dashed var(--color-border);
+	}
+
+	.details dt {
+		color: var(--color-text-muted);
+	}
+
+	.details dd {
+		margin: 0;
+		font-weight: 600;
+	}
+
+	.map-placeholder {
+		margin-top: 1rem;
+		height: 12rem;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		background: var(--color-accent-light);
+		border-radius: var(--radius);
+		color: var(--color-text-muted);
+	}
+</style>

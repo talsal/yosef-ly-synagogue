@@ -1,0 +1,72 @@
+---
+import HolidayList from '../components/HolidayList.astro';
+import ShabbatSchedule from '../components/ShabbatSchedule.astro';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { WEEKDAY_TIMES } from '../data/prayerTimes';
+---
+
+<BaseLayout title="זמני תפילות" description="לוח זמני תפילה לימות החול ולשבת בבית הכנסת יוסף-לי">
+	<div class="container section">
+		<h1>זמני תפילות</h1>
+
+		<section class="section">
+			<h2>לוח שבת שבועי</h2>
+			<ShabbatSchedule />
+		</section>
+
+		<section class="section">
+			<h2>ימות החול</h2>
+			<div class="grid weekday-grid">
+				<div class="card">
+					<h3>קיץ</h3>
+					<dl>
+						<div><dt>שחרית</dt><dd>{WEEKDAY_TIMES.summer.shacharit || 'יעודכן בקרוב'}</dd></div>
+						<div><dt>מנחה</dt><dd>{WEEKDAY_TIMES.summer.mincha || 'יעודכן בקרוב'}</dd></div>
+						<div><dt>ערבית</dt><dd>{WEEKDAY_TIMES.summer.arvit || 'יעודכן בקרוב'}</dd></div>
+					</dl>
+				</div>
+				<div class="card">
+					<h3>חורף</h3>
+					<dl>
+						<div><dt>שחרית</dt><dd>{WEEKDAY_TIMES.winter.shacharit || 'יעודכן בקרוב'}</dd></div>
+						<div><dt>מנחה</dt><dd>{WEEKDAY_TIMES.winter.mincha || 'יעודכן בקרוב'}</dd></div>
+						<div><dt>ערבית</dt><dd>{WEEKDAY_TIMES.winter.arvit || 'יעודכן בקרוב'}</dd></div>
+					</dl>
+				</div>
+			</div>
+		</section>
+
+		<section class="section">
+			<h2>חגים ומועדים קרובים</h2>
+			<HolidayList />
+		</section>
+	</div>
+</BaseLayout>
+
+<style>
+	.weekday-grid {
+		display: grid;
+		gap: 1rem;
+		grid-template-columns: repeat(auto-fit, minmax(14rem, 1fr));
+	}
+
+	.weekday-grid dl {
+		margin: 0;
+	}
+
+	.weekday-grid dl > div {
+		display: flex;
+		justify-content: space-between;
+		padding-block: 0.35rem;
+		border-bottom: 1px dashed var(--color-border);
+	}
+
+	.weekday-grid dt {
+		color: var(--color-text-muted);
+	}
+
+	.weekday-grid dd {
+		margin: 0;
+		font-weight: 600;
+	}
+</style>

@@ -1,0 +1,68 @@
+---
+import { CONTACT, NEIGHBORHOOD, ORG_NAME, RABBI_NAME, SITE_NAME, withBase } from '../data/site';
+
+const year = new Date().getFullYear();
+---
+
+<footer class="site-footer">
+	<div class="container footer-inner">
+		<div>
+			<p class="footer-title">{SITE_NAME}</p>
+			<p>{NEIGHBORHOOD}</p>
+			<p>{RABBI_NAME}, רב הקהילה</p>
+		</div>
+
+		<div>
+			<p class="footer-title">יצירת קשר</p>
+			{CONTACT.phone && <p>טלפון: {CONTACT.phone}</p>}
+			{CONTACT.email && <p>מייל: {CONTACT.email}</p>}
+			<a href={withBase('/contact')}>לעמוד יצירת קשר</a>
+		</div>
+
+		<div>
+			<p class="footer-title">תרומות</p>
+			<a href={withBase('/donations')}>איך תורמים</a>
+		</div>
+	</div>
+
+	<div class="container footer-legal">
+		<p>{ORG_NAME} &middot; {year}&#8207;</p>
+	</div>
+</footer>
+
+<style>
+	.site-footer {
+		background: var(--color-primary-dark);
+		color: #f2efe6;
+		margin-top: 3rem;
+	}
+
+	.footer-inner {
+		display: grid;
+		gap: 1.5rem;
+		grid-template-columns: repeat(auto-fit, minmax(14rem, 1fr));
+		padding-block: 2.5rem;
+	}
+
+	.footer-title {
+		font-weight: 700;
+		color: #fff;
+		margin-bottom: 0.4rem;
+	}
+
+	.site-footer p {
+		margin: 0.2rem 0;
+		max-width: none;
+	}
+
+	.site-footer a {
+		color: var(--color-accent-light);
+	}
+
+	.footer-legal {
+		border-top: 1px solid rgba(255, 255, 255, 0.15);
+		padding-block: 1rem;
+		font-size: 0.85rem;
+		color: #cfc9b8;
+	}
+</style>

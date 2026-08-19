@@ -1,0 +1,78 @@
+---
+// תקציר זמני השבת הקרובה לעמוד הבית — הפירוט המלא נמצא ב"זמני תפילות".
+---
+
+<div class="upcoming-times card" aria-live="polite">
+	<p class="loading-state">טוען זמני שבת...</p>
+</div>
+
+<style>
+	.upcoming-times {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 1.5rem;
+		align-items: center;
+		justify-content: space-between;
+	}
+
+	.loading-state,
+	.error-state {
+		color: var(--color-text-muted);
+		margin: 0;
+	}
+
+	.upcoming-times .parasha {
+		font-weight: 700;
+		color: var(--color-primary);
+		margin: 0;
+		font-size: 1.15rem;
+	}
+
+	.times {
+		display: flex;
+		gap: 1.5rem;
+		flex-wrap: wrap;
+	}
+
+	.times div {
+		text-align: center;
+	}
+
+	.times dt {
+		color: var(--color-text-muted);
+		font-size: 0.85rem;
+	}
+
+	.times dd {
+		margin: 0;
+		font-weight: 700;
+		font-size: 1.3rem;
+		color: var(--color-accent);
+	}
+</style>
+
+<script>
+	import { fetchShabbatTimes } from '../lib/hebcal';
+
+	async function render() {
+		const container = document.querySelector<HTMLElement>('.upcoming-times');
+		if (!container) return;
+
+		const times = await fetchShabbatTimes().catch(() => null);
+
+		if (!times) {
+			container.innerHTML = '<p class="error-state">לא ניתן לטעון כרגע את זמני השבת.</p>';
+			return;
+		}
+
+		container.innerHTML = `
+			<p class="parasha">${times.parasha ? `פרשת ${times.parasha}` : 'שבת קרובה'}</p>
+			<dl class="times">
+				<div><dt>כניסת שבת</dt><dd>${times.candleLighting}</dd></div>
+				<div><dt>יציאת שבת</dt><dd>${times.havdalah}</dd></div>
+			</dl>
+		`;
+	}
+
+	render();
+</script>

@@ -1,0 +1,68 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { withBase } from '../data/site';
+---
+
+<BaseLayout title="מכירת עליות לתורה" description="עליות לתורה לפרשת השבוע בבית הכנסת יוסף-לי">
+	<div class="container section">
+		<h1>מכירת עליות לתורה</h1>
+		<p>סטטוס העליות לפרשת השבוע. לרכישת עלייה יש לפנות לאיש הקשר.</p>
+
+		<!--
+			עמודות הגיליון (aliyot): parasha, aliyah_name, status, price
+			ראו ALIYOT_SHEET_CSV_URL ב-src/data/site.ts
+		-->
+		<div class="aliyot-list" aria-live="polite">
+			<p class="loading-state">טוען עליות...</p>
+		</div>
+
+		<p class="contact-note">
+			לרכישה יש לפנות דרך עמוד <a href={withBase('/contact')}>יצירת קשר</a>.
+		</p>
+	</div>
+</BaseLayout>
+
+<style>
+	.loading-state,
+	:global(.error-state) {
+		color: var(--color-text-muted);
+	}
+
+	.aliyot-list {
+		margin-top: 1.5rem;
+	}
+
+	.aliyot-list :global(.aliyah-row) {
+		display: flex;
+		justify-content: space-between;
+		gap: 1rem;
+		flex-wrap: wrap;
+		padding: 0.75rem 0;
+		border-bottom: 1px solid var(--color-border);
+	}
+
+	.aliyot-list :global(.status) {
+		font-weight: 700;
+	}
+
+	.contact-note {
+		margin-top: 1.5rem;
+	}
+</style>
+
+<script>
+	import { ALIYOT_SHEET_CSV_URL } from '../data/site';
+	import { renderSheetList } from '../lib/sheetList';
+
+	renderSheetList(
+		'.aliyot-list',
+		ALIYOT_SHEET_CSV_URL,
+		(row) => `
+			<div class="aliyah-row">
+				<span>${row.aliyah_name ?? ''}</span>
+				<span class="status">${row.status ?? ''}${row.price ? ` &middot; ${row.price} ₪` : ''}</span>
+			</div>
+		`,
+		'רשימת העליות לשבת הקרובה עוד לא פורסמה.',
+	);
+</script>

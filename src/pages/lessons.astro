@@ -1,0 +1,51 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../layouts/BaseLayout.astro';
+
+const lessons = await getCollection('lessons');
+---
+
+<BaseLayout title="שיעורי תורה" description="שיעורי התורה הקבועים בבית הכנסת יוסף-לי">
+	<div class="container section">
+		<h1>שיעורי תורה</h1>
+		<p>
+			רשימת השיעורים הקבועים בקהילה. מנוהל בקוד האתר &mdash; לעדכון פנו למתנדב הטכני של הקהילה.
+		</p>
+		<!-- TODO: להשלים את הרשימה המלאה של שיעורי הקבע (כולל שיעורי חול), לא רק את שיעורי השבת -->
+
+		<div class="lessons-grid">
+			{
+				lessons.map(({ data }) => (
+					<div class="card">
+						<h2>{data.topic}</h2>
+						<p>
+							<strong>מעביר:</strong> {data.teacher}
+						</p>
+						<p>
+							<strong>מתי:</strong> {data.day}, {data.time}
+						</p>
+						{data.audience && (
+							<p>
+								<strong>קהל יעד:</strong> {data.audience}
+							</p>
+						)}
+					</div>
+				))
+			}
+		</div>
+	</div>
+</BaseLayout>
+
+<style>
+	.lessons-grid {
+		display: grid;
+		gap: 1rem;
+		grid-template-columns: repeat(auto-fit, minmax(16rem, 1fr));
+		margin-top: 1.5rem;
+	}
+
+	.lessons-grid p {
+		margin: 0.3rem 0;
+		max-width: none;
+	}
+</style>

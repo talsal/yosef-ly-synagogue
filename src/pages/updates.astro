@@ -1,0 +1,62 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+---
+
+<BaseLayout title="עדכונים" description="עדכוני קהילה אחרונים מבית הכנסת יוסף-לי">
+	<div class="container section">
+		<h1>עדכונים</h1>
+		<p>פיד ההודעות והחדשות האחרונות של הקהילה.</p>
+
+		<!--
+			עמודות הגיליון (updates): date, title, body
+			ראו UPDATES_SHEET_CSV_URL ב-src/data/site.ts
+		-->
+		<div class="updates-list" aria-live="polite">
+			<p class="loading-state">טוען עדכונים...</p>
+		</div>
+	</div>
+</BaseLayout>
+
+<style>
+	.loading-state,
+	:global(.error-state) {
+		color: var(--color-text-muted);
+	}
+
+	.updates-list :global(.update-card) {
+		margin-bottom: 1rem;
+	}
+
+	.updates-list :global(.update-date) {
+		color: var(--color-accent);
+		font-weight: 700;
+		font-size: 0.9rem;
+	}
+
+	.updates-list :global(h2) {
+		margin: 0.2rem 0 0.4rem;
+		font-size: 1.1rem;
+	}
+
+	.updates-list :global(p) {
+		max-width: none;
+	}
+</style>
+
+<script>
+	import { UPDATES_SHEET_CSV_URL } from '../data/site';
+	import { renderSheetList } from '../lib/sheetList';
+
+	renderSheetList(
+		'.updates-list',
+		UPDATES_SHEET_CSV_URL,
+		(row) => `
+			<div class="card update-card">
+				<p class="update-date">${row.date ?? ''}</p>
+				<h2>${row.title ?? ''}</h2>
+				${row.body ? `<p>${row.body}</p>` : ''}
+			</div>
+		`,
+		'אין כרגע עדכונים חדשים.',
+	);
+</script>

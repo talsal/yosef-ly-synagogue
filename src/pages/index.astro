@@ -1,0 +1,138 @@
+---
+import { Image } from 'astro:assets';
+import buildingRendering from '../assets/images/building-rendering.png';
+import UpcomingTimes from '../components/UpcomingTimes.astro';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { NEIGHBORHOOD, SITE_NAME, SITE_TAGLINE, withBase } from '../data/site';
+---
+
+<BaseLayout title={SITE_NAME}>
+	<section class="hero">
+		<Image
+			src={buildingRendering}
+			alt="הדמיה של הבניין החדש של בית הכנסת יוסף-לי, עם הכיתוב עשו לי מקדש ושכנתי בתוכם"
+			widths={[480, 800, 1200]}
+			sizes="100vw"
+			class="hero-image"
+			loading="eager"
+		/>
+		<div class="container hero-content">
+			<p class="eyebrow">{NEIGHBORHOOD}</p>
+			<h1>{SITE_NAME}</h1>
+			<p class="tagline">&ldquo;{SITE_TAGLINE}&rdquo;</p>
+			<div class="hero-actions">
+				<a class="button" href={withBase('/tefillah-times')}>זמני תפילות</a>
+				<a class="button button-outline" href={withBase('/donations')}>לתרומה</a>
+			</div>
+		</div>
+	</section>
+
+	<section class="section container">
+		<h2>השבת הקרובה</h2>
+		<UpcomingTimes />
+	</section>
+
+	<section class="section container welcome">
+		<div class="card">
+			<h2>ברוכים הבאים</h2>
+			<p>
+				קהילת בית הכנסת יוסף-לי מתפללת בנוסח ירושלמי בשכונת מוריה, מודיעין. אנו שמחים לעמוד
+				הבית החדש שלנו, ומזמינים כל אחד ואחת להצטרף אלינו לתפילה, לשיעורי תורה ולאירועי הקהילה.
+			</p>
+			<p>
+				המבנה החדש כמעט מוכן, והקהילה ממתינה לאישורים הרשמיים למעבר. עד אז אנו מתפללים באולם
+				התעמלות השכונתי.
+			</p>
+			<a href={withBase('/about')}>עוד על הקהילה ועל המבנה החדש &larr;</a>
+		</div>
+	</section>
+
+	<section class="section container quick-links">
+		<h2>קישורים מהירים</h2>
+		<div class="grid">
+			<a class="card link-card" href={withBase('/lessons')}>שיעורי תורה</a>
+			<a class="card link-card" href={withBase('/events')}>אירועים קרובים</a>
+			<a class="card link-card" href={withBase('/refuah')}>רפואות &ndash; מי שברך</a>
+			<a class="card link-card" href={withBase('/updates')}>עדכוני קהילה</a>
+		</div>
+	</section>
+</BaseLayout>
+
+<style>
+	.hero {
+		position: relative;
+		color: #fff;
+	}
+
+	.hero-image {
+		width: 100%;
+		aspect-ratio: 16 / 9;
+		object-fit: cover;
+		filter: brightness(0.55);
+	}
+
+	@media (min-width: 48rem) {
+		.hero-image {
+			aspect-ratio: 21 / 9;
+		}
+	}
+
+	.hero-content {
+		position: absolute;
+		inset: 0;
+		display: flex;
+		flex-direction: column;
+		justify-content: center;
+		gap: 0.5rem;
+	}
+
+	.hero-content h1,
+	.hero-content .tagline {
+		color: #fff;
+	}
+
+	.tagline {
+		font-size: 1.1rem;
+		font-style: italic;
+		max-width: none;
+	}
+
+	.hero-actions {
+		display: flex;
+		gap: 1rem;
+		margin-top: 1rem;
+		flex-wrap: wrap;
+	}
+
+	.button-outline {
+		background: transparent;
+		border: 2px solid #fff;
+	}
+
+	.button-outline:hover {
+		background: #fff;
+		color: var(--color-primary);
+	}
+
+	.welcome .card p:last-of-type {
+		margin-bottom: 1rem;
+	}
+
+	.quick-links .grid {
+		display: grid;
+		gap: 1rem;
+		grid-template-columns: repeat(auto-fit, minmax(12rem, 1fr));
+	}
+
+	.link-card {
+		text-decoration: none;
+		font-weight: 700;
+		color: var(--color-primary);
+		text-align: center;
+	}
+
+	.link-card:hover {
+		border-color: var(--color-accent);
+		color: var(--color-accent);
+	}
+</style>

@@ -1,0 +1,52 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+---
+
+<BaseLayout title="אזכרות" description="אזכרות קרובות בקהילת בית הכנסת יוסף-לי">
+	<div class="container section">
+		<h1>אזכרות</h1>
+		<p>רשימת האזכרות הקרובות. לתיאום אזכרה יש לפנות לאיש הקשר המצוין.</p>
+
+		<!--
+			עמודות הגיליון (memorials): name, hebrew_date, contact
+			ראו MEMORIALS_SHEET_CSV_URL ב-src/data/site.ts
+		-->
+		<div class="memorials-list" aria-live="polite">
+			<p class="loading-state">טוען אזכרות...</p>
+		</div>
+	</div>
+</BaseLayout>
+
+<style>
+	.loading-state,
+	:global(.error-state) {
+		color: var(--color-text-muted);
+	}
+
+	.memorials-list :global(.memorial-row) {
+		display: flex;
+		justify-content: space-between;
+		gap: 1rem;
+		flex-wrap: wrap;
+		padding: 0.75rem 0;
+		border-bottom: 1px solid var(--color-border);
+	}
+</style>
+
+<script>
+	import { MEMORIALS_SHEET_CSV_URL } from '../data/site';
+	import { renderSheetList } from '../lib/sheetList';
+
+	renderSheetList(
+		'.memorials-list',
+		MEMORIALS_SHEET_CSV_URL,
+		(row) => `
+			<div class="memorial-row">
+				<strong>${row.name ?? ''}</strong>
+				<span>${row.hebrew_date ?? ''}</span>
+				<span>${row.contact ?? ''}</span>
+			</div>
+		`,
+		'אין כרגע אזכרות קרובות מפורסמות.',
+	);
+</script>

@@ -1,0 +1,70 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { withBase } from '../data/site';
+---
+
+<BaseLayout title="רפואות" description="רשימת שמות לתפילה לרפואה שלמה בבית הכנסת יוסף-לי">
+	<div class="container section">
+		<h1>רפואות &ndash; מי שברך</h1>
+		<p>רשימת השמות שהקהילה מתפללת עבורם לרפואה שלמה.</p>
+
+		<!--
+			עמודות הגיליון (refuah): hebrew_name, mother_hebrew_name
+			ראו REFUAH_SHEET_CSV_URL ב-src/data/site.ts
+		-->
+		<div class="refuah-list" aria-live="polite">
+			<p class="loading-state">טוען רשימה...</p>
+		</div>
+
+		<section class="card request-form">
+			<h2>בקשה להוספת שם</h2>
+			<p>
+				מטעמי פרטיות, הוספת שם לרשימה אינה מתפרסמת ישירות באתר אלא מועברת לאישור הגבאי.
+				<!-- TODO: לחבר טופס בקשה אמיתי (Google Form) ולעדכן כאן קישור/הטמעה -->
+			</p>
+			<a class="button" href={withBase('/contact')}>לפנייה לגבאי</a>
+		</section>
+	</div>
+</BaseLayout>
+
+<style>
+	.loading-state,
+	:global(.error-state) {
+		color: var(--color-text-muted);
+	}
+
+	.refuah-list {
+		columns: 2;
+		margin: 1rem 0;
+	}
+
+	.refuah-list :global(.refuah-name) {
+		display: block;
+		break-inside: avoid;
+		padding-block: 0.25rem;
+	}
+
+	.refuah-list :global(.refuah-name::before) {
+		content: '• ';
+		color: var(--color-accent);
+	}
+
+	.request-form {
+		margin-top: 2rem;
+	}
+</style>
+
+<script>
+	import { REFUAH_SHEET_CSV_URL } from '../data/site';
+	import { renderSheetList } from '../lib/sheetList';
+
+	renderSheetList(
+		'.refuah-list',
+		REFUAH_SHEET_CSV_URL,
+		(row) =>
+			`<span class="refuah-name">${row.hebrew_name ?? ''}${
+				row.mother_hebrew_name ? ` בן/בת ${row.mother_hebrew_name}` : ''
+			}</span>`,
+		'הרשימה תתעדכן כאן ברגע שיחובר הגיליון.',
+	);
+</script>

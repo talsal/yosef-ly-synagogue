@@ -1,0 +1,49 @@
+---
+import { Image } from 'astro:assets';
+import buildingEntrance from '../assets/images/building-entrance.jpeg';
+import buildingRendering from '../assets/images/building-rendering.png';
+import constructionProgress from '../assets/images/construction-progress.png';
+import BaseLayout from '../layouts/BaseLayout.astro';
+
+const photos = [
+	{ src: buildingRendering, alt: 'הדמיה רשמית של המבנה החדש' },
+	{ src: constructionProgress, alt: 'התקדמות בניית המבנה, ממגרש ריק ועד מבנה כמעט גמור' },
+	{ src: buildingEntrance, alt: 'הכניסה הנגישה למבנה' },
+];
+---
+
+<BaseLayout title="גלריה" description="תמונות מהבנייה ומאירועי הקהילה">
+	<div class="container section">
+		<h1>גלריה</h1>
+		<p>תמונות מבניית המבנה החדש ומאירועי הקהילה.</p>
+		<!-- TODO: להוסיף תמונות אירועים ותמונות בנייה נוספות ברזולוציה גבוהה -->
+
+		<div class="gallery-grid">
+			{
+				photos.map((photo) => (
+					<figure class="card">
+						<Image src={photo.src} alt={photo.alt} widths={[300, 500, 800]} sizes="(min-width: 60rem) 30vw, 45vw" />
+					</figure>
+				))
+			}
+		</div>
+	</div>
+</BaseLayout>
+
+<style>
+	.gallery-grid {
+		display: grid;
+		gap: 1rem;
+		grid-template-columns: repeat(auto-fit, minmax(14rem, 1fr));
+		margin-top: 1.5rem;
+	}
+
+	.gallery-grid .card {
+		padding: 0.5rem;
+		margin: 0;
+	}
+
+	.gallery-grid img {
+		border-radius: calc(var(--radius) - 0.25rem);
+	}
+</style>

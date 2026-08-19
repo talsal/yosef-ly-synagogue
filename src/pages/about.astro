@@ -1,0 +1,88 @@
+---
+import { Image } from 'astro:assets';
+import constructionProgress from '../assets/images/construction-progress.png';
+import buildingEntrance from '../assets/images/building-entrance.jpeg';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { HALL_NAME, ORG_NAME, RABBI_NAME, SITE_NAME } from '../data/site';
+---
+
+<BaseLayout title="אודות בית הכנסת" description={`הסיפור של ${SITE_NAME}`}>
+	<div class="container section">
+		<h1>אודות בית הכנסת</h1>
+
+		<div class="card">
+			<h2>הסיפור שלנו</h2>
+			<p>
+				קהילת {SITE_NAME} מתפללת בנוסח ירושלמי, וצמחה מתוך מתפללים ותושבים בשכונת מוריה,
+				מודיעין. במשך שנים התפללה הקהילה באולם התעמלות שכונתי, עד לבניית מבנה הקבע החדש.
+			</p>
+			<p>
+				המבנה החדש נבנה בסיוע {ORG_NAME}, ונמצא כעת בשלבי סיום, ממתין לאישורים הרשמיים למעבר
+				הקהילה אליו. הכניסה למבנה נגישה פיזית לכל.
+			</p>
+			<p>
+				רב הקהילה הוא {RABBI_NAME}.
+			</p>
+		</div>
+
+		<div class="card honor">
+			<h2>{HALL_NAME}</h2>
+			<p>המבנה החדש קרוי על שם התורם הגדול שסייע להקמתו &mdash; {HALL_NAME}.</p>
+		</div>
+
+		<section class="progress">
+			<h2>התקדמות הבנייה</h2>
+			<Image
+				src={constructionProgress}
+				alt="סדרת תמונות המתעדות את התקדמות בניית המבנה, ממגרש ריק ועד מבנה כמעט גמור"
+				widths={[480, 800, 1200]}
+				sizes="100vw"
+			/>
+		</section>
+
+		<section class="progress">
+			<h2>נגישות</h2>
+			<div class="accessible-entrance">
+				<Image
+					src={buildingEntrance}
+					alt="הכניסה הנגישה למבנה, עם שילוט כניסה נגישה"
+					widths={[300, 500]}
+					sizes="(min-width: 48rem) 24rem, 100vw"
+				/>
+				<p>הנגישות הפיזית כבר קיימת במבנה החדש, כולל כניסה נגישה מסומנת.</p>
+			</div>
+		</section>
+	</div>
+</BaseLayout>
+
+<style>
+	.card {
+		margin-bottom: 1.5rem;
+	}
+
+	.honor {
+		background: var(--color-accent-light);
+		border-color: var(--color-accent);
+	}
+
+	.progress {
+		margin-block: 2rem;
+	}
+
+	.accessible-entrance {
+		display: grid;
+		gap: 1rem;
+		grid-template-columns: minmax(0, 24rem) 1fr;
+		align-items: center;
+	}
+
+	.accessible-entrance img {
+		border-radius: var(--radius);
+	}
+
+	@media (max-width: 40rem) {
+		.accessible-entrance {
+			grid-template-columns: 1fr;
+		}
+	}
+</style>

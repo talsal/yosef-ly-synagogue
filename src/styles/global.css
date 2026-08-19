@@ -1,0 +1,138 @@
+@import '@fontsource-variable/heebo';
+
+:root {
+	--color-bg: #fdfbf6;
+	--color-surface: #ffffff;
+	--color-text: #201c14;
+	--color-text-muted: #55503f;
+	--color-primary: #1e2a4a;
+	--color-primary-dark: #141d35;
+	--color-accent: #a97c1f;
+	--color-accent-light: #f2e4c2;
+	--color-border: #e4ddc9;
+	--color-focus: #0b5fff;
+
+	--font-body: 'Heebo Variable', 'Heebo', system-ui, sans-serif;
+	--max-width: 72rem;
+	--radius: 0.75rem;
+}
+
+*,
+*::before,
+*::after {
+	box-sizing: border-box;
+}
+
+html {
+	font-size: 112.5%; /* ~18px בסיס, קריא יותר לקהל מבוגר */
+	scroll-behavior: smooth;
+}
+
+body {
+	margin: 0;
+	font-family: var(--font-body);
+	background: var(--color-bg);
+	color: var(--color-text);
+	line-height: 1.6;
+	direction: rtl;
+}
+
+h1,
+h2,
+h3,
+h4 {
+	line-height: 1.3;
+	color: var(--color-primary);
+	font-weight: 700;
+}
+
+h1 {
+	font-size: clamp(1.9rem, 4vw, 2.6rem);
+}
+
+h2 {
+	font-size: clamp(1.5rem, 3vw, 2rem);
+}
+
+p {
+	max-width: 65ch;
+}
+
+a {
+	color: var(--color-primary);
+}
+
+a:hover {
+	color: var(--color-accent);
+}
+
+img {
+	max-width: 100%;
+	height: auto;
+	display: block;
+}
+
+.container {
+	max-width: var(--max-width);
+	margin-inline: auto;
+	padding-inline: 1.25rem;
+}
+
+.skip-link {
+	position: absolute;
+	right: 1rem;
+	top: -3rem;
+	background: var(--color-primary);
+	color: #fff;
+	padding: 0.75rem 1.25rem;
+	border-radius: var(--radius);
+	z-index: 100;
+	transition: top 0.15s ease;
+}
+
+.skip-link:focus {
+	top: 1rem;
+}
+
+:focus-visible {
+	outline: 3px solid var(--color-focus);
+	outline-offset: 2px;
+}
+
+button {
+	font-family: inherit;
+	font-size: 1rem;
+	cursor: pointer;
+}
+
+.card {
+	background: var(--color-surface);
+	border: 1px solid var(--color-border);
+	border-radius: var(--radius);
+	padding: 1.5rem;
+}
+
+.button {
+	display: inline-block;
+	background: var(--color-accent);
+	color: #fff;
+	padding: 0.85rem 1.75rem;
+	border-radius: var(--radius);
+	font-weight: 700;
+	text-decoration: none;
+}
+
+.button:hover {
+	background: var(--color-primary);
+	color: #fff;
+}
+
+.section {
+	padding-block: 2.5rem;
+}
+
+.eyebrow {
+	color: var(--color-accent);
+	font-weight: 700;
+	letter-spacing: 0.02em;
+}

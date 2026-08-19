@@ -1,0 +1,165 @@
+---
+// לוח שבת שבועי: כניסת/יציאת שבת ופרשה נשלפים אוטומטית מ-Hebcal, ושאר הלוח
+// (שיעורים, מנחה, סעודה שלישית וכו') מחושב מהם אוטומטית — ראו lib/shabbatCompute.ts.
+// אין צורך בגיליון חיצוני; תורני הקידוש בלבד מעודכנים ידנית בקוד (לא ניתן לחשב שם אדם).
+---
+
+<section class="card shabbat-schedule" aria-live="polite">
+	<p class="loading-state">טוען את לוח השבת...</p>
+</section>
+
+<template id="shabbat-schedule-template">
+	<h3 class="parasha"></h3>
+	<p class="times-summary"></p>
+
+	<div class="schedule-columns">
+		<div>
+			<h4>ליל שבת</h4>
+			<dl>
+				<div><dt>מנחה וערבית מוקדמות</dt><dd data-field="mincha_arvit_early"></dd></div>
+				<div><dt>שיר השירים</dt><dd data-field="shir_hashirim_time"></dd></div>
+				<div><dt>מנחה/כניסת שבת</dt><dd data-field="mincha_candle_time"></dd></div>
+			</dl>
+		</div>
+
+		<div>
+			<h4>שבת</h4>
+			<dl>
+				<div><dt>שיעור לפני שחרית</dt><dd data-field="shiur_before_shacharit"></dd></div>
+				<div><dt>שחרית</dt><dd data-field="shacharit_time"></dd></div>
+				<div><dt>קידוש &mdash; תורנים</dt><dd data-field="kiddush_toranim"></dd></div>
+				<div><dt>שיעור אחרי קידוש</dt><dd data-field="shiur_after_kiddush"></dd></div>
+				<div><dt>שיעור אחה"צ</dt><dd data-field="shiur_afternoon"></dd></div>
+			</dl>
+		</div>
+
+		<div>
+			<h4>מנחה וערב</h4>
+			<dl>
+				<div><dt>מנחה של שבת</dt><dd data-field="mincha_shabbat"></dd></div>
+				<div><dt>סעודה שלישית</dt><dd data-field="seuda_shlishit"></dd></div>
+				<div><dt>ערבית מוצאי שבת קודש</dt><dd data-field="arvit_motzash"></dd></div>
+			</dl>
+		</div>
+	</div>
+
+	<p class="signature">רב הקהילה הרב אופיר בן סעדון והוועד</p>
+</template>
+
+<style>
+	.shabbat-schedule {
+		display: grid;
+		gap: 1rem;
+	}
+
+	.loading-state,
+	.error-state {
+		color: var(--color-text-muted);
+	}
+
+	.parasha {
+		margin: 0;
+	}
+
+	.times-summary {
+		font-weight: 700;
+		color: var(--color-accent);
+		max-width: none;
+	}
+
+	.schedule-columns {
+		display: grid;
+		gap: 1.5rem;
+		grid-template-columns: repeat(auto-fit, minmax(14rem, 1fr));
+	}
+
+	.schedule-columns h4 {
+		margin: 0 0 0.5rem;
+		color: var(--color-primary);
+	}
+
+	dl {
+		margin: 0;
+	}
+
+	dl > div {
+		display: flex;
+		justify-content: space-between;
+		gap: 0.75rem;
+		padding-block: 0.35rem;
+		border-bottom: 1px dashed var(--color-border);
+	}
+
+	dt {
+		color: var(--color-text-muted);
+	}
+
+	dd {
+		margin: 0;
+		font-weight: 600;
+		text-align: left;
+	}
+
+	.signature {
+		text-align: center;
+		color: var(--color-text-muted);
+		font-style: italic;
+		margin-top: 0.5rem;
+		max-width: none;
+	}
+</style>
+
+<script>
+	import { fetchShabbatTimes } from '../lib/hebcal';
+	import { computeWeeklySchedule, type WeeklySchedule } from '../lib/shabbatCompute';
+
+	const CSV_FIELDS = [
+		'shiur_before_shacharit',
+		'shacharit_time',
+		'kiddush_toranim',
+		'shiur_after_kiddush',
+		'shiur_afternoon',
+		'mincha_arvit_early',
+		'shir_hashirim_time',
+		'mincha_candle_time',
+		'mincha_shabbat',
+		'seuda_shlishit',
+		'arvit_motzash',
+	] as const satisfies readonly (keyof WeeklySchedule)[];
+
+	async function render() {
+		const container = document.querySelector<HTMLElement>('.shabbat-schedule');
+		if (!container) return;
+
+		const shabbatTimes = await fetchShabbatTimes().catch(() => null);
+
+		if (!shabbatTimes) {
+			const base = import.meta.env.BASE_URL.endsWith('/')
+				? import.meta.env.BASE_URL
+				: `${import.meta.env.BASE_URL}/`;
+			container.innerHTML = `<p class="error-state">לא ניתן לטעון כרגע את לוח השבת. אפשר לפנות אלינו ב<a href="${base}contact">יצירת קשר</a>.</p>`;
+			return;
+		}
+
+		const template = document.querySelector<HTMLTemplateElement>('#shabbat-schedule-template');
+		if (!template) return;
+
+		const fragment = template.content.cloneNode(true) as DocumentFragment;
+
+		const parashaEl = fragment.querySelector('.parasha')!;
+		const summaryEl = fragment.querySelector('.times-summary')!;
+
+		parashaEl.textContent = shabbatTimes.parasha ? `פרשת ${shabbatTimes.parasha}` : 'לוח השבת';
+		summaryEl.textContent = `כניסת שבת ${shabbatTimes.candleLighting} · יציאת שבת ${shabbatTimes.havdalah}`;
+
+		const schedule = computeWeeklySchedule(shabbatTimes.candleLightingDate, shabbatTimes.havdalahDate);
+		for (const field of CSV_FIELDS) {
+			const el = fragment.querySelector(`[data-field="${field}"]`);
+			if (el) el.textContent = schedule[field];
+		}
+
+		container.replaceChildren(fragment);
+	}
+
+	render();
+</script>

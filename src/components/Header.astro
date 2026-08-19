@@ -1,0 +1,154 @@
+---
+import { NAV_ITEMS, SITE_NAME, withBase } from '../data/site';
+
+const currentPath = Astro.url.pathname;
+---
+
+<header class="site-header">
+	<div class="container header-inner">
+		<a href={withBase('/')} class="brand">{SITE_NAME}</a>
+
+		<details class="nav-toggle">
+			<summary aria-label="פתח תפריט ניווט">
+				<span aria-hidden="true">☰</span>
+				<span class="toggle-label">תפריט</span>
+			</summary>
+			<nav aria-label="ניווט ראשי">
+				<ul>
+					{
+						NAV_ITEMS.map((item) => (
+							<li>
+								<a
+									href={withBase(item.href)}
+									aria-current={currentPath === withBase(item.href) ? 'page' : undefined}
+								>
+									{item.label}
+								</a>
+							</li>
+						))
+					}
+				</ul>
+			</nav>
+		</details>
+	</div>
+</header>
+
+<style>
+	.site-header {
+		background: var(--color-primary);
+		color: #fff;
+		position: sticky;
+		top: 0;
+		z-index: 50;
+	}
+
+	.header-inner {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		padding-block: 1rem;
+		gap: 1rem;
+	}
+
+	.brand {
+		color: #fff;
+		font-weight: 700;
+		font-size: 1.25rem;
+		text-decoration: none;
+	}
+
+	.brand:hover {
+		color: var(--color-accent-light);
+	}
+
+	.nav-toggle summary {
+		list-style: none;
+		display: flex;
+		align-items: center;
+		gap: 0.4rem;
+		color: #fff;
+		padding: 0.5rem 0.75rem;
+		border-radius: var(--radius);
+		border: 1px solid rgba(255, 255, 255, 0.35);
+	}
+
+	.nav-toggle summary::-webkit-details-marker {
+		display: none;
+	}
+
+	.nav-toggle summary:hover {
+		background: rgba(255, 255, 255, 0.1);
+	}
+
+	.nav-toggle nav {
+		position: absolute;
+		inset-inline: 0;
+		background: var(--color-primary-dark);
+		padding: 1rem 1.25rem 1.5rem;
+	}
+
+	.nav-toggle ul {
+		list-style: none;
+		margin: 0;
+		padding: 0;
+		display: flex;
+		flex-direction: column;
+		gap: 0.25rem;
+		max-width: var(--max-width);
+		margin-inline: auto;
+	}
+
+	.nav-toggle a {
+		display: block;
+		color: #fff;
+		text-decoration: none;
+		padding: 0.6rem 0.5rem;
+		border-radius: var(--radius);
+	}
+
+	.nav-toggle a:hover,
+	.nav-toggle a[aria-current='page'] {
+		background: rgba(255, 255, 255, 0.12);
+		color: var(--color-accent-light);
+	}
+
+	@media (min-width: 62rem) {
+		.nav-toggle summary {
+			display: none;
+		}
+
+		.nav-toggle {
+			position: static;
+		}
+
+		.nav-toggle nav {
+			position: static;
+			background: none;
+			padding: 0;
+		}
+
+		.nav-toggle ul {
+			flex-direction: row;
+			flex-wrap: wrap;
+			gap: 0.25rem;
+			max-width: none;
+			margin: 0;
+			justify-content: flex-end;
+		}
+
+		.nav-toggle a {
+			padding: 0.5rem 0.65rem;
+			font-size: 0.95rem;
+		}
+	}
+</style>
+
+<script>
+	// סוגר את תפריט הנייד אחרי לחיצה על קישור
+	const toggle = document.querySelector<HTMLDetailsElement>('.nav-toggle');
+	toggle?.querySelectorAll('a').forEach((link) => {
+		link.addEventListener('click', () => {
+			if (window.innerWidth < 992) toggle.open = false;
+		});
+	});
+</script>
