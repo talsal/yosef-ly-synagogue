@@ -34,13 +34,14 @@ import { withBase } from '../data/site';
 	}
 
 	.refuah-list {
-		columns: 2;
+		display: flex;
+		flex-wrap: wrap;
+		gap: 0.25rem 2rem;
 		margin: 1rem 0;
 	}
 
 	.refuah-list :global(.refuah-name) {
-		display: block;
-		break-inside: avoid;
+		flex: 1 1 14rem;
 		padding-block: 0.25rem;
 	}
 
