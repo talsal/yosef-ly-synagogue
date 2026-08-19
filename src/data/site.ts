@@ -25,12 +25,12 @@ export const CONTACT = {
 
 // גיליונות Google Sheets מפורסמים כ-CSV לתוכן שמתעדכן בלי נגיעה בקוד.
 // כל ריק = טרם חובר גיליון אמיתי (ראו את קובץ ה-.astro של כל עמוד למבנה העמודות הנדרש).
-// לוח השבת השבועי אינו כאן: הוא מחושב אוטומטית, ראו src/lib/shabbatCompute.ts.
+// לוח השבת השבועי ועליות לתורה אינם כאן: מחושב/מעודכן בקוד ידנית, ראו
+// src/lib/shabbatCompute.ts ו-src/data/aliyot.ts בהתאמה.
 export const EVENTS_SHEET_CSV_URL = '';
 export const MEMORIALS_SHEET_CSV_URL = '';
 export const REFUAH_SHEET_CSV_URL = '';
 export const UPDATES_SHEET_CSV_URL = '';
-export const ALIYOT_SHEET_CSV_URL = '';
 
 export interface NavItem {
 	label: string;
