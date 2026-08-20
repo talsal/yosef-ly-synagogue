@@ -15,12 +15,12 @@ export const HALL_NAME = 'היכל שלמה ויעקב';
 export const RABBI_NAME = 'הרב אופיר בן סעדון';
 export const SITE_TAGLINE = 'עשו לי מקדש ושכנתי בתוכם';
 
-// TODO: להשלים פרטי קשר אמיתיים
+// TODO: להשלים טלפון, וואטסאפ ומייל
 export const CONTACT = {
 	phone: '',
 	whatsapp: '',
 	email: '',
-	address: `${NEIGHBORHOOD}`,
+	address: 'יעל הגיבורה 66, מודיעין מכבים רעות',
 };
 
 export interface NavItem {
