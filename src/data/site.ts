@@ -27,6 +27,13 @@ export const CONTACT = {
 // לשימוש בחישוב זמני היום ההלכתיים (src/lib/zmanim.ts) במקום מרכז העיר הכללי.
 export const SYNAGOGUE_COORDS = { latitude: 31.882533, longitude: 35.0101906 };
 
+// גיליון Google Sheets המחובר לטופס "רישום אזכרות", מפורסם כ-CSV (Publish to
+// web), כדי שחברי הקהילה ימלאו בעצמם בלי לעבור דרך גבאי/מתנדב טכני.
+export const MEMORIALS_FORM_URL =
+	'https://docs.google.com/forms/d/e/1FAIpQLScIn6OM0NsF5Z62bgS_ZnDYjcLETv743clbVT-XmyNPRrOh-A/viewform';
+export const MEMORIALS_SHEET_CSV_URL =
+	'https://docs.google.com/spreadsheets/d/e/2PACX-1vRX81jLSOpcKHr7meAU9nYJfk8eSJP4LdB9o4jjHhp15KkXq9dwvLS8uP-F3ms8vtWfhop4Frw1FyFB/pub?output=csv';
+
 export interface NavItem {
 	label: string;
 	href: string;

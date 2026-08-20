@@ -29,16 +29,6 @@ const events = defineCollection({
 	}),
 });
 
-const memorials = defineCollection({
-	loader: glob({ pattern: '**/*.md', base: './src/content/memorials' }),
-	schema: z.object({
-		name: z.string(),
-		hebrewDate: z.string(),
-		date: z.coerce.date(),
-		contact: z.string().optional(),
-	}),
-});
-
 const refuah = defineCollection({
 	loader: glob({ pattern: '**/*.md', base: './src/content/refuah' }),
 	schema: z.object({
@@ -47,4 +37,4 @@ const refuah = defineCollection({
 	}),
 });
 
-export const collections = { lessons, updates, events, memorials, refuah };
+export const collections = { lessons, updates, events, refuah };
