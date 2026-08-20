@@ -29,13 +29,35 @@ import { MEMORIALS_FORM_URL } from '../data/site';
 		color: var(--color-text-muted);
 	}
 
-	.memorials-list :global(.memorial-row) {
+	.memorials-list {
+		display: grid;
+		gap: 1rem;
+	}
+
+	.memorials-list :global(.memorial-card) {
+		margin: 0;
+	}
+
+	.memorials-list :global(dl) {
+		margin: 0;
+		display: grid;
+		gap: 0.4rem;
+	}
+
+	.memorials-list :global(dl > div) {
 		display: flex;
 		justify-content: space-between;
 		gap: 1rem;
 		flex-wrap: wrap;
-		padding: 0.75rem 0;
-		border-bottom: 1px solid var(--color-border);
+	}
+
+	.memorials-list :global(dt) {
+		color: var(--color-text-muted);
+	}
+
+	.memorials-list :global(dd) {
+		margin: 0;
+		font-weight: 600;
 	}
 </style>
 
@@ -57,10 +79,13 @@ import { MEMORIALS_FORM_URL } from '../data/site';
 			container.innerHTML = rows
 				.map(
 					(row) => `
-						<div class="memorial-row">
-							<strong>${row['שם הנפטר/ת (ושם האב/אם אם נהוג)'] ?? ''}</strong>
-							<span>${row['תאריך הפטירה העברי'] ?? ''}</span>
-							<span>${row['שם בן/בת המשפחה מהקהילה'] ?? ''}</span>
+						<div class="card memorial-card">
+							<dl>
+								<div><dt>שם הנפטר/ת</dt><dd>${row['שם הנפטר/ת (ושם האב/אם אם נהוג)'] ?? ''}</dd></div>
+								<div><dt>תאריך הפטירה העברי</dt><dd>${row['תאריך הפטירה העברי'] ?? ''}</dd></div>
+								<div><dt>בן/בת משפחה מהקהילה</dt><dd>${row['שם בן/בת המשפחה מהקהילה'] ?? ''}</dd></div>
+								<div><dt>קשר לנפטר/ת</dt><dd>${row['מה הקשר שלך לנפטר/ת? (למשל: סבתא, אבא, אח)'] ?? ''}</dd></div>
+							</dl>
 						</div>
 					`,
 				)
