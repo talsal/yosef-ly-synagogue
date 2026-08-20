@@ -145,11 +145,24 @@ const currentPath = Astro.url.pathname;
 </style>
 
 <script>
-	// סוגר את תפריט הנייד אחרי לחיצה על קישור
+	// דפדפנים לא מציגים תוכן <details> סגור גם אם ה-CSS קובע display:block —
+	// חובה להגדיר את התכונה open בפועל. בדסקטופ (≥62rem) התפריט תמיד "פתוח"
+	// (הכפתור עצמו מוסתר ב-CSS כך שאין למשתמש דרך לסגור אותו), ובנייד הוא
+	// נשלט ע"י הדפדפן/לחיצת המשתמש.
 	const toggle = document.querySelector<HTMLDetailsElement>('.nav-toggle');
+	const desktopQuery = window.matchMedia('(min-width: 62rem)');
+
+	function syncOpenState() {
+		if (toggle) toggle.open = desktopQuery.matches;
+	}
+
+	syncOpenState();
+	desktopQuery.addEventListener('change', syncOpenState);
+
+	// סוגר את תפריט הנייד אחרי לחיצה על קישור
 	toggle?.querySelectorAll('a').forEach((link) => {
 		link.addEventListener('click', () => {
-			if (window.innerWidth < 992) toggle.open = false;
+			if (!desktopQuery.matches) toggle.open = false;
 		});
 	});
 </script>
