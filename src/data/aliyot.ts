@@ -10,7 +10,7 @@ export interface AliyahSale {
 }
 
 export const LAST_ALIYOT_SALE: { parasha: string; sales: AliyahSale[] } = {
-	parasha: 'משפטים',
+	parasha: 'שופטים',
 	sales: [
 		{ aliyah: 'פתיחה', name: 'חנן גפן', price: 120 },
 		{ aliyah: 'הולכה', name: 'דניאל יעקובוף', price: 120 },
