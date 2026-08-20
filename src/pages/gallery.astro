@@ -3,20 +3,31 @@ import { Image } from 'astro:assets';
 import buildingEntrance from '../assets/images/building-entrance.jpeg';
 import buildingRendering from '../assets/images/building-rendering.png';
 import constructionProgress from '../assets/images/construction-progress.png';
+import dedicationPlaque from '../assets/images/gallery-dedication-plaque.jpeg';
+import pewsDelivery from '../assets/images/gallery-pews-delivery.jpeg';
+import sanctuaryInterior from '../assets/images/gallery-sanctuary-interior.jpeg';
 import BaseLayout from '../layouts/BaseLayout.astro';
+import { withBase } from '../data/site';
 
 const photos = [
 	{ src: buildingRendering, alt: 'הדמיה רשמית של המבנה החדש' },
 	{ src: constructionProgress, alt: 'התקדמות בניית המבנה, ממגרש ריק ועד מבנה כמעט גמור' },
 	{ src: buildingEntrance, alt: 'הכניסה הנגישה למבנה' },
+	{ src: sanctuaryInterior, alt: 'מבט מבפנים על אולם התפילה' },
+	{ src: pewsDelivery, alt: 'הכנסת ספסלי התפילה החדשים לאולם' },
+	{ src: dedicationPlaque, alt: 'לוח ההקדשה של היכל שלמה ויעקב' },
+];
+
+const videos = [
+	{ src: '/videos/dedication-invitation.mp4', title: 'הזמנה לחנוכת היכל שלמה ויעקב' },
+	{ src: '/videos/entrance-walkthrough.mp4', title: 'מתוך עבודות הגמר במבנה' },
 ];
 ---
 
-<BaseLayout title="גלריה" description="תמונות מהבנייה ומאירועי הקהילה">
+<BaseLayout title="גלריה" description="תמונות וסרטונים מהבנייה ומאירועי הקהילה">
 	<div class="container section">
 		<h1>גלריה</h1>
-		<p>תמונות מבניית המבנה החדש ומאירועי הקהילה.</p>
-		<!-- TODO: להוסיף תמונות אירועים ותמונות בנייה נוספות ברזולוציה גבוהה -->
+		<p>תמונות וסרטונים מבניית המבנה החדש ומאירועי הקהילה.</p>
 
 		<div class="gallery-grid">
 			{
@@ -27,23 +38,54 @@ const photos = [
 				))
 			}
 		</div>
+
+		<h2 class="videos-heading">סרטונים</h2>
+		<div class="videos-grid">
+			{
+				videos.map((video) => (
+					<figure class="card">
+						<video controls preload="metadata" src={withBase(video.src)} />
+						<figcaption>{video.title}</figcaption>
+					</figure>
+				))
+			}
+		</div>
 	</div>
 </BaseLayout>
 
 <style>
-	.gallery-grid {
+	.gallery-grid,
+	.videos-grid {
 		display: grid;
 		gap: 1rem;
 		grid-template-columns: repeat(auto-fit, minmax(14rem, 1fr));
 		margin-top: 1.5rem;
 	}
 
-	.gallery-grid .card {
+	.gallery-grid .card,
+	.videos-grid .card {
 		padding: 0.5rem;
 		margin: 0;
 	}
 
 	.gallery-grid img {
 		border-radius: calc(var(--radius) - 0.25rem);
+	}
+
+	.videos-heading {
+		margin-top: 2.5rem;
+	}
+
+	.videos-grid video {
+		width: 100%;
+		border-radius: calc(var(--radius) - 0.25rem);
+		display: block;
+	}
+
+	.videos-grid figcaption {
+		margin-top: 0.5rem;
+		color: var(--color-text-muted);
+		font-size: 0.9rem;
+		text-align: center;
 	}
 </style>
