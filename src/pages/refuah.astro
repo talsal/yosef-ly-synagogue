@@ -30,21 +30,35 @@ import { REFUAH_FORM_URL } from '../data/site';
 	}
 
 	.refuah-list {
+		display: grid;
+		gap: 1rem;
+		grid-template-columns: repeat(auto-fit, minmax(16rem, 1fr));
+	}
+
+	.refuah-list :global(.refuah-card) {
+		margin: 0;
+	}
+
+	.refuah-list :global(dl) {
+		margin: 0;
+		display: grid;
+		gap: 0.4rem;
+	}
+
+	.refuah-list :global(dl > div) {
 		display: flex;
+		justify-content: space-between;
+		gap: 1rem;
 		flex-wrap: wrap;
-		gap: 0.25rem 2rem;
-		margin: 1rem 0;
 	}
 
-	.refuah-list :global(.refuah-name) {
-		flex: 1 1 14rem;
-		padding-block: 0.25rem;
-		display: block;
+	.refuah-list :global(dt) {
+		color: var(--color-text-muted);
 	}
 
-	.refuah-list :global(.refuah-name::before) {
-		content: '• ';
-		color: var(--color-accent);
+	.refuah-list :global(dd) {
+		margin: 0;
+		font-weight: 600;
 	}
 </style>
 
@@ -67,7 +81,14 @@ import { REFUAH_FORM_URL } from '../data/site';
 				.map((row) => {
 					const name = row['שם החולה/ה לרפואה (בעברית)'] ?? '';
 					const mother = row['שם האם (בעברית, לפי המנהג)'];
-					return `<span class="refuah-name">${name}${mother ? ` בן/בת ${mother}` : ''}</span>`;
+					return `
+						<div class="card refuah-card">
+							<dl>
+								<div><dt>שם לרפואה</dt><dd>${name}</dd></div>
+								${mother ? `<div><dt>שם האם</dt><dd>${mother}</dd></div>` : ''}
+							</dl>
+						</div>
+					`;
 				})
 				.join('');
 		} catch {
