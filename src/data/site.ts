@@ -23,6 +23,10 @@ export const CONTACT = {
 	address: 'יעל הגיבורה 66, מודיעין מכבים רעות',
 };
 
+// קואורדינטות מדויקות של כתובת בית הכנסת (geocoding חד-פעמי מול OpenStreetMap),
+// לשימוש בחישוב זמני היום ההלכתיים (src/lib/zmanim.ts) במקום מרכז העיר הכללי.
+export const SYNAGOGUE_COORDS = { latitude: 31.882533, longitude: 35.0101906 };
+
 export interface NavItem {
 	label: string;
 	href: string;

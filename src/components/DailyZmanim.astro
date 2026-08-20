@@ -1,0 +1,91 @@
+---
+// זמני היום ההלכתיים, מחושבים אוטומטית לפי מיקום בית הכנסת המדויק (Hebcal).
+---
+
+<div class="zmanim card" aria-live="polite">
+	<p class="loading-state">טוען זמני היום...</p>
+</div>
+
+<template id="zmanim-template">
+	<dl class="zmanim-grid">
+		<div><dt>עלות השחר</dt><dd data-field="alotHaShachar"></dd></div>
+		<div><dt>הנץ החמה</dt><dd data-field="sunrise"></dd></div>
+		<div><dt>סוף זמן ק"ש (גר"א)</dt><dd data-field="sofZmanShma"></dd></div>
+		<div><dt>סוף זמן תפילה (גר"א)</dt><dd data-field="sofZmanTfilla"></dd></div>
+		<div><dt>חצות היום</dt><dd data-field="chatzot"></dd></div>
+		<div><dt>מנחה גדולה</dt><dd data-field="minchaGedola"></dd></div>
+		<div><dt>שקיעה</dt><dd data-field="sunset"></dd></div>
+		<div><dt>צאת הכוכבים</dt><dd data-field="tzeitHakochavim"></dd></div>
+	</dl>
+</template>
+
+<style>
+	.loading-state,
+	.error-state {
+		color: var(--color-text-muted);
+	}
+
+	.zmanim-grid {
+		display: grid;
+		gap: 0.5rem 1.5rem;
+		grid-template-columns: repeat(auto-fit, minmax(13rem, 1fr));
+		margin: 0;
+	}
+
+	.zmanim-grid > div {
+		display: flex;
+		justify-content: space-between;
+		gap: 0.75rem;
+		padding-block: 0.35rem;
+		border-bottom: 1px dashed var(--color-border);
+	}
+
+	.zmanim-grid dt {
+		color: var(--color-text-muted);
+	}
+
+	.zmanim-grid dd {
+		margin: 0;
+		font-weight: 600;
+	}
+</style>
+
+<script>
+	import { fetchDailyZmanim } from '../lib/zmanim';
+
+	const FIELDS = [
+		'alotHaShachar',
+		'sunrise',
+		'sofZmanShma',
+		'sofZmanTfilla',
+		'chatzot',
+		'minchaGedola',
+		'sunset',
+		'tzeitHakochavim',
+	] as const;
+
+	async function render() {
+		const container = document.querySelector<HTMLElement>('.zmanim');
+		if (!container) return;
+
+		const zmanim = await fetchDailyZmanim().catch(() => null);
+
+		if (!zmanim) {
+			container.innerHTML = '<p class="error-state">לא ניתן לטעון כרגע את זמני היום.</p>';
+			return;
+		}
+
+		const template = document.querySelector<HTMLTemplateElement>('#zmanim-template');
+		if (!template) return;
+
+		const fragment = template.content.cloneNode(true) as DocumentFragment;
+		for (const field of FIELDS) {
+			const el = fragment.querySelector(`[data-field="${field}"]`);
+			if (el) el.textContent = zmanim[field];
+		}
+
+		container.replaceChildren(fragment);
+	}
+
+	render();
+</script>

@@ -1,4 +1,5 @@
 ---
+import DailyZmanim from '../components/DailyZmanim.astro';
 import HolidayList from '../components/HolidayList.astro';
 import ShabbatSchedule from '../components/ShabbatSchedule.astro';
 import BaseLayout from '../layouts/BaseLayout.astro';
@@ -37,6 +38,12 @@ import { WEEKDAY_TIMES } from '../data/prayerTimes';
 		</section>
 
 		<section class="section">
+			<h2>זמני היום</h2>
+			<p class="section-note">מחושב לפי מיקום בית הכנסת המדויק בשכונת מוריה, מודיעין.</p>
+			<DailyZmanim />
+		</section>
+
+		<section class="section">
 			<h2>חגים ומועדים קרובים</h2>
 			<HolidayList />
 		</section>
@@ -44,6 +51,12 @@ import { WEEKDAY_TIMES } from '../data/prayerTimes';
 </BaseLayout>
 
 <style>
+	.section-note {
+		color: var(--color-text-muted);
+		font-size: 0.9rem;
+		margin-top: -0.5rem;
+	}
+
 	.weekday-grid {
 		display: grid;
 		gap: 1rem;
