@@ -27,6 +27,9 @@ const year = new Date().getFullYear();
 
 	<div class="container footer-legal">
 		<p>{ORG_NAME} &middot; {year}&#8207;</p>
+		<p>
+			פותח ע"י <a href="https://github.com/talsal" target="_blank" rel="noopener noreferrer">טל סלמן</a>
+		</p>
 	</div>
 </footer>
 
@@ -64,5 +67,13 @@ const year = new Date().getFullYear();
 		padding-block: 1rem;
 		font-size: 0.85rem;
 		color: #cfc9b8;
+		display: flex;
+		flex-wrap: wrap;
+		gap: 0.5rem 1.5rem;
+		justify-content: space-between;
+	}
+
+	.footer-legal p {
+		margin: 0;
 	}
 </style>
