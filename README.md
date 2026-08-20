@@ -16,9 +16,10 @@ npm run dev
 - `src/layouts/BaseLayout.astro` &mdash; שלד העמוד המשותף (RTL, ניווט, פוטר).
 - `src/components/` &mdash; רכיבים משותפים, כולל הרכיבים ששולפים נתונים דינמיים
   (`ShabbatSchedule`, `UpcomingTimes`, `HolidayList`).
-- `src/data/site.ts` &mdash; קבועים כלל-אתריים: שמות, ניווט, כתובות ה-CSV של הגיליונות.
-- `src/content/lessons/` &mdash; שיעורי תורה קבועים (Astro content collection, ערוך בקוד).
-- `src/lib/` &mdash; שליפת CSV מגיליונות Google Sheets, ו-API של Hebcal לזמני שבת/חגים.
+- `src/data/site.ts` &mdash; קבועים כלל-אתריים: שמות, ניווט.
+- `src/content/` &mdash; כל התוכן שמתעדכן (שיעורים, עדכונים, אירועים, אזכרות, רפואות)
+  &mdash; ראו "איך מוסיפים תוכן" למטה.
+- `src/lib/` &mdash; API של Hebcal לזמני שבת/חגים.
 
 ## לוח שבת שבועי — מחושב אוטומטית, בלי גיליון
 
@@ -40,19 +41,73 @@ npm run dev
 כפי שהגבאי רשם אותן — יש לעדכן אותן ידנית כל שבוע ב-`LAST_ALIYOT_SALE` בקובץ
 `src/data/aliyot.ts`.
 
-## תוכן דינמי (Google Sheets)
+## איך מוסיפים תוכן (עדכונים, אירועים, אזכרות, רפואות, שיעורים)
 
-עמודים אלו שולפים נתונים בזמן טעינת הדף מגיליון Google Sheets שפורסם כ-CSV
-(File → Share → Publish to web → CSV), כדי שמתנדבים יוכלו לעדכן בלי לגעת בקוד:
+אין גיליון Google חיצוני. כל פריט הוא קובץ Markdown קטן אחד בתיקיית
+`src/content/<סוג>/`, בכל שם קובץ שתרצו (למשל `2026-09-01-ראש-השנה.md`).
+כדי להוסיף, מוחקים או מעדכנים פריט &mdash; יוצרים/עורכים/מוחקים את הקובץ.
 
-| עמוד | קבוע ב-`site.ts` | מבנה עמודות |
-| --- | --- | --- |
-| אירועים | `EVENTS_SHEET_CSV_URL` | `title, date, category, description` |
-| אזכרות | `MEMORIALS_SHEET_CSV_URL` | `name, hebrew_date, contact` |
-| רפואות | `REFUAH_SHEET_CSV_URL` | `hebrew_name, mother_hebrew_name` |
-| עדכונים | `UPDATES_SHEET_CSV_URL` | `date, title, body` |
+**אין צורך בסביבת פיתוח בכלל**: אפשר לעשות את זה ישירות באתר GitHub &mdash;
+להיכנס לתיקייה המתאימה בריפו, "Add file" → "Create new file", להדביק את
+התוכן לפי התבנית למטה, ו-"Commit directly to the main branch". האתר ייבנה
+ויתעדכן אוטומטית תוך דקה.
 
-כל עוד קבוע ה-URL ריק, העמוד מציג הודעת "טרם חובר גיליון" ידידותית במקום שגיאה.
+### עדכונים (`src/content/updates/`)
+
+```md
+---
+date: 2026-09-01
+title: כותרת העדכון
+---
+
+גוף העדכון, יכול להיות כמה פסקאות.
+```
+
+### אירועים (`src/content/events/`)
+
+```md
+---
+date: 2026-09-10
+title: שם האירוע
+category: קטגוריה (אופציונלי)
+---
+
+תיאור האירוע.
+```
+
+### אזכרות (`src/content/memorials/`)
+
+```md
+---
+name: שם הנפטר/ת
+hebrewDate: התאריך העברי לתצוגה, למשל כ"ג בתשרי
+date: 2026-10-04
+contact: איש קשר (אופציונלי)
+---
+```
+
+### רפואות (`src/content/refuah/`)
+
+```md
+---
+hebrewName: שם השם לרפואה
+motherHebrewName: שם האם (אופציונלי)
+---
+```
+
+### שיעורי תורה (`src/content/lessons/`)
+
+```md
+---
+topic: נושא השיעור
+teacher: שם המעביר
+day: יום
+time: שעה
+audience: קהל יעד (אופציונלי)
+---
+```
+
+כשהתיקייה ריקה, כל עמוד מציג הודעת "אין כרגע..." ידידותית במקום שגיאה.
 
 ## פריסה (GitHub Pages)
 

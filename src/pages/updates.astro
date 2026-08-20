@@ -1,5 +1,15 @@
 ---
+import { getCollection, render } from 'astro:content';
 import BaseLayout from '../layouts/BaseLayout.astro';
+
+const entries = await getCollection('updates');
+const updates = await Promise.all(
+	entries
+		.sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf())
+		.map(async (entry) => ({ entry, rendered: await render(entry) })),
+);
+
+const dateFormat = new Intl.DateTimeFormat('he-IL', { day: 'numeric', month: 'long', year: 'numeric' });
 ---
 
 <BaseLayout title="עדכונים" description="עדכוני קהילה אחרונים מבית הכנסת יוסף-לי">
@@ -7,56 +17,45 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 		<h1>עדכונים</h1>
 		<p>פיד ההודעות והחדשות האחרונות של הקהילה.</p>
 
-		<!--
-			עמודות הגיליון (updates): date, title, body
-			ראו UPDATES_SHEET_CSV_URL ב-src/data/site.ts
-		-->
-		<div class="updates-list" aria-live="polite">
-			<p class="loading-state">טוען עדכונים...</p>
-		</div>
+		{
+			updates.length === 0 ? (
+				<p class="empty-state">אין כרגע עדכונים חדשים.</p>
+			) : (
+				<div class="updates-list">
+					{updates.map(({ entry, rendered: { Content } }) => (
+						<article class="card update-card">
+							<p class="update-date">{dateFormat.format(entry.data.date)}</p>
+							<h2>{entry.data.title}</h2>
+							<Content />
+						</article>
+					))}
+				</div>
+			)
+		}
 	</div>
 </BaseLayout>
 
 <style>
-	.loading-state,
-	:global(.error-state) {
+	.empty-state {
 		color: var(--color-text-muted);
 	}
 
-	.updates-list :global(.update-card) {
+	.updates-list .update-card {
 		margin-bottom: 1rem;
 	}
 
-	.updates-list :global(.update-date) {
+	.update-date {
 		color: var(--color-accent);
 		font-weight: 700;
 		font-size: 0.9rem;
 	}
 
-	.updates-list :global(h2) {
+	.update-card h2 {
 		margin: 0.2rem 0 0.4rem;
 		font-size: 1.1rem;
 	}
 
-	.updates-list :global(p) {
+	.update-card :global(p) {
 		max-width: none;
 	}
 </style>
-
-<script>
-	import { UPDATES_SHEET_CSV_URL } from '../data/site';
-	import { renderSheetList } from '../lib/sheetList';
-
-	renderSheetList(
-		'.updates-list',
-		UPDATES_SHEET_CSV_URL,
-		(row) => `
-			<div class="card update-card">
-				<p class="update-date">${row.date ?? ''}</p>
-				<h2>${row.title ?? ''}</h2>
-				${row.body ? `<p>${row.body}</p>` : ''}
-			</div>
-		`,
-		'אין כרגע עדכונים חדשים.',
-	);
-</script>

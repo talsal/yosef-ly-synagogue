@@ -1,61 +1,63 @@
 ---
+import { getCollection, render } from 'astro:content';
 import BaseLayout from '../layouts/BaseLayout.astro';
+
+const entries = await getCollection('events');
+const events = await Promise.all(
+	entries
+		.sort((a, b) => a.data.date.valueOf() - b.data.date.valueOf())
+		.map(async (entry) => ({ entry, rendered: await render(entry) })),
+);
+
+const dateFormat = new Intl.DateTimeFormat('he-IL', { day: 'numeric', month: 'long', year: 'numeric' });
 ---
 
 <BaseLayout title="אירועים" description="אירועים קרובים בבית הכנסת יוסף-לי">
 	<div class="container section">
 		<h1>אירועים</h1>
-		<p>רשימת האירועים הקרובים של הקהילה, מעודכנת על ידי המתנדבים.</p>
+		<p>רשימת האירועים הקרובים של הקהילה.</p>
 
-		<!--
-			עמודות הגיליון (events): title, date, category, description
-			ראו EVENTS_SHEET_CSV_URL ב-src/data/site.ts
-		-->
-		<div class="events-list" aria-live="polite">
-			<p class="loading-state">טוען אירועים...</p>
-		</div>
+		{
+			events.length === 0 ? (
+				<p class="empty-state">אין כרגע אירועים קרובים מפורסמים. עקבו אחרינו לעדכונים.</p>
+			) : (
+				<div class="events-list">
+					{events.map(({ entry, rendered: { Content } }) => (
+						<article class="card event-card">
+							<p class="event-date">
+								{dateFormat.format(entry.data.date)}
+								{entry.data.category && <> &middot; {entry.data.category}</>}
+							</p>
+							<h2>{entry.data.title}</h2>
+							<Content />
+						</article>
+					))}
+				</div>
+			)
+		}
 	</div>
 </BaseLayout>
 
 <style>
-	.loading-state,
-	:global(.error-state) {
+	.empty-state {
 		color: var(--color-text-muted);
 	}
 
-	.events-list :global(.event-card) {
+	.events-list .event-card {
 		margin-bottom: 1rem;
 	}
 
-	.events-list :global(.event-card h2) {
+	.event-card h2 {
 		margin: 0 0 0.25rem;
 		font-size: 1.15rem;
 	}
 
-	.events-list :global(.event-date) {
+	.event-date {
 		color: var(--color-accent);
 		font-weight: 700;
 	}
 
-	.events-list :global(p) {
+	.event-card :global(p) {
 		max-width: none;
 	}
 </style>
-
-<script>
-	import { EVENTS_SHEET_CSV_URL } from '../data/site';
-	import { renderSheetList } from '../lib/sheetList';
-
-	renderSheetList(
-		'.events-list',
-		EVENTS_SHEET_CSV_URL,
-		(row) => `
-			<div class="card event-card">
-				<p class="event-date">${row.date ?? ''} ${row.category ? `&middot; ${row.category}` : ''}</p>
-				<h2>${row.title ?? ''}</h2>
-				${row.description ? `<p>${row.description}</p>` : ''}
-			</div>
-		`,
-		'אין כרגע אירועים קרובים מפורסמים. עקבו אחרינו לעדכונים.',
-	);
-</script>

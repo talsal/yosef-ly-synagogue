@@ -1,5 +1,10 @@
 ---
+import { getCollection } from 'astro:content';
 import BaseLayout from '../layouts/BaseLayout.astro';
+
+const memorials = (await getCollection('memorials')).sort(
+	(a, b) => a.data.date.valueOf() - b.data.date.valueOf(),
+);
 ---
 
 <BaseLayout title="אזכרות" description="אזכרות קרובות בקהילת בית הכנסת יוסף-לי">
@@ -7,23 +12,30 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 		<h1>אזכרות</h1>
 		<p>רשימת האזכרות הקרובות. לתיאום אזכרה יש לפנות לאיש הקשר המצוין.</p>
 
-		<!--
-			עמודות הגיליון (memorials): name, hebrew_date, contact
-			ראו MEMORIALS_SHEET_CSV_URL ב-src/data/site.ts
-		-->
-		<div class="memorials-list" aria-live="polite">
-			<p class="loading-state">טוען אזכרות...</p>
-		</div>
+		{
+			memorials.length === 0 ? (
+				<p class="empty-state">אין כרגע אזכרות קרובות מפורסמות.</p>
+			) : (
+				<div class="memorials-list">
+					{memorials.map(({ data }) => (
+						<div class="memorial-row">
+							<strong>{data.name}</strong>
+							<span>{data.hebrewDate}</span>
+							{data.contact && <span>{data.contact}</span>}
+						</div>
+					))}
+				</div>
+			)
+		}
 	</div>
 </BaseLayout>
 
 <style>
-	.loading-state,
-	:global(.error-state) {
+	.empty-state {
 		color: var(--color-text-muted);
 	}
 
-	.memorials-list :global(.memorial-row) {
+	.memorial-row {
 		display: flex;
 		justify-content: space-between;
 		gap: 1rem;
@@ -32,21 +44,3 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 		border-bottom: 1px solid var(--color-border);
 	}
 </style>
-
-<script>
-	import { MEMORIALS_SHEET_CSV_URL } from '../data/site';
-	import { renderSheetList } from '../lib/sheetList';
-
-	renderSheetList(
-		'.memorials-list',
-		MEMORIALS_SHEET_CSV_URL,
-		(row) => `
-			<div class="memorial-row">
-				<strong>${row.name ?? ''}</strong>
-				<span>${row.hebrew_date ?? ''}</span>
-				<span>${row.contact ?? ''}</span>
-			</div>
-		`,
-		'אין כרגע אזכרות קרובות מפורסמות.',
-	);
-</script>
