@@ -1,44 +1,31 @@
 ---
-import { getCollection } from 'astro:content';
 import BaseLayout from '../layouts/BaseLayout.astro';
-import { withBase } from '../data/site';
-
-const names = await getCollection('refuah');
+import { REFUAH_FORM_URL } from '../data/site';
 ---
 
 <BaseLayout title="רפואות" description="רשימת שמות לתפילה לרפואה שלמה בבית הכנסת יוסף-לי">
 	<div class="container section">
 		<h1>רפואות &ndash; מי שברך</h1>
-		<p>רשימת השמות שהקהילה מתפללת עבורם לרפואה שלמה.</p>
+		<p>רשימת השמות שנרשמו על ידי חברי הקהילה לתפילה לרפואה שלמה.</p>
 
-		{
-			names.length === 0 ? (
-				<p class="empty-state">הרשימה תתעדכן כאן בקרוב.</p>
-			) : (
-				<div class="refuah-list">
-					{names.map(({ data }) => (
-						<span class="refuah-name">
-							{data.hebrewName}
-							{data.motherHebrewName && ` בן/בת ${data.motherHebrewName}`}
-						</span>
-					))}
-				</div>
-			)
-		}
+		<a class="button" href={REFUAH_FORM_URL} target="_blank" rel="noopener noreferrer">
+			הוספת שם לרפואה
+		</a>
 
-		<section class="card request-form">
-			<h2>בקשה להוספת שם</h2>
-			<p>
-				מטעמי פרטיות, הוספת שם לרשימה אינה מתפרסמת ישירות באתר אלא מועברת לאישור הגבאי.
-				<!-- TODO: לחבר טופס בקשה אמיתי (Google Form) ולעדכן כאן קישור/הטמעה -->
-			</p>
-			<a class="button" href={withBase('/contact')}>לפנייה לגבאי</a>
-		</section>
+		<div class="refuah-list" aria-live="polite">
+			<p class="loading-state">טוען רשימה...</p>
+		</div>
 	</div>
 </BaseLayout>
 
 <style>
-	.empty-state {
+	.button {
+		display: inline-block;
+		margin: 1rem 0 1.5rem;
+	}
+
+	.loading-state,
+	:global(.error-state) {
 		color: var(--color-text-muted);
 	}
 
@@ -49,18 +36,44 @@ const names = await getCollection('refuah');
 		margin: 1rem 0;
 	}
 
-	.refuah-name {
+	.refuah-list :global(.refuah-name) {
 		flex: 1 1 14rem;
 		padding-block: 0.25rem;
 		display: block;
 	}
 
-	.refuah-name::before {
+	.refuah-list :global(.refuah-name::before) {
 		content: '• ';
 		color: var(--color-accent);
 	}
-
-	.request-form {
-		margin-top: 2rem;
-	}
 </style>
+
+<script>
+	import { REFUAH_SHEET_CSV_URL } from '../data/site';
+	import { fetchSheetRows } from '../lib/csv';
+
+	async function render() {
+		const container = document.querySelector<HTMLElement>('.refuah-list');
+		if (!container) return;
+
+		try {
+			const rows = await fetchSheetRows(REFUAH_SHEET_CSV_URL);
+			if (rows.length === 0) {
+				container.innerHTML = '<p class="error-state">הרשימה תתעדכן כאן בקרוב.</p>';
+				return;
+			}
+
+			container.innerHTML = rows
+				.map((row) => {
+					const name = row['שם החולה/ה לרפואה (בעברית)'] ?? '';
+					const mother = row['שם האם (בעברית, לפי המנהג)'];
+					return `<span class="refuah-name">${name}${mother ? ` בן/בת ${mother}` : ''}</span>`;
+				})
+				.join('');
+		} catch {
+			container.innerHTML = '<p class="error-state">אירעה שגיאה בטעינת הרשימה. נסו לרענן את העמוד.</p>';
+		}
+	}
+
+	render();
+</script>

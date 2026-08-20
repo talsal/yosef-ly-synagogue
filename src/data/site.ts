@@ -34,6 +34,12 @@ export const MEMORIALS_FORM_URL =
 export const MEMORIALS_SHEET_CSV_URL =
 	'https://docs.google.com/spreadsheets/d/e/2PACX-1vRX81jLSOpcKHr7meAU9nYJfk8eSJP4LdB9o4jjHhp15KkXq9dwvLS8uP-F3ms8vtWfhop4Frw1FyFB/pub?output=csv';
 
+// אותו דפוס עבור טופס "רישום שם לרפואה שלמה" (מי שברך).
+export const REFUAH_FORM_URL =
+	'https://docs.google.com/forms/d/e/1FAIpQLScHwm9kFc3Lq6D8M8nBbm1__ofBIrIAc1ScwOG_Mhk_gMjZRw/viewform';
+export const REFUAH_SHEET_CSV_URL =
+	'https://docs.google.com/spreadsheets/d/e/2PACX-1vRySlN2g_-wxY6rnH-LCiYRiG17PPivLjYMCNeMGEzbZnH85jC5V9VJIoEjH8VedsaGA2uS4bIYKoJz/pub?output=csv';
+
 export interface NavItem {
 	label: string;
 	href: string;

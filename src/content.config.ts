@@ -29,12 +29,4 @@ const events = defineCollection({
 	}),
 });
 
-const refuah = defineCollection({
-	loader: glob({ pattern: '**/*.md', base: './src/content/refuah' }),
-	schema: z.object({
-		hebrewName: z.string(),
-		motherHebrewName: z.string().optional(),
-	}),
-});
-
-export const collections = { lessons, updates, events, refuah };
+export const collections = { lessons, updates, events };
