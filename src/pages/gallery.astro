@@ -1,15 +1,27 @@
 ---
 import { Image } from 'astro:assets';
+import arkInterior from '../assets/images/gallery-ark-interior.jpeg';
+import arkParochetDetail from '../assets/images/gallery-ark-parochet-detail.jpeg';
 import buildingEntrance from '../assets/images/building-entrance.jpeg';
 import buildingRendering from '../assets/images/building-rendering.png';
 import constructionProgress from '../assets/images/construction-progress.png';
 import dedicationPlaque from '../assets/images/gallery-dedication-plaque.jpeg';
+import entranceSignClose from '../assets/images/gallery-entrance-sign-close.jpeg';
+import entranceSignMedium from '../assets/images/gallery-entrance-sign-medium.jpeg';
+import entranceSignWide from '../assets/images/gallery-entrance-sign-wide.jpeg';
+import exteriorFullTwilight from '../assets/images/exterior-full-twilight.jpeg';
 import pewsDelivery from '../assets/images/gallery-pews-delivery.jpeg';
 import sanctuaryInterior from '../assets/images/gallery-sanctuary-interior.jpeg';
 import BaseLayout from '../layouts/BaseLayout.astro';
 import { withBase } from '../data/site';
 
 const photos = [
+	{ src: exteriorFullTwilight, alt: 'מבט חיצוני מלא על בית הכנסת בשעת בין הערביים' },
+	{ src: entranceSignWide, alt: 'שלט הכניסה, היכל שלמה ויעקב' },
+	{ src: entranceSignMedium, alt: 'שלט הכניסה מקרוב' },
+	{ src: entranceSignClose, alt: 'שלט הכניסה, תקריב' },
+	{ src: arkInterior, alt: 'ארון הקודש באולם התפילה' },
+	{ src: arkParochetDetail, alt: 'פרוכת ארון הקודש, לעילוי נשמת שלמה אדולפו פיצוטו' },
 	{ src: buildingRendering, alt: 'הדמיה רשמית של המבנה החדש' },
 	{ src: constructionProgress, alt: 'התקדמות בניית המבנה, ממגרש ריק ועד מבנה כמעט גמור' },
 	{ src: buildingEntrance, alt: 'הכניסה הנגישה למבנה' },

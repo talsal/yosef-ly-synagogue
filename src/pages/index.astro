@@ -1,6 +1,6 @@
 ---
 import { Image } from 'astro:assets';
-import buildingRendering from '../assets/images/building-rendering.png';
+import exteriorFullTwilight from '../assets/images/exterior-full-twilight.jpeg';
 import UpcomingTimes from '../components/UpcomingTimes.astro';
 import BaseLayout from '../layouts/BaseLayout.astro';
 import { NEIGHBORHOOD, SITE_NAME, SITE_TAGLINE, withBase } from '../data/site';
@@ -9,8 +9,8 @@ import { NEIGHBORHOOD, SITE_NAME, SITE_TAGLINE, withBase } from '../data/site';
 <BaseLayout title={SITE_NAME}>
 	<section class="hero">
 		<Image
-			src={buildingRendering}
-			alt="הדמיה של הבניין החדש של בית הכנסת יוסף-לי, עם הכיתוב עשו לי מקדש ושכנתי בתוכם"
+			src={exteriorFullTwilight}
+			alt="מבט חיצוני על בניין בית הכנסת יוסף-לי, היכל שלמה ויעקב, בשעת בין הערביים"
 			widths={[480, 800, 1200]}
 			sizes="100vw"
 			class="hero-image"
