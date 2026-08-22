@@ -22,6 +22,20 @@ const pageTitle = title === SITE_NAME ? title : `${title} | ${SITE_NAME}`;
 		<link rel="icon" type="image/svg+xml" href={withBase('/favicon.svg')} />
 		<meta name="generator" content={Astro.generator} />
 		<title>{pageTitle}</title>
+		<script async src="https://www.googletagmanager.com/gtag/js?id=G-BPXKJRE9D2"></script>
+		<script>
+			declare global {
+				interface Window {
+					dataLayer: unknown[];
+				}
+			}
+			window.dataLayer = window.dataLayer || [];
+			function gtag(...args: unknown[]) {
+				window.dataLayer.push(args);
+			}
+			gtag('js', new Date());
+			gtag('config', 'G-BPXKJRE9D2');
+		</script>
 	</head>
 	<body>
 		<a href="#main-content" class="skip-link">דלג לתוכן העמוד</a>
