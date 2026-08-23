@@ -29,4 +29,19 @@ const events = defineCollection({
 	}),
 });
 
-export const collections = { lessons, updates, events };
+const aliyot = defineCollection({
+	loader: glob({ pattern: '**/*.md', base: './src/content/aliyot' }),
+	schema: z.object({
+		date: z.coerce.date(),
+		parasha: z.string(),
+		sales: z.array(
+			z.object({
+				aliyah: z.string(),
+				name: z.string(),
+				price: z.number().nullable(),
+			}),
+		),
+	}),
+});
+
+export const collections = { lessons, updates, events, aliyot };

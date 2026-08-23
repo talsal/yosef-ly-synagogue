@@ -1,10 +1,15 @@
 ---
+import { getCollection } from 'astro:content';
 import BaseLayout from '../layouts/BaseLayout.astro';
 import { withBase } from '../data/site';
-import { LAST_ALIYOT_SALE } from '../data/aliyot';
+
+const entries = (await getCollection('aliyot')).sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
+const [latest, ...previous] = entries;
+
+const dateFormat = new Intl.DateTimeFormat('he-IL', { day: 'numeric', month: 'long', year: 'numeric' });
 ---
 
-<BaseLayout title="מכירת עליות לתורה" description="איך מתבצעת מכירת העליות לתורה בבית הכנסת יוסף-לי">
+<BaseLayout title="מכירת עליות לתורה" description="היסטוריית מכירת העליות לתורה בבית הכנסת יוסף-לי">
 	<div class="container section">
 		<h1>מכירת עליות לתורה</h1>
 
@@ -17,22 +22,52 @@ import { LAST_ALIYOT_SALE } from '../data/aliyot';
 			</p>
 		</div>
 
-		<section class="section">
-			<h2>תוצאות המכירה האחרונה &ndash; פרשת {LAST_ALIYOT_SALE.parasha}</h2>
-			<div class="card">
-				<div class="sales-list">
-					{
-						LAST_ALIYOT_SALE.sales.map((sale) => (
-							<div class="sale-row">
-								<span class="aliyah-name">{sale.aliyah}</span>
-								<span class="buyer-name">{sale.name || 'לא נמכר'}</span>
-								<span class="price">{sale.price ? `${sale.price} ₪` : ''}</span>
-							</div>
-						))
-					}
-				</div>
-			</div>
-		</section>
+		{
+			!latest ? (
+				<p class="empty-state">אין כרגע תוצאות מכירה רשומות.</p>
+			) : (
+				<section class="section">
+					<h2>תוצאות המכירה האחרונה &ndash; פרשת {latest.data.parasha} ({dateFormat.format(latest.data.date)})</h2>
+					<div class="card">
+						<div class="sales-list">
+							{latest.data.sales.map((sale) => (
+								<div class="sale-row">
+									<span class="aliyah-name">{sale.aliyah}</span>
+									<span class="buyer-name">{sale.name || 'לא נמכר'}</span>
+									<span class="price">{sale.price ? `${sale.price} ₪` : ''}</span>
+								</div>
+							))}
+						</div>
+					</div>
+				</section>
+			)
+		}
+
+		{
+			previous.length > 0 && (
+				<section class="section">
+					<h2>מכירות קודמות</h2>
+					<div class="history-list">
+						{previous.map((entry) => (
+							<details class="card history-item">
+								<summary>
+									פרשת {entry.data.parasha} &ndash; {dateFormat.format(entry.data.date)}
+								</summary>
+								<div class="sales-list">
+									{entry.data.sales.map((sale) => (
+										<div class="sale-row">
+											<span class="aliyah-name">{sale.aliyah}</span>
+											<span class="buyer-name">{sale.name || 'לא נמכר'}</span>
+											<span class="price">{sale.price ? `${sale.price} ₪` : ''}</span>
+										</div>
+									))}
+								</div>
+							</details>
+						))}
+					</div>
+				</section>
+			)
+		}
 
 		<p class="contact-note">
 			לשאלות על מכירת העליות יש לפנות דרך עמוד <a href={withBase('/contact')}>יצירת קשר</a>.
@@ -41,6 +76,10 @@ import { LAST_ALIYOT_SALE } from '../data/aliyot';
 </BaseLayout>
 
 <style>
+	.empty-state {
+		color: var(--color-text-muted);
+	}
+
 	.sales-list {
 		display: grid;
 		gap: 0.25rem;
@@ -74,6 +113,25 @@ import { LAST_ALIYOT_SALE } from '../data/aliyot';
 		text-align: left;
 		font-weight: 700;
 		color: var(--color-accent);
+	}
+
+	.history-list {
+		display: grid;
+		gap: 0.75rem;
+	}
+
+	.history-item {
+		margin: 0;
+	}
+
+	.history-item summary {
+		cursor: pointer;
+		font-weight: 700;
+		color: var(--color-primary);
+	}
+
+	.history-item .sales-list {
+		margin-top: 0.75rem;
 	}
 
 	.contact-note {
