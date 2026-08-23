@@ -23,15 +23,10 @@ const pageTitle = title === SITE_NAME ? title : `${title} | ${SITE_NAME}`;
 		<meta name="generator" content={Astro.generator} />
 		<title>{pageTitle}</title>
 		<script async src="https://www.googletagmanager.com/gtag/js?id=G-BPXKJRE9D2"></script>
-		<script>
-			declare global {
-				interface Window {
-					dataLayer: unknown[];
-				}
-			}
+		<script is:inline>
 			window.dataLayer = window.dataLayer || [];
-			function gtag(...args: unknown[]) {
-				window.dataLayer.push(args);
+			function gtag() {
+				window.dataLayer.push(arguments);
 			}
 			gtag('js', new Date());
 			gtag('config', 'G-BPXKJRE9D2');
