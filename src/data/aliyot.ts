@@ -22,6 +22,6 @@ export const LAST_ALIYOT_SALE: { parasha: string; sales: AliyahSale[] } = {
 		{ aliyah: 'חמישי', name: 'משה מזרחי', price: 202 },
 		{ aliyah: 'שישי', name: 'קוסקס', price: 100 },
 		{ aliyah: 'שביעי', name: 'רמי ב. סעדון', price: 200 },
-		{ aliyah: 'מפטיר', name: 'טרבלסי', price: null },
+		{ aliyah: 'מפטיר', name: 'טרבלסי', price: 400 },
 	],
 };
