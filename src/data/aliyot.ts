@@ -10,18 +10,18 @@ export interface AliyahSale {
 }
 
 export const LAST_ALIYOT_SALE: { parasha: string; sales: AliyahSale[] } = {
-	parasha: 'שופטים',
+	parasha: 'כי תצא',
 	sales: [
-		{ aliyah: 'פתיחה', name: 'חנן גפן', price: 120 },
-		{ aliyah: 'הולכה', name: 'דניאל יעקובוף', price: 120 },
-		{ aliyah: 'הגבהה', name: 'בכר ישראל', price: 150 },
-		{ aliyah: 'כהן', name: 'סיימון', price: 209 },
-		{ aliyah: 'לוי', name: 'סיימון', price: 300 },
-		{ aliyah: 'שלישי', name: 'דניאל יעקובוף', price: 200 },
-		{ aliyah: 'רביעי', name: 'יוני לוי', price: 180 },
-		{ aliyah: 'חמישי', name: 'אילן בוטבול', price: 120 },
-		{ aliyah: 'שישי', name: 'מאור', price: 300 },
-		{ aliyah: 'שביעי', name: '', price: null },
-		{ aliyah: 'מפטיר', name: 'יגאל שטרית', price: 300 },
+		{ aliyah: 'פתיחה', name: 'זאב מנחם', price: 101 },
+		{ aliyah: 'הולכה', name: 'יחיאל', price: 100 },
+		{ aliyah: 'הגבהה', name: 'שרון מזרחי', price: 101 },
+		{ aliyah: 'כהן', name: '', price: null },
+		{ aliyah: 'לוי', name: 'טרבלסי', price: 150 },
+		{ aliyah: 'שלישי', name: 'ניר דוד', price: 260 },
+		{ aliyah: 'רביעי', name: 'רענן יהונתן', price: 200 },
+		{ aliyah: 'חמישי', name: 'משה מזרחי', price: 202 },
+		{ aliyah: 'שישי', name: 'קוסקס', price: 100 },
+		{ aliyah: 'שביעי', name: 'רמי ב. סעדון', price: 200 },
+		{ aliyah: 'מפטיר', name: 'טרבלסי', price: null },
 	],
 };
