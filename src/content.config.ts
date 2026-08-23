@@ -9,6 +9,8 @@ const lessons = defineCollection({
 		day: z.string(),
 		time: z.string(),
 		audience: z.string().optional(),
+		location: z.string().optional(),
+		note: z.string().optional(),
 	}),
 });
 

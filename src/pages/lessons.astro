@@ -29,6 +29,12 @@ const lessons = await getCollection('lessons');
 								<strong>קהל יעד:</strong> {data.audience}
 							</p>
 						)}
+						{data.location && (
+							<p>
+								<strong>מקום:</strong> {data.location}
+							</p>
+						)}
+						{data.note && <p class="note">{data.note}</p>}
 					</div>
 				))
 			}
@@ -42,6 +48,11 @@ const lessons = await getCollection('lessons');
 		gap: 1rem;
 		grid-template-columns: repeat(auto-fit, minmax(16rem, 1fr));
 		margin-top: 1.5rem;
+	}
+
+	.lessons-grid .note {
+		color: var(--color-text-muted);
+		font-size: 0.9rem;
 	}
 
 	.lessons-grid p {
