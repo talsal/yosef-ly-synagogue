@@ -1,0 +1,32 @@
+---
+// התאריך העברי של היום, בעמוד הבית — מחושב בצד הלקוח כדי שיישאר מדויק גם בין deploy-ים.
+---
+
+<p class="hebrew-date-today" aria-live="polite"></p>
+
+<style>
+	.hebrew-date-today {
+		margin: 0;
+		font-size: 0.95rem;
+		color: #fff;
+		opacity: 0.9;
+	}
+
+	.hebrew-date-today:empty {
+		display: none;
+	}
+</style>
+
+<script>
+	import { fetchTodayHebrewDate } from '../lib/hebrewDate';
+
+	async function render() {
+		const el = document.querySelector<HTMLElement>('.hebrew-date-today');
+		if (!el) return;
+
+		const date = await fetchTodayHebrewDate().catch(() => null);
+		if (date) el.textContent = `היום ${date}`;
+	}
+
+	render();
+</script>

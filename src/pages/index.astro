@@ -1,6 +1,7 @@
 ---
 import { Image } from 'astro:assets';
 import exteriorFullTwilight from '../assets/images/exterior-full-twilight.jpeg';
+import HebrewDateToday from '../components/HebrewDateToday.astro';
 import UpcomingTimes from '../components/UpcomingTimes.astro';
 import BaseLayout from '../layouts/BaseLayout.astro';
 import { NEIGHBORHOOD, SITE_NAME, SITE_TAGLINE, withBase } from '../data/site';
@@ -20,6 +21,7 @@ import { NEIGHBORHOOD, SITE_NAME, SITE_TAGLINE, withBase } from '../data/site';
 			<p class="eyebrow">{NEIGHBORHOOD}</p>
 			<h1>{SITE_NAME}</h1>
 			<p class="tagline">&ldquo;{SITE_TAGLINE}&rdquo;</p>
+			<HebrewDateToday />
 			<div class="hero-actions">
 				<a class="button" href={withBase('/tefillah-times')}>זמני תפילות</a>
 				<a class="button button-outline" href={withBase('/donations')}>לתרומה</a>
