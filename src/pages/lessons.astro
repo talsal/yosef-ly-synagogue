@@ -3,6 +3,8 @@ import { getCollection } from 'astro:content';
 import BaseLayout from '../layouts/BaseLayout.astro';
 
 const lessons = await getCollection('lessons');
+const shabbatLessons = lessons.filter((l) => l.data.day === 'שבת');
+const weekdayLessons = lessons.filter((l) => l.data.day !== 'שבת');
 ---
 
 <BaseLayout title="שיעורי תורה" description="שיעורי התורה הקבועים בבית הכנסת יוסף-לי">
@@ -11,38 +13,82 @@ const lessons = await getCollection('lessons');
 		<p>
 			רשימת השיעורים הקבועים בקהילה. מנוהל בקוד האתר &mdash; לעדכון פנו למתנדב הטכני של הקהילה.
 		</p>
-		<!-- TODO: להשלים את הרשימה המלאה של שיעורי הקבע (כולל שיעורי חול), לא רק את שיעורי השבת -->
 
-		<div class="lessons-grid">
-			{
-				lessons.map(({ data }) => (
-					<div class="card">
-						<h2>{data.topic}</h2>
-						<p>
-							<strong>מעביר:</strong> {data.teacher}
-						</p>
-						<p>
-							<strong>מתי:</strong> {data.day}, {data.time}
-						</p>
-						{data.audience && (
+		<h2>שיעורי שבת</h2>
+		{
+			shabbatLessons.length === 0 ? (
+				<p class="empty-state">אין כרגע שיעורי שבת רשומים.</p>
+			) : (
+				<div class="lessons-grid">
+					{shabbatLessons.map(({ data }) => (
+						<div class="card">
+							<h3>{data.topic}</h3>
 							<p>
-								<strong>קהל יעד:</strong> {data.audience}
+								<strong>מעביר:</strong> {data.teacher}
 							</p>
-						)}
-						{data.location && (
 							<p>
-								<strong>מקום:</strong> {data.location}
+								<strong>מתי:</strong> {data.day}, {data.time}
 							</p>
-						)}
-						{data.note && <p class="note">{data.note}</p>}
-					</div>
-				))
-			}
-		</div>
+							{data.audience && (
+								<p>
+									<strong>קהל יעד:</strong> {data.audience}
+								</p>
+							)}
+							{data.location && (
+								<p>
+									<strong>מקום:</strong> {data.location}
+								</p>
+							)}
+							{data.note && <p class="note">{data.note}</p>}
+						</div>
+					))}
+				</div>
+			)
+		}
+
+		<h2>שיעורי ימי חול</h2>
+		{
+			weekdayLessons.length === 0 ? (
+				<p class="empty-state">אין כרגע שיעורי חול רשומים.</p>
+			) : (
+				<div class="lessons-grid">
+					{weekdayLessons.map(({ data }) => (
+						<div class="card">
+							<h3>{data.topic}</h3>
+							<p>
+								<strong>מעביר:</strong> {data.teacher}
+							</p>
+							<p>
+								<strong>מתי:</strong> {data.day}, {data.time}
+							</p>
+							{data.audience && (
+								<p>
+									<strong>קהל יעד:</strong> {data.audience}
+								</p>
+							)}
+							{data.location && (
+								<p>
+									<strong>מקום:</strong> {data.location}
+								</p>
+							)}
+							{data.note && <p class="note">{data.note}</p>}
+						</div>
+					))}
+				</div>
+			)
+		}
 	</div>
 </BaseLayout>
 
 <style>
+	h2 {
+		margin-top: 2rem;
+	}
+
+	.empty-state {
+		color: var(--color-text-muted);
+	}
+
 	.lessons-grid {
 		display: grid;
 		gap: 1rem;
