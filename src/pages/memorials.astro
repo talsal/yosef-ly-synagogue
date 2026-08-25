@@ -63,7 +63,7 @@ import { MEMORIALS_FORM_URL } from '../data/site';
 
 <script>
 	import { MEMORIALS_SHEET_CSV_URL } from '../data/site';
-	import { fetchSheetRows } from '../lib/csv';
+	import { escapeHtml, fetchSheetRows } from '../lib/csv';
 
 	async function render() {
 		const container = document.querySelector<HTMLElement>('.memorials-list');
@@ -77,18 +77,22 @@ import { MEMORIALS_FORM_URL } from '../data/site';
 			}
 
 			container.innerHTML = rows
-				.map(
-					(row) => `
+				.map((row) => {
+					const name = escapeHtml(row['שם הנפטר/ת (ושם האב/אם אם נהוג)'] ?? '');
+					const date = escapeHtml(row['תאריך הפטירה העברי'] ?? '');
+					const relative = escapeHtml(row['שם בן/בת המשפחה מהקהילה'] ?? '');
+					const relation = escapeHtml(row['מה הקשר שלך לנפטר/ת? (למשל: סבתא, אבא, אח)'] ?? '');
+					return `
 						<div class="card memorial-card">
 							<dl>
-								<div><dt>שם הנפטר/ת</dt><dd>${row['שם הנפטר/ת (ושם האב/אם אם נהוג)'] ?? ''}</dd></div>
-								<div><dt>תאריך הפטירה העברי</dt><dd>${row['תאריך הפטירה העברי'] ?? ''}</dd></div>
-								<div><dt>בן/בת משפחה מהקהילה</dt><dd>${row['שם בן/בת המשפחה מהקהילה'] ?? ''}</dd></div>
-								<div><dt>קשר לנפטר/ת</dt><dd>${row['מה הקשר שלך לנפטר/ת? (למשל: סבתא, אבא, אח)'] ?? ''}</dd></div>
+								<div><dt>שם הנפטר/ת</dt><dd>${name}</dd></div>
+								<div><dt>תאריך הפטירה העברי</dt><dd>${date}</dd></div>
+								<div><dt>בן/בת משפחה מהקהילה</dt><dd>${relative}</dd></div>
+								<div><dt>קשר לנפטר/ת</dt><dd>${relation}</dd></div>
 							</dl>
 						</div>
-					`,
-				)
+					`;
+				})
 				.join('');
 		} catch {
 			container.innerHTML = '<p class="error-state">אירעה שגיאה בטעינת הרשימה. נסו לרענן את העמוד.</p>';

@@ -64,7 +64,7 @@ import { REFUAH_FORM_URL } from '../data/site';
 
 <script>
 	import { REFUAH_SHEET_CSV_URL } from '../data/site';
-	import { fetchSheetRows } from '../lib/csv';
+	import { escapeHtml, fetchSheetRows } from '../lib/csv';
 
 	async function render() {
 		const container = document.querySelector<HTMLElement>('.refuah-list');
@@ -79,8 +79,8 @@ import { REFUAH_FORM_URL } from '../data/site';
 
 			container.innerHTML = rows
 				.map((row) => {
-					const name = row['שם החולה/ה לרפואה (בעברית)'] ?? '';
-					const mother = row['שם האם (בעברית, לפי המנהג)'];
+					const name = escapeHtml(row['שם החולה/ה לרפואה (בעברית)'] ?? '');
+					const mother = escapeHtml(row['שם האם (בעברית, לפי המנהג)'] ?? '');
 					return `
 						<div class="card refuah-card">
 							<dl>

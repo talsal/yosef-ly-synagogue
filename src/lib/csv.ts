@@ -4,6 +4,20 @@
  * שמילוי הטופס משתקף באתר מיידית בלי build מחדש.
  */
 
+/**
+ * בריחת HTML לערכים שמגיעים מהגיליון (קלט חופשי מטופס Google Form, ולכן
+ * לא אמין) לפני הכנסתם ל-innerHTML, כדי שלא יתאפשר להריץ קוד דרך שם/שדה
+ * שמכיל תגיות HTML.
+ */
+export function escapeHtml(value: string): string {
+	return value
+		.replace(/&/g, '&amp;')
+		.replace(/</g, '&lt;')
+		.replace(/>/g, '&gt;')
+		.replace(/"/g, '&quot;')
+		.replace(/'/g, '&#39;');
+}
+
 export async function fetchSheetRows(csvUrl: string): Promise<Record<string, string>[]> {
 	const res = await fetch(csvUrl);
 	if (!res.ok) {
