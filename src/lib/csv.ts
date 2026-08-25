@@ -18,6 +18,25 @@ export function escapeHtml(value: string): string {
 		.replace(/'/g, '&#39;');
 }
 
+/**
+ * מילות/דפוסים חשודים שמעידים על ספאם, פרסומת או תוכן לא הולם, ולא על שם
+ * אמיתי. משמש לסינון אוטומטי של שורות מהתצוגה הציבורית (ראו isSuspicious) —
+ * בלי לחסום את השליחה עצמה ובלי צורך במישהו שיאשר כל רשומה ידנית.
+ */
+const SUSPICIOUS_PATTERNS = [
+	/https?:\/\//i, // קישור
+	/www\./i, // קישור
+	/\d{7,}/, // רצף ספרות ארוך (טלפון וכדומה)
+	/<[a-z!/][^>]*>/i, // תגית HTML
+	/\b(fuck|shit|bitch|porn|viagra|casino)\b/i,
+	/(זונה|מניאק|בן זונה|שרמוטה)/,
+];
+
+/** בודק אם טקסט חשוד כספאם/תוכן לא הולם, לצורך סינון אוטומטי מהתצוגה. */
+export function isSuspicious(value: string): boolean {
+	return SUSPICIOUS_PATTERNS.some((pattern) => pattern.test(value));
+}
+
 export async function fetchSheetRows(csvUrl: string): Promise<Record<string, string>[]> {
 	const res = await fetch(csvUrl);
 	if (!res.ok) {

@@ -63,14 +63,15 @@ import { MEMORIALS_FORM_URL } from '../data/site';
 
 <script>
 	import { MEMORIALS_SHEET_CSV_URL } from '../data/site';
-	import { escapeHtml, fetchSheetRows } from '../lib/csv';
+	import { escapeHtml, fetchSheetRows, isSuspicious } from '../lib/csv';
 
 	async function render() {
 		const container = document.querySelector<HTMLElement>('.memorials-list');
 		if (!container) return;
 
 		try {
-			const rows = await fetchSheetRows(MEMORIALS_SHEET_CSV_URL);
+			const allRows = await fetchSheetRows(MEMORIALS_SHEET_CSV_URL);
+			const rows = allRows.filter((row) => !Object.values(row).some(isSuspicious));
 			if (rows.length === 0) {
 				container.innerHTML = '<p class="error-state">אין כרגע אזכרות רשומות.</p>';
 				return;
