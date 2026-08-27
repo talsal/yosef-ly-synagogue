@@ -13,7 +13,6 @@
 import { getToranimForShabbat } from '../data/toranim';
 
 const OFFSET_MINUTES = {
-	minchaArvitEarly: -72, // ליל שבת: מנחה וערבית מוקדמות, לפני כניסת שבת
 	shirHashirim: -12, // ליל שבת: שיר השירים, לפני כניסת שבת
 	shiurAfternoon: -142, // שבת: שיעור אחה"צ, לפני יציאת שבת
 	minchaShabbat: -77, // שבת: מנחה של שבת, לפני יציאת שבת
@@ -29,7 +28,6 @@ const FIXED_MORNING = {
 };
 
 export interface WeeklySchedule {
-	mincha_arvit_early: string;
 	shir_hashirim_time: string;
 	mincha_candle_time: string;
 	shiur_before_shacharit: string;
@@ -65,7 +63,6 @@ export function computeWeeklySchedule(candleLighting: Date, havdalah: Date): Wee
 	const toranimText = toranim ? toranim.join(' – ') : 'יעודכן ע"י הוועד';
 
 	return {
-		mincha_arvit_early: formatTime(addMinutes(candleLighting, OFFSET_MINUTES.minchaArvitEarly)),
 		shir_hashirim_time: formatTime(addMinutes(candleLighting, OFFSET_MINUTES.shirHashirim)),
 		mincha_candle_time: formatTime(candleLighting),
 		shiur_before_shacharit: `${FIXED_MORNING.shiurBeforeShacharit.time} – ${FIXED_MORNING.shiurBeforeShacharit.teacher}`,
