@@ -2,6 +2,7 @@
 // לוח שבת שבועי: כניסת/יציאת שבת ופרשה נשלפים אוטומטית מ-Hebcal, ושאר הלוח
 // (שיעורים, מנחה, סעודה שלישית וכו') מחושב מהם אוטומטית — ראו lib/shabbatCompute.ts.
 // אין צורך בגיליון חיצוני; תורני הקידוש בלבד מעודכנים ידנית בקוד (לא ניתן לחשב שם אדם).
+import { withBase } from '../data/site';
 ---
 
 <section class="card shabbat-schedule" aria-live="polite">
@@ -34,6 +35,7 @@
 				* לא לשכוח להביא גבינות מהולי בייגל ולשים בקירור במחסן. יש לתאם הגעה מראש עם איציק
 				0542567787
 			</p>
+			<a class="toranim-link" href={withBase('/toranim')}>לוח התורנים המלא ולתיאום החלפות &larr;</a>
 		</div>
 
 		<div>
@@ -107,6 +109,13 @@
 		margin: 0.5rem 0 0;
 		color: var(--color-text-muted);
 		font-size: 0.85rem;
+	}
+
+	.toranim-link {
+		display: inline-block;
+		margin-top: 0.5rem;
+		font-size: 0.9rem;
+		font-weight: 600;
 	}
 
 	.signature {
