@@ -7,6 +7,37 @@ const entries = (await getCollection('aliyot')).sort((a, b) => b.data.date.value
 const [latest, ...previous] = entries;
 
 const dateFormat = new Intl.DateTimeFormat('he-IL', { day: 'numeric', month: 'long', year: 'numeric' });
+
+function totalOf(sales: { price: number | null }[]): number {
+	return sales.reduce((sum, sale) => sum + (sale.price ?? 0), 0);
+}
+
+const monthFormat = new Intl.DateTimeFormat('he-IL', { month: 'long', year: 'numeric' });
+const yearFormat = new Intl.DateTimeFormat('he-IL', { year: 'numeric' });
+
+function summarize(
+	list: typeof entries,
+	keyOf: (date: Date) => string,
+	formatter: Intl.DateTimeFormat,
+): { label: string; total: number }[] {
+	const order: string[] = [];
+	const totals = new Map<string, number>();
+	const labels = new Map<string, string>();
+
+	for (const entry of list) {
+		const key = keyOf(entry.data.date);
+		if (!totals.has(key)) {
+			order.push(key);
+			labels.set(key, formatter.format(entry.data.date));
+		}
+		totals.set(key, (totals.get(key) ?? 0) + totalOf(entry.data.sales));
+	}
+
+	return order.map((key) => ({ label: labels.get(key)!, total: totals.get(key)! }));
+}
+
+const monthlySummary = summarize(entries, (d) => `${d.getFullYear()}-${d.getMonth()}`, monthFormat);
+const yearlySummary = summarize(entries, (d) => `${d.getFullYear()}`, yearFormat);
 ---
 
 <BaseLayout title="מכירת עליות לתורה" description="היסטוריית מכירת העליות לתורה בבית הכנסת יוסף-לי">
@@ -38,6 +69,43 @@ const dateFormat = new Intl.DateTimeFormat('he-IL', { day: 'numeric', month: 'lo
 									<span class="price">{sale.price ? `${sale.price} ₪` : ''}</span>
 								</div>
 							))}
+							<div class="sale-row total-row">
+								<span class="aliyah-name">סה&quot;כ</span>
+								<span class="buyer-name"></span>
+								<span class="price">{totalOf(latest.data.sales)} ₪</span>
+							</div>
+						</div>
+					</div>
+				</section>
+			)
+		}
+
+		{
+			entries.length > 0 && (
+				<section class="section">
+					<h2>סיכומים</h2>
+					<div class="summaries-grid">
+						<div class="card">
+							<h3>לפי חודש</h3>
+							<div class="summary-list">
+								{monthlySummary.map((row) => (
+									<div class="sale-row">
+										<span class="aliyah-name">{row.label}</span>
+										<span class="price">{row.total} ₪</span>
+									</div>
+								))}
+							</div>
+						</div>
+						<div class="card">
+							<h3>לפי שנה</h3>
+							<div class="summary-list">
+								{yearlySummary.map((row) => (
+									<div class="sale-row">
+										<span class="aliyah-name">{row.label}</span>
+										<span class="price">{row.total} ₪</span>
+									</div>
+								))}
+							</div>
 						</div>
 					</div>
 				</section>
@@ -52,7 +120,8 @@ const dateFormat = new Intl.DateTimeFormat('he-IL', { day: 'numeric', month: 'lo
 						{previous.map((entry) => (
 							<details class="card history-item">
 								<summary>
-									פרשת {entry.data.parasha} &ndash; {dateFormat.format(entry.data.date)}
+									<span>פרשת {entry.data.parasha} &ndash; {dateFormat.format(entry.data.date)}</span>
+									<span class="summary-total">סה&quot;כ {totalOf(entry.data.sales)} ₪</span>
 								</summary>
 								<div class="sales-list">
 									{entry.data.sales.map((sale) => (
@@ -62,6 +131,11 @@ const dateFormat = new Intl.DateTimeFormat('he-IL', { day: 'numeric', month: 'lo
 											<span class="price">{sale.price ? `${sale.price} ₪` : ''}</span>
 										</div>
 									))}
+									<div class="sale-row total-row">
+										<span class="aliyah-name">סה&quot;כ</span>
+										<span class="buyer-name"></span>
+										<span class="price">{totalOf(entry.data.sales)} ₪</span>
+									</div>
 								</div>
 							</details>
 						))}
@@ -104,6 +178,37 @@ const dateFormat = new Intl.DateTimeFormat('he-IL', { day: 'numeric', month: 'lo
 		border-bottom: none;
 	}
 
+	.total-row {
+		border-top: 2px solid var(--color-border);
+		border-bottom: none;
+		margin-top: 0.25rem;
+		padding-top: 0.75rem;
+	}
+
+	.total-row .aliyah-name,
+	.total-row .price {
+		color: var(--color-accent);
+	}
+
+	.summaries-grid {
+		display: grid;
+		gap: 1rem;
+		grid-template-columns: repeat(auto-fit, minmax(14rem, 1fr));
+	}
+
+	.summary-list {
+		display: grid;
+		gap: 0.25rem;
+	}
+
+	.summary-list .sale-row {
+		justify-content: space-between;
+	}
+
+	.summary-list .price {
+		flex: none;
+	}
+
 	.aliyah-name {
 		font-weight: 700;
 		color: var(--color-primary);
@@ -135,6 +240,14 @@ const dateFormat = new Intl.DateTimeFormat('he-IL', { day: 'numeric', month: 'lo
 		cursor: pointer;
 		font-weight: 700;
 		color: var(--color-primary);
+		display: flex;
+		justify-content: space-between;
+		gap: 1rem;
+		flex-wrap: wrap;
+	}
+
+	.summary-total {
+		color: var(--color-accent);
 	}
 
 	.history-item .sales-list {
