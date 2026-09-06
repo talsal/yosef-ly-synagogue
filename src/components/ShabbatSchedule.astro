@@ -51,6 +51,23 @@ import { withBase } from '../data/site';
 	<p class="signature">רב הקהילה הרב אופיר בן סעדון והוועד</p>
 </template>
 
+<template id="special-schedule-template">
+	<h3 class="special-title"></h3>
+	<div class="special-days"></div>
+	<p class="signature special-note"></p>
+</template>
+
+<template id="special-day-template">
+	<div class="special-day">
+		<h4></h4>
+		<dl></dl>
+	</div>
+</template>
+
+<template id="special-item-template">
+	<div><dt></dt><dd></dd></div>
+</template>
+
 <style>
 	.shabbat-schedule {
 		display: grid;
@@ -125,11 +142,32 @@ import { withBase } from '../data/site';
 		margin-top: 0.5rem;
 		max-width: none;
 	}
+
+	.special-title {
+		margin: 0 0 0.5rem;
+		text-align: center;
+	}
+
+	.special-days {
+		display: grid;
+		gap: 1.5rem;
+		grid-template-columns: repeat(auto-fit, minmax(16rem, 1fr));
+	}
+
+	.special-day h4 {
+		margin: 0 0 0.5rem;
+		color: var(--color-primary);
+	}
+
+	.special-note {
+		font-style: normal;
+	}
 </style>
 
 <script>
 	import { fetchShabbatTimes } from '../lib/hebcal';
-	import { computeWeeklySchedule, type WeeklySchedule } from '../lib/shabbatCompute';
+	import { computeWeeklySchedule, toIsraelIsoDate, type WeeklySchedule } from '../lib/shabbatCompute';
+	import { SPECIAL_SCHEDULES } from '../data/specialSchedule';
 
 	const CSV_FIELDS = [
 		'shiur_before_shacharit',
@@ -144,9 +182,47 @@ import { withBase } from '../data/site';
 		'arvit_motzash',
 	] as const satisfies readonly (keyof WeeklySchedule)[];
 
+	function renderSpecial(container: HTMLElement, special: (typeof SPECIAL_SCHEDULES)[number]) {
+		const specialTemplate = document.querySelector<HTMLTemplateElement>('#special-schedule-template');
+		const dayTemplate = document.querySelector<HTMLTemplateElement>('#special-day-template');
+		const itemTemplate = document.querySelector<HTMLTemplateElement>('#special-item-template');
+		if (!specialTemplate || !dayTemplate || !itemTemplate) return;
+
+		const fragment = specialTemplate.content.cloneNode(true) as DocumentFragment;
+		fragment.querySelector('.special-title')!.textContent = special.title;
+		fragment.querySelector('.special-note')!.textContent = special.closingNote;
+
+		const daysContainer = fragment.querySelector('.special-days')!;
+		for (const day of special.days) {
+			const dayFragment = dayTemplate.content.cloneNode(true) as DocumentFragment;
+			dayFragment.querySelector('h4')!.textContent = `${day.label} – ${day.dateLabel}`;
+			const dl = dayFragment.querySelector('dl')!;
+			for (const item of day.items) {
+				const itemFragment = itemTemplate.content.cloneNode(true) as DocumentFragment;
+				itemFragment.querySelector('dt')!.textContent = item.time;
+				itemFragment.querySelector('dd')!.textContent = item.text;
+				dl.appendChild(itemFragment);
+			}
+			daysContainer.appendChild(dayFragment);
+		}
+
+		container.replaceChildren(fragment);
+	}
+
 	async function render() {
 		const container = document.querySelector<HTMLElement>('.shabbat-schedule');
 		if (!container) return;
+
+		// בדיקת לוח מיוחד (חג) קודם, לפי טווח תאריכים בלבד — בלי תלות
+		// ב"הדלקת הנרות הקרובה" של Hebcal, כדי לא להישבר כשהיא מתקדמת ליום ב' של חג
+		const todayIsrael = toIsraelIsoDate(new Date());
+		const special = SPECIAL_SCHEDULES.find(
+			(s) => todayIsrael >= s.activeFrom && todayIsrael <= s.activeUntil,
+		);
+		if (special) {
+			renderSpecial(container, special);
+			return;
+		}
 
 		const shabbatTimes = await fetchShabbatTimes().catch(() => null);
 
@@ -166,7 +242,8 @@ import { withBase } from '../data/site';
 		const parashaEl = fragment.querySelector('.parasha')!;
 		const summaryEl = fragment.querySelector('.times-summary')!;
 
-		parashaEl.textContent = shabbatTimes.parasha ? `פרשת ${shabbatTimes.parasha}` : 'לוח השבת';
+		// shabbatTimes.parasha מגיע כבר עם הקידומת "פרשת" מ-Hebcal (למשל "פרשת נח")
+		parashaEl.textContent = shabbatTimes.parasha || 'לוח השבת';
 		summaryEl.textContent = `כניסת שבת ${shabbatTimes.candleLighting} · יציאת שבת ${shabbatTimes.havdalah}`;
 
 		const schedule = computeWeeklySchedule(shabbatTimes.candleLightingDate, shabbatTimes.havdalahDate);

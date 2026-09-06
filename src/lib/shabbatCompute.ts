@@ -52,7 +52,7 @@ function formatTime(date: Date): string {
 	}).format(date);
 }
 
-function toIsraelIsoDate(date: Date): string {
+export function toIsraelIsoDate(date: Date): string {
 	// en-CA נותן yyyy-mm-dd
 	return new Intl.DateTimeFormat('en-CA', { timeZone: 'Asia/Jerusalem' }).format(date);
 }
