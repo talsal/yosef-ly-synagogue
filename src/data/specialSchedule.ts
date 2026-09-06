@@ -25,7 +25,7 @@ export interface SpecialSchedule {
 
 export const SPECIAL_SCHEDULES: SpecialSchedule[] = [
 	{
-		activeFrom: '2026-09-07',
+		activeFrom: '2026-09-06',
 		activeUntil: '2026-09-13',
 		title: 'זמני תפילה לראש השנה תשפ"ז — קהילת ניצוץ הקדושה (יוסף לי)',
 		closingNote: 'יהי רצון שיתקבלו כל תפילותינו ונכתב בספר חיים טובים וארוכים ולשלום — אמן',
