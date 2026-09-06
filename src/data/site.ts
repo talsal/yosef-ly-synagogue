@@ -58,6 +58,7 @@ export const NAV_ITEMS: NavItem[] = [
 	{ label: 'תרומות', href: '/donations' },
 	{ label: 'עליות לתורה', href: '/aliyot' },
 	{ label: 'תורנים', href: '/toranim' },
+	{ label: 'מקומות ישיבה', href: '/seating' },
 	{ label: 'אודות', href: '/about' },
 	{ label: 'חברות', href: '/membership' },
 	{ label: 'גלריה', href: '/gallery' },

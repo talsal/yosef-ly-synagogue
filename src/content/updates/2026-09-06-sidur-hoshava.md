@@ -16,3 +16,5 @@ title: סידור מקומות ישיבה לחברי העמותה
 תודה על ההבנה ושיתוף הפעולה.
 
 [לצפייה בסידור הישיבה (PDF)](/yosef-ly-synagogue/documents/sidur-hoshava-2026-09.pdf)
+
+אפשר גם [לחפש כאן את מספר הכיסא שלכם](/yosef-ly-synagogue/seating) לפי שם.

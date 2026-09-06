@@ -1,0 +1,124 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { withBase } from '../data/site';
+---
+
+<BaseLayout title="מקומות ישיבה" description="חיפוש מקום הישיבה שלך באולם התפילה, לפי סידור ההושבה של חברי העמותה">
+	<div class="container section">
+		<h1>מקומות ישיבה</h1>
+		<p>
+			מתפלל יקר, הזן את שמך למטה ותוכל לדעת באיזה כיסא/כיסאות אתה יושב, לפי סידור ההושבה של
+			חברי העמותה.
+		</p>
+		<p class="note">
+			החיפוש מכסה כרגע רק את עזרת הגברים. לצפייה בסידור המלא ראו את
+			<a href={withBase('/updates')}>עמוד העדכונים</a>.
+		</p>
+
+		<div class="search-box">
+			<label for="name-search">שם (שם משפחה ושם פרטי, בכל סדר)</label>
+			<input id="name-search" type="text" placeholder="לדוגמה: כהן דוד" autocomplete="off" />
+		</div>
+
+		<div class="results" aria-live="polite">
+			<p class="hint-state">הקלידו שם כדי לראות תוצאות.</p>
+		</div>
+	</div>
+</BaseLayout>
+
+<style>
+	.note {
+		color: var(--color-text-muted);
+		font-size: 0.9rem;
+	}
+
+	.search-box {
+		display: grid;
+		gap: 0.4rem;
+		max-width: 24rem;
+		margin: 1.5rem 0;
+	}
+
+	.search-box label {
+		font-weight: 600;
+	}
+
+	.search-box input {
+		padding: 0.6rem 0.8rem;
+		border-radius: var(--radius);
+		border: 1px solid var(--color-border);
+		font-size: 1rem;
+		background: var(--color-surface);
+		color: var(--color-text);
+	}
+
+	.results {
+		display: grid;
+		gap: 0.75rem;
+	}
+
+	.hint-state,
+	:global(.empty-state) {
+		color: var(--color-text-muted);
+	}
+
+	.results :global(.seat-card) {
+		margin: 0;
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
+		gap: 1rem;
+		flex-wrap: wrap;
+	}
+
+	.results :global(.seat-card .seat-name) {
+		font-weight: 600;
+	}
+
+	.results :global(.seat-card .seat-numbers) {
+		color: var(--color-accent);
+		font-weight: 700;
+	}
+</style>
+
+<script>
+	import { MENS_SEATING } from '../data/seating';
+	import { escapeHtml } from '../lib/csv';
+
+	const input = document.querySelector<HTMLInputElement>('#name-search');
+	const results = document.querySelector<HTMLElement>('.results');
+
+	function render() {
+		if (!input || !results) return;
+		const query = input.value.trim();
+
+		if (!query) {
+			results.innerHTML = '<p class="hint-state">הקלידו שם כדי לראות תוצאות.</p>';
+			return;
+		}
+
+		const tokens = query.split(/\s+/).filter(Boolean);
+		const matches = MENS_SEATING.filter((entry) =>
+			tokens.every((token) => entry.name.includes(token)),
+		);
+
+		if (matches.length === 0) {
+			results.innerHTML = '<p class="empty-state">לא נמצא מתפלל בשם זה בעזרת הגברים.</p>';
+			return;
+		}
+
+		results.innerHTML = matches
+			.map((entry) => {
+				const seatWord = entry.seats.length > 1 ? 'כיסאות' : 'כיסא';
+				return `
+					<div class="card seat-card">
+						<span class="seat-name">${escapeHtml(entry.name)}</span>
+						<span class="seat-numbers">${seatWord} ${entry.seats.map(escapeHtml).join(', ')}</span>
+					</div>
+				`;
+			})
+			.join('');
+	}
+
+	input?.addEventListener('input', render);
+</script>
