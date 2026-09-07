@@ -1,6 +1,8 @@
 ---
+import { Image } from 'astro:assets';
 import BaseLayout from '../layouts/BaseLayout.astro';
 import { withBase } from '../data/site';
+import seatingFloorPlan from '../assets/images/seating-floor-plan-mens.png';
 ---
 
 <BaseLayout title="מקומות ישיבה" description="חיפוש מקום הישיבה שלך באולם התפילה, לפי סידור ההושבה של חברי העמותה">
@@ -22,6 +24,15 @@ import { withBase } from '../data/site';
 
 		<div class="results" aria-live="polite">
 			<p class="hint-state">הקלידו שם כדי לראות תוצאות.</p>
+		</div>
+
+		<div class="map-section" hidden>
+			<h2>מיקום על המפה</h2>
+			<p class="map-note">עזרת הגברים, מבט מלמעלה. הכיסא/כיסאות שנמצאו מסומנים באדום.</p>
+			<div class="map-wrapper">
+				<Image src={seatingFloorPlan} alt="מפת עזרת הגברים עם מספרי הכיסאות" widths={[600, 960, 1400]} sizes="(min-width: 60rem) 50rem, 100vw" />
+				<div class="pins-layer"></div>
+			</div>
 		</div>
 	</div>
 </BaseLayout>
@@ -79,14 +90,77 @@ import { withBase } from '../data/site';
 		color: var(--color-accent);
 		font-weight: 700;
 	}
+
+	.map-section {
+		margin-top: 2rem;
+	}
+
+	.map-note {
+		color: var(--color-text-muted);
+		font-size: 0.9rem;
+	}
+
+	.map-wrapper {
+		position: relative;
+		max-width: 50rem;
+		border: 1px solid var(--color-border);
+		border-radius: var(--radius);
+		overflow: hidden;
+	}
+
+	.map-wrapper :global(img) {
+		display: block;
+		width: 100%;
+		height: auto;
+	}
+
+	.pins-layer {
+		position: absolute;
+		inset: 0;
+	}
+
+	.pins-layer :global(.map-pin) {
+		position: absolute;
+		width: 1.4rem;
+		height: 1.4rem;
+		margin-left: -0.7rem;
+		margin-top: -0.7rem;
+		border-radius: 50%;
+		background: rgba(220, 38, 38, 0.55);
+		border: 2px solid #dc2626;
+		box-shadow: 0 0 0 3px rgba(220, 38, 38, 0.2);
+	}
 </style>
 
 <script>
 	import { MENS_SEATING } from '../data/seating';
 	import { escapeHtml } from '../lib/csv';
+	import { SEAT_MAP_POSITIONS } from '../data/seatingMap';
 
 	const input = document.querySelector<HTMLInputElement>('#name-search');
 	const results = document.querySelector<HTMLElement>('.results');
+	const mapSection = document.querySelector<HTMLElement>('.map-section');
+	const pinsLayer = document.querySelector<HTMLElement>('.pins-layer');
+
+	function updateMap(matches: (typeof MENS_SEATING)[number][]) {
+		if (!mapSection || !pinsLayer) return;
+
+		const seats = [...new Set(matches.flatMap((entry) => entry.seats))];
+		if (seats.length === 0) {
+			mapSection.hidden = true;
+			pinsLayer.innerHTML = '';
+			return;
+		}
+
+		pinsLayer.innerHTML = seats
+			.map((seat) => {
+				const pos = SEAT_MAP_POSITIONS[seat];
+				if (!pos) return '';
+				return `<div class="map-pin" style="left:${pos.left}%;top:${pos.top}%" title="כיסא ${escapeHtml(seat)}"></div>`;
+			})
+			.join('');
+		mapSection.hidden = false;
+	}
 
 	function render() {
 		if (!input || !results) return;
@@ -94,6 +168,7 @@ import { withBase } from '../data/site';
 
 		if (!query) {
 			results.innerHTML = '<p class="hint-state">הקלידו שם כדי לראות תוצאות.</p>';
+			updateMap([]);
 			return;
 		}
 
@@ -104,6 +179,7 @@ import { withBase } from '../data/site';
 
 		if (matches.length === 0) {
 			results.innerHTML = '<p class="empty-state">לא נמצא מתפלל בשם זה בעזרת הגברים.</p>';
+			updateMap([]);
 			return;
 		}
 
@@ -118,6 +194,7 @@ import { withBase } from '../data/site';
 				`;
 			})
 			.join('');
+		updateMap(matches);
 	}
 
 	input?.addEventListener('input', render);
