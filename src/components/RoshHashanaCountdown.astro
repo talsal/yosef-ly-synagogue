@@ -1,0 +1,96 @@
+---
+// ספירה לאחור לכניסת ראש השנה תשפ"ז — יעד קבוע (18:33, כניסת החג ביום שישי
+// 11/09/2026, לפי לוח הזמנים המיוחד בעמוד "זמני תפילות"). רכיב חד-פעמי
+// לעונה הזו בלבד, לא מחושב אוטומטית לשנים הבאות.
+const TARGET_ISO = '2026-09-11T18:33:00+03:00';
+---
+
+<div class="countdown card" data-target={TARGET_ISO}>
+	<p class="countdown-title">לקראת ראש השנה תשפ"ז</p>
+	<div class="countdown-numbers">
+		<div><dd data-unit="days">0</dd><dt>ימים</dt></div>
+		<div><dd data-unit="hours">0</dd><dt>שעות</dt></div>
+		<div><dd data-unit="minutes">0</dd><dt>דקות</dt></div>
+		<div><dd data-unit="seconds">0</dd><dt>שניות</dt></div>
+	</div>
+</div>
+
+<style>
+	.countdown {
+		text-align: center;
+	}
+
+	.countdown-title {
+		margin: 0 0 0.75rem;
+		font-weight: 700;
+		color: var(--color-primary);
+		font-size: 1.15rem;
+	}
+
+	.countdown-numbers {
+		display: flex;
+		justify-content: center;
+		gap: 1.5rem;
+		flex-wrap: wrap;
+	}
+
+	.countdown-numbers div {
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		min-width: 3.5rem;
+	}
+
+	.countdown-numbers dd {
+		margin: 0;
+		font-weight: 700;
+		font-size: 2rem;
+		color: var(--color-accent);
+		font-variant-numeric: tabular-nums;
+	}
+
+	.countdown-numbers dt {
+		margin-top: 0.2rem;
+		color: var(--color-text-muted);
+		font-size: 0.85rem;
+	}
+</style>
+
+<script>
+	function render() {
+		const container = document.querySelector<HTMLElement>('.countdown');
+		if (!container) return;
+
+		const target = new Date(container.dataset.target ?? '').getTime();
+		let intervalId: ReturnType<typeof setInterval> | undefined;
+
+		function tick() {
+			const diff = target - Date.now();
+
+			if (diff <= 0) {
+				container!.innerHTML = '<p class="countdown-title">חג שמח! ראש השנה תשפ"ז 🍎🍯</p>';
+				clearInterval(intervalId);
+				return;
+			}
+
+			const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+			const hours = Math.floor((diff / (1000 * 60 * 60)) % 24);
+			const minutes = Math.floor((diff / (1000 * 60)) % 60);
+			const seconds = Math.floor((diff / 1000) % 60);
+
+			const setUnit = (unit: string, value: number) => {
+				const el = container!.querySelector<HTMLElement>(`[data-unit="${unit}"]`);
+				if (el) el.textContent = String(value);
+			};
+			setUnit('days', days);
+			setUnit('hours', hours);
+			setUnit('minutes', minutes);
+			setUnit('seconds', seconds);
+		}
+
+		tick();
+		intervalId = setInterval(tick, 1000);
+	}
+
+	render();
+</script>
