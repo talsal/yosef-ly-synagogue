@@ -9,6 +9,10 @@ import { NEIGHBORHOOD, SITE_NAME, SITE_TAGLINE, withBase } from '../data/site';
 ---
 
 <BaseLayout title={SITE_NAME}>
+	<section class="section container">
+		<RoshHashanaCountdown />
+	</section>
+
 	<section class="hero">
 		<Image
 			src={exteriorFullTwilight}
@@ -28,10 +32,6 @@ import { NEIGHBORHOOD, SITE_NAME, SITE_TAGLINE, withBase } from '../data/site';
 				<a class="button button-outline" href={withBase('/donations')}>לתרומה</a>
 			</div>
 		</div>
-	</section>
-
-	<section class="section container">
-		<RoshHashanaCountdown />
 	</section>
 
 	<section class="section container">
