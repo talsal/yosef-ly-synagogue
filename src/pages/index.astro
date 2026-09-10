@@ -1,6 +1,7 @@
 ---
 import { Image } from 'astro:assets';
 import exteriorFullTwilight from '../assets/images/exterior-full-twilight.jpeg';
+import CelebrationBanner from '../components/CelebrationBanner.astro';
 import HebrewDateToday from '../components/HebrewDateToday.astro';
 import RoshHashanaCountdown from '../components/RoshHashanaCountdown.astro';
 import UpcomingTimes from '../components/UpcomingTimes.astro';
@@ -9,6 +10,10 @@ import { NEIGHBORHOOD, SITE_NAME, SITE_TAGLINE, withBase } from '../data/site';
 ---
 
 <BaseLayout title={SITE_NAME}>
+	<section class="container celebration-section">
+		<CelebrationBanner />
+	</section>
+
 	<section class="section container">
 		<RoshHashanaCountdown />
 	</section>
@@ -66,6 +71,10 @@ import { NEIGHBORHOOD, SITE_NAME, SITE_TAGLINE, withBase } from '../data/site';
 </BaseLayout>
 
 <style>
+	.celebration-section {
+		padding-top: 1.5rem;
+	}
+
 	.hero {
 		position: relative;
 		color: #fff;

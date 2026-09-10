@@ -1,0 +1,155 @@
+---
+// באנר חגיגה חד-פעמי לרגל קבלת תעודת הגמר לבית הכנסת (ראו עדכון
+// 2026-09-10-teudat-gamar). מוצג פעם אחת בלבד לכל מבקר (localStorage) —
+// לא חוסם את הדף, ניתן לסגירה. רכיב זמני לעונה הזו בלבד — יש להסיר את
+// הקריאה לו מ-index.astro כשההודעה כבר לא רלוונטית (כעבור שבוע-שבועיים).
+import { withBase } from '../data/site';
+---
+
+<div class="celebration-banner" hidden>
+	<canvas class="confetti-canvas"></canvas>
+	<div class="celebration-content card">
+		<button class="close-button" type="button" aria-label="סגירה">&times;</button>
+		<p class="celebration-message">🎉 קיבלנו תעודת גמר לבית הכנסת! 🎉</p>
+		<a href={withBase('/updates')}>לפרטים &larr;</a>
+	</div>
+</div>
+
+<style>
+	.celebration-banner {
+		position: relative;
+		margin-bottom: 1.5rem;
+	}
+
+	.confetti-canvas {
+		position: fixed;
+		inset: 0;
+		width: 100%;
+		height: 100%;
+		pointer-events: none;
+		z-index: 100;
+	}
+
+	.celebration-content {
+		position: relative;
+		text-align: center;
+		background: var(--color-accent-light);
+		border-color: var(--color-accent);
+	}
+
+	.celebration-message {
+		margin: 0 0 0.4rem;
+		font-weight: 700;
+		font-size: 1.2rem;
+		color: var(--color-primary);
+	}
+
+	.celebration-content a {
+		font-weight: 600;
+	}
+
+	.close-button {
+		position: absolute;
+		top: 0.5rem;
+		left: 0.5rem;
+		background: none;
+		border: none;
+		font-size: 1.5rem;
+		line-height: 1;
+		cursor: pointer;
+		color: var(--color-text-muted);
+		padding: 0.2rem 0.5rem;
+	}
+
+	.close-button:hover {
+		color: var(--color-primary);
+	}
+</style>
+
+<script>
+	const STORAGE_KEY = 'teudat-gamar-celebration-seen';
+
+	function launchConfetti(canvas: HTMLCanvasElement) {
+		const ctx = canvas.getContext('2d');
+		if (!ctx) return;
+
+		function resize() {
+			canvas.width = window.innerWidth;
+			canvas.height = window.innerHeight;
+		}
+		resize();
+		window.addEventListener('resize', resize);
+
+		const colors = ['#a97c1f', '#f2e4c2', '#2b6cb0', '#38a169', '#e53e3e', '#d69e2e'];
+		const pieces = Array.from({ length: 140 }, () => ({
+			x: Math.random() * canvas.width,
+			y: -20 - Math.random() * canvas.height * 0.5,
+			size: 6 + Math.random() * 6,
+			color: colors[Math.floor(Math.random() * colors.length)],
+			speedY: 2 + Math.random() * 3,
+			speedX: -1.5 + Math.random() * 3,
+			rotation: Math.random() * 360,
+			rotationSpeed: -6 + Math.random() * 12,
+		}));
+
+		const duration = 3500;
+		const start = performance.now();
+
+		function frame(now: number) {
+			const elapsed = now - start;
+			ctx!.clearRect(0, 0, canvas.width, canvas.height);
+
+			for (const p of pieces) {
+				p.x += p.speedX;
+				p.y += p.speedY;
+				p.rotation += p.rotationSpeed;
+
+				ctx!.save();
+				ctx!.translate(p.x, p.y);
+				ctx!.rotate((p.rotation * Math.PI) / 180);
+				ctx!.fillStyle = p.color;
+				ctx!.fillRect(-p.size / 2, -p.size / 2, p.size, p.size * 0.6);
+				ctx!.restore();
+			}
+
+			if (elapsed < duration) {
+				requestAnimationFrame(frame);
+			} else {
+				window.removeEventListener('resize', resize);
+				canvas.remove();
+			}
+		}
+		requestAnimationFrame(frame);
+	}
+
+	function init() {
+		const banner = document.querySelector<HTMLElement>('.celebration-banner');
+		if (!banner) return;
+
+		let alreadySeen = false;
+		try {
+			alreadySeen = localStorage.getItem(STORAGE_KEY) === '1';
+		} catch {
+			alreadySeen = false;
+		}
+		if (alreadySeen) return;
+
+		banner.hidden = false;
+
+		const canvas = banner.querySelector<HTMLCanvasElement>('.confetti-canvas');
+		if (canvas) launchConfetti(canvas);
+
+		try {
+			localStorage.setItem(STORAGE_KEY, '1');
+		} catch {
+			/* פרטי/ללא localStorage -- לא נורא, פשוט יוצג שוב בפעם הבאה */
+		}
+
+		banner.querySelector('.close-button')?.addEventListener('click', () => {
+			banner.hidden = true;
+			canvas?.remove();
+		});
+	}
+
+	init();
+</script>
