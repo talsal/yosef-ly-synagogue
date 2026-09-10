@@ -1,8 +1,9 @@
 ---
-// באנר חגיגה חד-פעמי לרגל קבלת תעודת הגמר לבית הכנסת (ראו עדכון
-// 2026-09-10-teudat-gamar). מוצג פעם אחת בלבד לכל מבקר (localStorage) —
-// לא חוסם את הדף, ניתן לסגירה. רכיב זמני לעונה הזו בלבד — יש להסיר את
-// הקריאה לו מ-index.astro כשההודעה כבר לא רלוונטית (כעבור שבוע-שבועיים).
+// באנר חגיגה לרגל קבלת תעודת הגמר לבית הכנסת (ראו עדכון
+// 2026-09-10-teudat-gamar). מוצג בכל כניסה לדף הבית (לפי בקשת המשתמש) —
+// לא חוסם את הדף, ניתן לסגירה לצפייה הנוכחית. רכיב זמני לעונה הזו
+// בלבד — יש להסיר את הקריאה לו מ-index.astro כשההודעה כבר לא רלוונטית
+// (כעבור שבוע-שבועיים).
 import { withBase } from '../data/site';
 ---
 
@@ -67,8 +68,6 @@ import { withBase } from '../data/site';
 </style>
 
 <script>
-	const STORAGE_KEY = 'teudat-gamar-celebration-seen';
-
 	function launchConfetti(canvas: HTMLCanvasElement) {
 		const ctx = canvas.getContext('2d');
 		if (!ctx) return;
@@ -126,24 +125,10 @@ import { withBase } from '../data/site';
 		const banner = document.querySelector<HTMLElement>('.celebration-banner');
 		if (!banner) return;
 
-		let alreadySeen = false;
-		try {
-			alreadySeen = localStorage.getItem(STORAGE_KEY) === '1';
-		} catch {
-			alreadySeen = false;
-		}
-		if (alreadySeen) return;
-
 		banner.hidden = false;
 
 		const canvas = banner.querySelector<HTMLCanvasElement>('.confetti-canvas');
 		if (canvas) launchConfetti(canvas);
-
-		try {
-			localStorage.setItem(STORAGE_KEY, '1');
-		} catch {
-			/* פרטי/ללא localStorage -- לא נורא, פשוט יוצג שוב בפעם הבאה */
-		}
 
 		banner.querySelector('.close-button')?.addEventListener('click', () => {
 			banner.hidden = true;
