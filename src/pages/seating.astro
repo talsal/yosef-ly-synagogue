@@ -17,13 +17,20 @@ import seatingFloorPlan from '../assets/images/seating-floor-plan-mens.png';
 			<a href={withBase('/updates')}>עמוד העדכונים</a>.
 		</p>
 
-		<div class="search-box">
-			<label for="name-search">שם (שם משפחה ושם פרטי, בכל סדר)</label>
-			<input id="name-search" type="text" placeholder="לדוגמה: כהן דוד" autocomplete="off" />
+		<div class="search-row">
+			<div class="search-box">
+				<label for="name-search">חיפוש לפי שם (שם משפחה ושם פרטי, בכל סדר)</label>
+				<input id="name-search" type="text" placeholder="לדוגמה: כהן דוד" autocomplete="off" />
+			</div>
+
+			<div class="search-box">
+				<label for="seat-search">חיפוש לפי מספר כיסא</label>
+				<input id="seat-search" type="text" placeholder="לדוגמה: 37" autocomplete="off" inputmode="decimal" />
+			</div>
 		</div>
 
 		<div class="results" aria-live="polite">
-			<p class="hint-state">הקלידו שם כדי לראות תוצאות.</p>
+			<p class="hint-state">הקלידו שם או מספר כיסא כדי לראות תוצאות.</p>
 		</div>
 
 		<div class="map-section" hidden>
@@ -43,11 +50,18 @@ import seatingFloorPlan from '../assets/images/seating-floor-plan-mens.png';
 		font-size: 0.9rem;
 	}
 
+	.search-row {
+		display: flex;
+		gap: 1.5rem;
+		flex-wrap: wrap;
+		margin: 1.5rem 0;
+	}
+
 	.search-box {
 		display: grid;
 		gap: 0.4rem;
 		max-width: 24rem;
-		margin: 1.5rem 0;
+		flex: 1 1 16rem;
 	}
 
 	.search-box label {
@@ -133,14 +147,22 @@ import seatingFloorPlan from '../assets/images/seating-floor-plan-mens.png';
 </style>
 
 <script>
-	import { MENS_SEATING } from '../data/seating';
+	import { MENS_SEATING, VACANT_SEATS } from '../data/seating';
 	import { escapeHtml } from '../lib/csv';
 	import { SEAT_MAP_POSITIONS } from '../data/seatingMap';
 
-	const input = document.querySelector<HTMLInputElement>('#name-search');
+	const nameInput = document.querySelector<HTMLInputElement>('#name-search');
+	const seatInput = document.querySelector<HTMLInputElement>('#seat-search');
 	const results = document.querySelector<HTMLElement>('.results');
 	const mapSection = document.querySelector<HTMLElement>('.map-section');
 	const pinsLayer = document.querySelector<HTMLElement>('.pins-layer');
+
+	const seatToName = new Map<string, string>();
+	for (const entry of MENS_SEATING) {
+		for (const seat of entry.seats) {
+			seatToName.set(seat, entry.name);
+		}
+	}
 
 	function updateMap(matches: (typeof MENS_SEATING)[number][]) {
 		if (!mapSection || !pinsLayer) return;
@@ -162,13 +184,18 @@ import seatingFloorPlan from '../assets/images/seating-floor-plan-mens.png';
 		mapSection.hidden = false;
 	}
 
-	function render() {
-		if (!input || !results) return;
-		const query = input.value.trim();
+	function renderHint() {
+		if (!results) return;
+		results.innerHTML = '<p class="hint-state">הקלידו שם או מספר כיסא כדי לראות תוצאות.</p>';
+		updateMap([]);
+	}
+
+	function renderByName() {
+		if (!nameInput || !results) return;
+		const query = nameInput.value.trim();
 
 		if (!query) {
-			results.innerHTML = '<p class="hint-state">הקלידו שם כדי לראות תוצאות.</p>';
-			updateMap([]);
+			renderHint();
 			return;
 		}
 
@@ -197,5 +224,51 @@ import seatingFloorPlan from '../assets/images/seating-floor-plan-mens.png';
 		updateMap(matches);
 	}
 
-	input?.addEventListener('input', render);
+	function renderBySeat() {
+		if (!seatInput || !results) return;
+		const seat = seatInput.value.trim();
+
+		if (!seat) {
+			renderHint();
+			return;
+		}
+
+		const name = seatToName.get(seat);
+		if (name) {
+			results.innerHTML = `
+				<div class="card seat-card">
+					<span class="seat-name">${escapeHtml(name)}</span>
+					<span class="seat-numbers">כיסא ${escapeHtml(seat)}</span>
+				</div>
+			`;
+			updateMap([{ name, seats: [seat] }]);
+			return;
+		}
+
+		if (VACANT_SEATS.includes(seat)) {
+			results.innerHTML = `<p class="empty-state">כיסא ${escapeHtml(seat)} פנוי, אינו משויך לאף מתפלל כרגע.</p>`;
+			updateMap([{ name: '', seats: [seat] }]);
+			return;
+		}
+
+		if (SEAT_MAP_POSITIONS[seat]) {
+			// מספר כיסא תקין על המפה אך לא הופיע ברשימת התפוסים/הפנויים -- מקרה קצה, נציג בכל זאת
+			results.innerHTML = `<p class="empty-state">לא נמצא שיוך לכיסא ${escapeHtml(seat)}.</p>`;
+			updateMap([{ name: '', seats: [seat] }]);
+			return;
+		}
+
+		results.innerHTML = `<p class="empty-state">מספר כיסא ${escapeHtml(seat)} אינו קיים בעזרת הגברים.</p>`;
+		updateMap([]);
+	}
+
+	nameInput?.addEventListener('input', () => {
+		if (seatInput) seatInput.value = '';
+		renderByName();
+	});
+
+	seatInput?.addEventListener('input', () => {
+		if (nameInput) nameInput.value = '';
+		renderBySeat();
+	});
 </script>
