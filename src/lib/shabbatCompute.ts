@@ -32,7 +32,8 @@ export interface WeeklySchedule {
 	mincha_candle_time: string;
 	shiur_before_shacharit: string;
 	shacharit_time: string;
-	kiddush_toranim: string;
+	kiddush_time: string;
+	toranim_names: string;
 	shiur_after_kiddush: string;
 	shiur_afternoon: string;
 	mincha_shabbat: string;
@@ -74,7 +75,8 @@ export function computeWeeklySchedule(candleLighting: Date, havdalah: Date): Wee
 		mincha_candle_time: formatTime(candleLighting),
 		shiur_before_shacharit: `${FIXED_MORNING.shiurBeforeShacharit.time} – ${noBreak(FIXED_MORNING.shiurBeforeShacharit.teacher)}`,
 		shacharit_time: FIXED_MORNING.shacharit,
-		kiddush_toranim: `${FIXED_MORNING.kiddush} – ${toranimText}`,
+		kiddush_time: FIXED_MORNING.kiddush,
+		toranim_names: toranimText,
 		shiur_after_kiddush: `${FIXED_MORNING.shiurAfterKiddush.time} – ${noBreak(FIXED_MORNING.shiurAfterKiddush.teacher)}`,
 		shiur_afternoon: formatTime(addMinutes(havdalah, OFFSET_MINUTES.shiurAfternoon)),
 		mincha_shabbat: formatTime(addMinutes(havdalah, OFFSET_MINUTES.minchaShabbat)),

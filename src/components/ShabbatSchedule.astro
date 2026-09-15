@@ -27,7 +27,8 @@ import { withBase } from '../data/site';
 			<dl>
 				<div><dt>שיעור לפני שחרית</dt><dd data-field="shiur_before_shacharit"></dd></div>
 				<div><dt>שחרית</dt><dd data-field="shacharit_time"></dd></div>
-				<div><dt>קידוש &mdash; תורנים</dt><dd data-field="kiddush_toranim"></dd></div>
+				<div><dt>קידוש</dt><dd data-field="kiddush_time"></dd></div>
+				<div><dt>תורנים</dt><dd data-field="toranim_names"></dd></div>
 				<div><dt>שיעור אחרי קידוש</dt><dd data-field="shiur_after_kiddush"></dd></div>
 				<div><dt>שיעור אחה"צ</dt><dd data-field="shiur_afternoon"></dd></div>
 			</dl>
@@ -172,7 +173,8 @@ import { withBase } from '../data/site';
 	const CSV_FIELDS = [
 		'shiur_before_shacharit',
 		'shacharit_time',
-		'kiddush_toranim',
+		'kiddush_time',
+		'toranim_names',
 		'shiur_after_kiddush',
 		'shiur_afternoon',
 		'shir_hashirim_time',
