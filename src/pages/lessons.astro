@@ -2,9 +2,42 @@
 import { getCollection } from 'astro:content';
 import BaseLayout from '../layouts/BaseLayout.astro';
 
+const DAY_ORDER: Record<string, number> = {
+	'יום ראשון': 0,
+	'יום שני': 1,
+	'יום שלישי': 2,
+	'יום רביעי': 3,
+	'יום חמישי': 4,
+	'יום שישי': 5,
+	שבת: 6,
+};
+
+// זמן טקסט חופשי ("20:30", "20:00–21:30", "לפני מנחה") -- ממיר לדקות מתחילת
+// היום לצורך מיון; טקסט שלא מתחיל בשעה מספרית (כמו "לפני מנחה") מסודר אחרון
+// בתוך אותו יום, לא לפני שיעורים עם שעה ידועה.
+function timeSortKey(time: string): number {
+	const match = time.match(/^(\d{1,2}):(\d{2})/);
+	if (!match) return Infinity;
+	return Number(match[1]) * 60 + Number(match[2]);
+}
+
+function byDayThenTime(a: (typeof lessons)[number], b: (typeof lessons)[number]): number {
+	const dayDiff = (DAY_ORDER[a.data.day] ?? 99) - (DAY_ORDER[b.data.day] ?? 99);
+	if (dayDiff !== 0) return dayDiff;
+	return timeSortKey(a.data.time) - timeSortKey(b.data.time);
+}
+
 const lessons = await getCollection('lessons');
-const shabbatLessons = lessons.filter((l) => l.data.day === 'שבת');
-const weekdayLessons = lessons.filter((l) => l.data.day !== 'שבת');
+const shabbatLessons = lessons.filter((l) => l.data.day === 'שבת').sort(byDayThenTime);
+const weekdayLessons = lessons.filter((l) => l.data.day !== 'שבת').sort(byDayThenTime);
+
+// קיבוץ שיעורי החול לפי יום, בסדר הימים, כדי שיהיה ברור בבירור מה יש בכל יום
+const weekdayGroups: { day: string; entries: typeof weekdayLessons }[] = [];
+for (const lesson of weekdayLessons) {
+	const group = weekdayGroups.find((g) => g.day === lesson.data.day);
+	if (group) group.entries.push(lesson);
+	else weekdayGroups.push({ day: lesson.data.day, entries: [lesson] });
+}
 ---
 
 <BaseLayout title="שיעורי תורה" description="שיעורי התורה הקבועים בבית הכנסת יוסף-לי">
@@ -48,33 +81,38 @@ const weekdayLessons = lessons.filter((l) => l.data.day !== 'שבת');
 
 		<h2>שיעורי ימי חול</h2>
 		{
-			weekdayLessons.length === 0 ? (
+			weekdayGroups.length === 0 ? (
 				<p class="empty-state">אין כרגע שיעורי חול רשומים.</p>
 			) : (
-				<div class="lessons-grid">
-					{weekdayLessons.map(({ data }) => (
-						<div class="card">
-							<h3>{data.topic}</h3>
-							<p>
-								<strong>מעביר:</strong> {data.teacher}
-							</p>
-							<p>
-								<strong>מתי:</strong> {data.day}, {data.time}
-							</p>
-							{data.audience && (
-								<p>
-									<strong>קהל יעד:</strong> {data.audience}
-								</p>
-							)}
-							{data.location && (
-								<p>
-									<strong>מקום:</strong> {data.location}
-								</p>
-							)}
-							{data.note && <p class="note">{data.note}</p>}
+				weekdayGroups.map((group) => (
+					<div class="day-group">
+						<h3>{group.day}</h3>
+						<div class="lessons-grid">
+							{group.entries.map(({ data }) => (
+								<div class="card">
+									<h4>{data.topic}</h4>
+									<p>
+										<strong>מעביר:</strong> {data.teacher}
+									</p>
+									<p>
+										<strong>שעה:</strong> {data.time}
+									</p>
+									{data.audience && (
+										<p>
+											<strong>קהל יעד:</strong> {data.audience}
+										</p>
+									)}
+									{data.location && (
+										<p>
+											<strong>מקום:</strong> {data.location}
+										</p>
+									)}
+									{data.note && <p class="note">{data.note}</p>}
+								</div>
+							))}
 						</div>
-					))}
-				</div>
+					</div>
+				))
 			)
 		}
 	</div>
@@ -83,6 +121,21 @@ const weekdayLessons = lessons.filter((l) => l.data.day !== 'שבת');
 <style>
 	h2 {
 		margin-top: 2rem;
+	}
+
+	.day-group {
+		margin-top: 1.5rem;
+	}
+
+	.day-group h3 {
+		margin: 0;
+		padding-bottom: 0.35rem;
+		border-bottom: 2px solid var(--color-accent);
+		color: var(--color-primary);
+	}
+
+	.day-group .lessons-grid {
+		margin-top: 1rem;
 	}
 
 	.empty-state {
