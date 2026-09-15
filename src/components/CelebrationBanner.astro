@@ -11,7 +11,9 @@ import { withBase } from '../data/site';
 	<canvas class="confetti-canvas"></canvas>
 	<div class="celebration-content card">
 		<button class="close-button" type="button" aria-label="סגירה">&times;</button>
-		<p class="celebration-message">🎉 קיבלנו תעודת גמר לבית הכנסת! 🎉</p>
+		<p class="celebration-message">
+			<span aria-hidden="true">🎉</span> קיבלנו תעודת גמר לבית הכנסת! <span aria-hidden="true">🎉</span>
+		</p>
 		<a href={withBase('/updates')}>לפרטים &larr;</a>
 	</div>
 </div>

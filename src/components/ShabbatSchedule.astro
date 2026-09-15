@@ -230,7 +230,7 @@ import { withBase } from '../data/site';
 			const base = import.meta.env.BASE_URL.endsWith('/')
 				? import.meta.env.BASE_URL
 				: `${import.meta.env.BASE_URL}/`;
-			container.innerHTML = `<p class="error-state">לא ניתן לטעון כרגע את לוח השבת. אפשר לפנות אלינו ב<a href="${base}contact">יצירת קשר</a>.</p>`;
+			container.innerHTML = `<p class="error-state" role="alert">לא ניתן לטעון כרגע את לוח השבת. אפשר לפנות אלינו ב<a href="${base}contact">יצירת קשר</a>.</p>`;
 			return;
 		}
 

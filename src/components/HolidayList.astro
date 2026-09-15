@@ -49,7 +49,7 @@
 		const holidays = await fetchUpcomingHolidays().catch(() => []);
 
 		if (holidays.length === 0) {
-			container.innerHTML = '<p class="error-state">לא ניתן לטעון כרגע את לוח החגים.</p>';
+			container.innerHTML = '<p class="error-state" role="alert">לא ניתן לטעון כרגע את לוח החגים.</p>';
 			return;
 		}
 

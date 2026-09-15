@@ -62,7 +62,7 @@
 		const times = await fetchShabbatTimes().catch(() => null);
 
 		if (!times) {
-			container.innerHTML = '<p class="error-state">לא ניתן לטעון כרגע את זמני השבת.</p>';
+			container.innerHTML = '<p class="error-state" role="alert">לא ניתן לטעון כרגע את זמני השבת.</p>';
 			return;
 		}
 

@@ -1,0 +1,116 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { SITE_NAME, withBase } from '../data/site';
+
+const lastUpdated = new Intl.DateTimeFormat('he-IL', { day: 'numeric', month: 'long', year: 'numeric' }).format(
+	new Date('2026-09-15'),
+);
+---
+
+<BaseLayout title="הצהרת נגישות" description={`הצהרת נגישות לאתר ${SITE_NAME}`}>
+	<div class="container section">
+		<h1>הצהרת נגישות</h1>
+
+		<div class="card">
+			<h2>המחויבות שלנו</h2>
+			<p>
+				אנו רואים חשיבות רבה במתן שירות שוויוני ונגיש לכלל הגולשים באתר, לרבות אנשים עם מוגבלות.
+				האתר תוכנן ונבנה תוך שאיפה לעמוד בדרישות תקן ישראלי ת"י 5568 לנגישות תכנים באינטרנט ברמת
+				AA, המבוסס על הנחיות WCAG 2.1 הבינלאומיות.
+			</p>
+		</div>
+
+		<div class="card">
+			<h2>ההתאמות שבוצעו באתר</h2>
+			<ul>
+				<li>קישור &quot;דלג לתוכן העמוד&quot; המופיע בתחילת כל עמוד עבור משתמשי מקלדת וקוראי מסך.</li>
+				<li>מבנה עמוד סמנטי עם אזור <code>main</code> יחיד לתוכן המרכזי, ותגי כותרות (h1&ndash;h4) בסדר היררכי רציף.</li>
+				<li>טקסט חלופי (alt) תיאורי לכל התמונות המשמעותיות באתר; סמלים ואמוג&apos;י דקורטיביים מוסתרים מקוראי מסך.</li>
+				<li>
+					אזורי תוכן המתעדכנים באופן דינמי (זמני תפילה, לוח שבת, לוח חגים, רשימות אזכרות ורפואה
+					שלמה, תוצאות חיפוש מקום ישיבה) מסומנים כ&quot;אזור חי&quot; (aria-live) כך שההתעדכנות
+					מדווחת אוטומטית למשתמשי קוראי מסך; הודעות שגיאה בטעינת מידע מסומנות ברמת דחיפות גבוהה
+					יותר (role=&quot;alert&quot;).
+				</li>
+				<li>ניגודיות צבעים בין טקסט לרקע נבדקה ותוקנה בהתאם ליחס המינימלי הנדרש בתקן (4.5:1 לטקסט רגיל).</li>
+				<li>
+					כל האלמנטים האינטראקטיביים (קישורים, כפתורים, שדות טופס) נגישים ופעילים באמצעות מקלדת
+					בלבד (Tab, Enter, Space), עם מסגרת מיקוד (focus) גלויה וברורה.
+				</li>
+				<li>שדות טופס מקושרים לתווית (label) ברורה.</li>
+				<li>גודל גופן בסיס מוגדל (כ-18 פיקסל) לנוחות קריאה, ותמיכה מלאה בכיווניות RTL.</li>
+			</ul>
+		</div>
+
+		<div class="card">
+			<h2>מגבלות ידועות</h2>
+			<ul>
+				<li>
+					הספירה לאחור (כאשר מוצגת) אינה מדווחת בכל שנייה לקוראי מסך, כדי למנוע הצפה של הודעות
+					&ndash; זוהי בחירה מכוונת ולא תקלה.
+				</li>
+				<li>
+					חלק מהתוכן באתר (למשל טפסים חיצוניים של Google Forms, מפת Google Maps, ועמוד התרומות
+					של jGive) מסופק על ידי שירותי צד שלישי שאין לנו שליטה מלאה על נגישותם.
+				</li>
+				<li>
+					זהו סבב עדכון ראשון ולא בוצעה עדיין בדיקת נגישות פורמלית על ידי גורם מוסמך חיצוני. אנו
+					ממשיכים לעבוד על שיפור הנגישות באופן שוטף.
+				</li>
+			</ul>
+		</div>
+
+		<div class="card">
+			<h2>נתקלתם בבעיית נגישות?</h2>
+			<p>
+				נשמח לשמוע ולטפל בכל בעיה. ניתן לפנות אלינו דרך עמוד
+				<a href={withBase('/contact')}>יצירת קשר</a>, או ישירות לאחראי הטכני של האתר:
+			</p>
+			<dl class="details">
+				<div><dt>טלפון</dt><dd><a href="tel:0505991972">050-599-1972</a></dd></div>
+				<div><dt>מייל</dt><dd><a href="mailto:tal.salman@gmail.com">tal.salman@gmail.com</a></dd></div>
+			</dl>
+		</div>
+
+		<p class="updated-note">הצהרה זו עודכנה לאחרונה בתאריך {lastUpdated}.</p>
+	</div>
+</BaseLayout>
+
+<style>
+	.card {
+		margin-bottom: 1.5rem;
+	}
+
+	.card ul {
+		margin: 0.5rem 0 0;
+		padding-inline-start: 1.25rem;
+		display: grid;
+		gap: 0.6rem;
+	}
+
+	.details {
+		margin: 1rem 0 0;
+	}
+
+	.details div {
+		display: flex;
+		justify-content: space-between;
+		gap: 1rem;
+		padding-block: 0.4rem;
+		border-bottom: 1px dashed var(--color-border);
+	}
+
+	.details dt {
+		color: var(--color-text-muted);
+	}
+
+	.details dd {
+		margin: 0;
+		font-weight: 600;
+	}
+
+	.updated-note {
+		color: var(--color-text-muted);
+		font-size: 0.9rem;
+	}
+</style>
