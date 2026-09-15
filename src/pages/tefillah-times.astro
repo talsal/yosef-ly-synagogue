@@ -17,7 +17,16 @@ import { WEEKDAY_TIMES } from '../data/prayerTimes';
 
 		<section class="section">
 			<h2>ימות החול</h2>
-			<div class="grid weekday-grid">
+
+			<div class="card special-weekday-times" id="special-weekday-times" hidden>
+				<h3>זמני חול &ndash; עשרת ימי תשובה (עד ערב יום כיפור, כולל)</h3>
+				<dl>
+					<div><dt>סליחות + שחרית</dt><dd>05:05</dd></div>
+					<div><dt>מנחה וערבית (צמודים)</dt><dd>18:35</dd></div>
+				</dl>
+			</div>
+
+			<div class="grid weekday-grid" id="regular-weekday-times">
 				<div class="card">
 					<h3>קיץ</h3>
 					<dl>
@@ -82,4 +91,47 @@ import { WEEKDAY_TIMES } from '../data/prayerTimes';
 		margin: 0;
 		font-weight: 600;
 	}
+
+	.special-weekday-times {
+		margin-bottom: 1rem;
+		background: var(--color-accent-light);
+		border-color: var(--color-accent);
+	}
+
+	.special-weekday-times dl {
+		margin: 0.5rem 0 0;
+	}
+
+	.special-weekday-times dl > div {
+		display: flex;
+		justify-content: space-between;
+		padding-block: 0.35rem;
+		border-bottom: 1px dashed var(--color-border);
+	}
+
+	.special-weekday-times dt {
+		color: var(--color-text-muted);
+	}
+
+	.special-weekday-times dd {
+		margin: 0;
+		font-weight: 700;
+		color: var(--color-primary);
+	}
 </style>
+
+<script>
+	import { toIsraelIsoDate } from '../lib/shabbatCompute';
+
+	// זמני חול מיוחדים לעשרת ימי תשובה, כפי שנמסרו על ידי הקהילה — בתוקף
+	// מ-15/09/2026 עד ערב יום כיפור (20/09/2026) כולל. אחרי התאריך הזה חוזרים
+	// אוטומטית ללוח קיץ/חורף הרגיל, בלי צורך בהסרה ידנית.
+	const ACTIVE_FROM = '2026-09-15';
+	const ACTIVE_UNTIL = '2026-09-20';
+
+	const todayIsrael = toIsraelIsoDate(new Date());
+	if (todayIsrael >= ACTIVE_FROM && todayIsrael <= ACTIVE_UNTIL) {
+		document.querySelector<HTMLElement>('#special-weekday-times')!.hidden = false;
+		document.querySelector<HTMLElement>('#regular-weekday-times')!.hidden = true;
+	}
+</script>
