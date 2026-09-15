@@ -12,6 +12,12 @@ function totalOf(sales: { price: number | null }[]): number {
 	return sales.reduce((sum, sale) => sum + (sale.price ?? 0), 0);
 }
 
+// שדה parasha מכיל לפעמים תווית יום-חג ("יום א' ראש השנה") ולא שם פרשה
+// שבועית -- במקרה כזה אין להוסיף את הקידומת "פרשת" (שלא הולמת חג).
+function parashaLabel(parasha: string): string {
+	return parasha.startsWith('יום ') ? parasha : `פרשת ${parasha}`;
+}
+
 const monthFormat = new Intl.DateTimeFormat('he-IL', { month: 'long', year: 'numeric' });
 const yearFormat = new Intl.DateTimeFormat('he-IL', { year: 'numeric' });
 
@@ -59,7 +65,7 @@ const yearlySummary = summarize(entries, (d) => `${d.getFullYear()}`, yearFormat
 				<p class="empty-state">אין כרגע תוצאות מכירה רשומות.</p>
 			) : (
 				<section class="section">
-					<h2>תוצאות המכירה האחרונה &ndash; פרשת {latest.data.parasha} ({dateFormat.format(latest.data.date)})</h2>
+					<h2>תוצאות המכירה האחרונה &ndash; {parashaLabel(latest.data.parasha)} ({dateFormat.format(latest.data.date)})</h2>
 					<div class="card">
 						<div class="sales-list">
 							{latest.data.sales.map((sale) => (
@@ -120,7 +126,7 @@ const yearlySummary = summarize(entries, (d) => `${d.getFullYear()}`, yearFormat
 						{previous.map((entry) => (
 							<details class="card history-item">
 								<summary>
-									<span>פרשת {entry.data.parasha} &ndash; {dateFormat.format(entry.data.date)}</span>
+									<span>{parashaLabel(entry.data.parasha)} &ndash; {dateFormat.format(entry.data.date)}</span>
 									<span class="summary-total">סה&quot;כ {totalOf(entry.data.sales)} ₪</span>
 								</summary>
 								<div class="sales-list">
