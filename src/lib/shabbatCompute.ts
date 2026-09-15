@@ -57,18 +57,25 @@ export function toIsraelIsoDate(date: Date): string {
 	return new Intl.DateTimeFormat('en-CA', { timeZone: 'Asia/Jerusalem' }).format(date);
 }
 
+// מחליף רווחים בתוך שם (בין שם פרטי למשפחה) ברווח בלתי-שביר, כדי שדפדפן לא
+// ישבור שם אמצע (למשל "אילן / בוטבול" בשתי שורות) כשהשורה המלאה לא נכנסת —
+// עדיין ניתן לשבור בין שמות/פרטים שונים, רק לא בתוך שם אחד.
+function noBreak(text: string): string {
+	return text.replace(/ /g, ' ');
+}
+
 export function computeWeeklySchedule(candleLighting: Date, havdalah: Date): WeeklySchedule {
 	const shabbatDate = toIsraelIsoDate(addMinutes(candleLighting, 24 * 60));
 	const toranim = getToranimForShabbat(shabbatDate);
-	const toranimText = toranim ? toranim.join(' – ') : 'יעודכן ע"י הוועד';
+	const toranimText = toranim ? toranim.map(noBreak).join(' – ') : 'יעודכן ע"י הוועד';
 
 	return {
 		shir_hashirim_time: formatTime(addMinutes(candleLighting, OFFSET_MINUTES.shirHashirim)),
 		mincha_candle_time: formatTime(candleLighting),
-		shiur_before_shacharit: `${FIXED_MORNING.shiurBeforeShacharit.time} – ${FIXED_MORNING.shiurBeforeShacharit.teacher}`,
+		shiur_before_shacharit: `${FIXED_MORNING.shiurBeforeShacharit.time} – ${noBreak(FIXED_MORNING.shiurBeforeShacharit.teacher)}`,
 		shacharit_time: FIXED_MORNING.shacharit,
 		kiddush_toranim: `${FIXED_MORNING.kiddush} – ${toranimText}`,
-		shiur_after_kiddush: `${FIXED_MORNING.shiurAfterKiddush.time} – ${FIXED_MORNING.shiurAfterKiddush.teacher}`,
+		shiur_after_kiddush: `${FIXED_MORNING.shiurAfterKiddush.time} – ${noBreak(FIXED_MORNING.shiurAfterKiddush.teacher)}`,
 		shiur_afternoon: formatTime(addMinutes(havdalah, OFFSET_MINUTES.shiurAfternoon)),
 		mincha_shabbat: formatTime(addMinutes(havdalah, OFFSET_MINUTES.minchaShabbat)),
 		seuda_shlishit: formatTime(addMinutes(havdalah, OFFSET_MINUTES.seudaShlishit)),
