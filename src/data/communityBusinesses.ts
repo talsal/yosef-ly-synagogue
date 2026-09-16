@@ -15,8 +15,9 @@ export interface CommunityBusiness {
 export const COMMUNITY_BUSINESSES: CommunityBusiness[] = [
 	{
 		name: 'אומן הפרקטים והקרמיקה',
-		category: 'פרקטים וריצוף',
-		description: 'התקנה ושיפוץ פרקט וקרמיקה, עבודה מקצועית ואמינה.',
+		category: 'קרמיקה, סניטציה ופרקטים',
+		description:
+			'יבוא ושיווק קרמיקה, כלים סניטריים, פרקטים, ארונות אמבטיה ונגרות, ומקלחונים בהתאמה אישית — עיצוב הבית במקום אחד. מתחייבים למוצרים ולמחירים הטובים ביותר.',
 		contactLabel: 'לעמוד האינסטגרם',
 		contactHref: 'https://www.instagram.com/oman_haparketim_vehakeramika/',
 		icon: '🪵',
