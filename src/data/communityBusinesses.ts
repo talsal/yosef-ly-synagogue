@@ -1,5 +1,5 @@
-// רשימת עסקים של חברי קהילה, מוצגים באתר בתשלום. טיוטה/סקיצה בלבד — לא חי
-// באתר עדיין. מבנה: שם, תחום, תיאור קצר, ולינק יצירת קשר (אתר/אינסטגרם/וואטסאפ).
+// רשימת עסקים של חברי קהילה, מוצגים באתר בתשלום. מבנה: שם, תחום, תיאור קצר,
+// ולינק יצירת קשר (אתר/אינסטגרם/וואטסאפ).
 export interface CommunityBusiness {
 	name: string;
 	category: string;
@@ -21,14 +21,5 @@ export const COMMUNITY_BUSINESSES: CommunityBusiness[] = [
 		contactHref: 'https://www.instagram.com/oman_haparketim_vehakeramika/',
 		icon: '🪵',
 		accent: '#c9a24b',
-	},
-	{
-		name: 'לדוגמה: עסק שני',
-		category: 'תחום לדוגמה',
-		description: 'כרטיס נוסף רק כדי להמחיש איך זה נראה כשיש כמה מפרסמים מתחלפים.',
-		contactLabel: 'קישור לדוגמה',
-		contactHref: '#',
-		icon: '✨',
-		accent: '#2c6e6b',
 	},
 ];
