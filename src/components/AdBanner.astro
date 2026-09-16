@@ -21,13 +21,15 @@ import { COMMUNITY_BUSINESSES } from '../data/communityBusinesses';
 						rel="noopener noreferrer sponsored"
 						data-ad-name={biz.name}
 					>
-						<span class="ad-icon" style={`background: ${biz.accent}`}>
-							{biz.icon}
-						</span>
-						<span class="ad-text">
-							<span class="ad-category">{biz.category}</span>
-							<span class="ad-name">{biz.name}</span>
-							<span class="ad-desc">{biz.description}</span>
+						<span class="ad-main">
+							<span class="ad-icon" style={`background: ${biz.accent}`}>
+								{biz.icon}
+							</span>
+							<span class="ad-text">
+								<span class="ad-category">{biz.category}</span>
+								<span class="ad-name">{biz.name}</span>
+								<span class="ad-desc">{biz.description}</span>
+							</span>
 						</span>
 						<span class="ad-cta">{biz.contactLabel} &larr;</span>
 					</a>
@@ -74,7 +76,7 @@ import { COMMUNITY_BUSINESSES } from '../data/communityBusinesses';
 	.ad-slides {
 		position: relative;
 		flex: 1;
-		min-height: 18rem;
+		min-height: 9.5rem;
 	}
 
 	@media (min-width: 40rem) {
@@ -88,12 +90,12 @@ import { COMMUNITY_BUSINESSES } from '../data/communityBusinesses';
 		inset: 0;
 		display: flex;
 		flex-direction: column;
-		align-items: center;
-		text-align: center;
+		align-items: flex-end;
+		text-align: right;
 		text-decoration: none;
 		color: #f7f2e4;
-		padding: 2rem 1.5rem 2.1rem;
-		gap: 0.5rem;
+		padding: 1.9rem 1.25rem 1.2rem;
+		gap: 0.6rem;
 		opacity: 0;
 		transform: translateY(0.35rem);
 		pointer-events: none;
@@ -111,68 +113,112 @@ import { COMMUNITY_BUSINESSES } from '../data/communityBusinesses';
 	@media (min-width: 40rem) {
 		.ad-slide {
 			flex-direction: row;
-			text-align: right;
+			align-items: center;
 			padding: 1.25rem 2rem;
 			gap: 1.5rem;
 		}
 	}
 
+	.ad-main {
+		display: flex;
+		flex-direction: row;
+		align-items: center;
+		gap: 0.85rem;
+		width: 100%;
+		min-width: 0;
+	}
+
+	@media (min-width: 40rem) {
+		.ad-main {
+			flex: 1;
+		}
+	}
+
 	.ad-icon {
 		flex-shrink: 0;
-		width: 3.25rem;
-		height: 3.25rem;
+		width: 2.75rem;
+		height: 2.75rem;
 		display: flex;
 		align-items: center;
 		justify-content: center;
 		border-radius: 50%;
-		font-size: 1.5rem;
+		font-size: 1.25rem;
 		box-shadow: 0 4px 10px -3px rgba(0, 0, 0, 0.4);
+	}
+
+	@media (min-width: 40rem) {
+		.ad-icon {
+			width: 3.25rem;
+			height: 3.25rem;
+			font-size: 1.5rem;
+		}
 	}
 
 	.ad-text {
 		display: flex;
 		flex-direction: column;
-		gap: 0.2rem;
+		gap: 0.15rem;
 		min-width: 0;
-	}
-
-	@media (min-width: 40rem) {
-		.ad-text {
-			flex: 1;
-		}
+		flex: 1;
 	}
 
 	.ad-category {
-		font-size: 0.75rem;
+		font-size: 0.7rem;
 		font-weight: 700;
 		letter-spacing: 0.05em;
 		color: #d9c48d;
+		white-space: nowrap;
+		overflow: hidden;
+		text-overflow: ellipsis;
 	}
 
 	.ad-name {
-		font-size: 1.25rem;
+		font-size: 1.05rem;
 		font-weight: 800;
+		white-space: nowrap;
+		overflow: hidden;
+		text-overflow: ellipsis;
+	}
+
+	@media (min-width: 40rem) {
+		.ad-name {
+			font-size: 1.25rem;
+		}
 	}
 
 	.ad-desc {
-		font-size: 0.9rem;
+		font-size: 0.8rem;
 		color: rgba(247, 242, 228, 0.78);
 		display: -webkit-box;
-		-webkit-line-clamp: 2;
+		-webkit-line-clamp: 1;
 		-webkit-box-orient: vertical;
 		overflow: hidden;
+	}
+
+	@media (min-width: 40rem) {
+		.ad-desc {
+			font-size: 0.9rem;
+			-webkit-line-clamp: 2;
+		}
 	}
 
 	.ad-cta {
 		flex-shrink: 0;
 		font-weight: 700;
-		font-size: 0.9rem;
+		font-size: 0.82rem;
 		background: var(--color-accent);
 		color: #fff;
-		padding: 0.6rem 1.4rem;
+		padding: 0.5rem 1.1rem;
 		border-radius: var(--radius);
 		white-space: nowrap;
 		transition: background 0.2s ease;
+	}
+
+	@media (min-width: 40rem) {
+		.ad-cta {
+			font-size: 0.9rem;
+			padding: 0.6rem 1.4rem;
+		}
 	}
 
 	.ad-slide:hover .ad-cta {
