@@ -17,26 +17,49 @@ import sanctuaryInterior from '../assets/images/gallery-sanctuary-interior.jpeg'
 import BaseLayout from '../layouts/BaseLayout.astro';
 import { withBase } from '../data/site';
 
-const photos = [
-	{ src: exteriorFullTwilight, alt: 'מבט חיצוני מלא על בית הכנסת בשעת בין הערביים' },
-	{ src: entranceSignWide, alt: 'שלט הכניסה, היכל שלמה ויעקב' },
-	{ src: entranceSignMedium, alt: 'שלט הכניסה מקרוב' },
-	{ src: entranceSignClose, alt: 'שלט הכניסה, תקריב' },
-	{ src: arkInterior, alt: 'ארון הקודש באולם התפילה' },
-	{ src: arkParochetDetail, alt: 'פרוכת ארון הקודש, לעילוי נשמת שלמה אדולפו פיצוטו' },
-	{ src: buildingRendering, alt: 'הדמיה רשמית של המבנה החדש' },
-	{ src: constructionProgress, alt: 'התקדמות בניית המבנה, ממגרש ריק ועד מבנה כמעט גמור' },
-	{ src: buildingEntrance, alt: 'הכניסה הנגישה למבנה' },
-	{ src: sanctuaryInterior, alt: 'מבט מבפנים על אולם התפילה' },
-	{ src: pewsDelivery, alt: 'הכנסת ספסלי התפילה החדשים לאולם' },
-	{ src: dedicationPlaque, alt: 'לוח ההקדשה של היכל שלמה ויעקב' },
-	{ src: torahStudyTable, alt: 'שיעור תורה סביב השולחן' },
-	{ src: lessonsSanctuary, alt: 'שיעור תורה באולם התפילה, ליד ארון הקודש' },
+const photoSections = [
+	{
+		title: 'המבנה',
+		photos: [
+			{ src: exteriorFullTwilight, alt: 'מבט חיצוני מלא על בית הכנסת בשעת בין הערביים' },
+			{ src: entranceSignWide, alt: 'שלט הכניסה, היכל שלמה ויעקב' },
+			{ src: entranceSignMedium, alt: 'שלט הכניסה מקרוב' },
+			{ src: entranceSignClose, alt: 'שלט הכניסה, תקריב' },
+			{ src: buildingEntrance, alt: 'הכניסה הנגישה למבנה' },
+			{ src: arkInterior, alt: 'ארון הקודש באולם התפילה' },
+			{ src: arkParochetDetail, alt: 'פרוכת ארון הקודש, לעילוי נשמת שלמה אדולפו פיצוטו' },
+			{ src: sanctuaryInterior, alt: 'מבט מבפנים על אולם התפילה' },
+			{ src: dedicationPlaque, alt: 'לוח ההקדשה של היכל שלמה ויעקב' },
+		],
+	},
+	{
+		title: 'מהבנייה',
+		photos: [
+			{ src: buildingRendering, alt: 'הדמיה רשמית של המבנה החדש' },
+			{ src: constructionProgress, alt: 'התקדמות בניית המבנה, ממגרש ריק ועד מבנה כמעט גמור' },
+			{ src: pewsDelivery, alt: 'הכנסת ספסלי התפילה החדשים לאולם' },
+		],
+	},
+	{
+		title: 'חיי הקהילה',
+		photos: [
+			{ src: torahStudyTable, alt: 'שיעור תורה סביב השולחן' },
+			{ src: lessonsSanctuary, alt: 'שיעור תורה באולם התפילה, ליד ארון הקודש' },
+		],
+	},
 ];
 
 const videos = [
-	{ src: '/videos/dedication-invitation.mp4', title: 'הזמנה לחנוכת היכל שלמה ויעקב' },
-	{ src: '/videos/entrance-walkthrough.mp4', title: 'מתוך עבודות הגמר במבנה' },
+	{
+		src: '/videos/dedication-invitation.mp4',
+		poster: '/videos/dedication-invitation-poster.jpg',
+		title: 'הזמנה לחנוכת היכל שלמה ויעקב',
+	},
+	{
+		src: '/videos/entrance-walkthrough.mp4',
+		poster: '/videos/entrance-walkthrough-poster.jpg',
+		title: 'מתוך עבודות הגמר במבנה',
+	},
 ];
 ---
 
@@ -45,22 +68,32 @@ const videos = [
 		<h1>גלריה</h1>
 		<p>תמונות וסרטונים מבניית המבנה החדש ומאירועי הקהילה.</p>
 
-		<div class="gallery-grid">
-			{
-				photos.map((photo) => (
-					<figure class="card">
-						<Image src={photo.src} alt={photo.alt} widths={[300, 500, 800]} sizes="(min-width: 60rem) 30vw, 45vw" />
-					</figure>
-				))
-			}
-		</div>
+		{
+			photoSections.map((section) => (
+				<section class="photo-section">
+					<h2>{section.title}</h2>
+					<div class="gallery-grid">
+						{section.photos.map((photo) => (
+							<figure class="card">
+								<Image
+									src={photo.src}
+									alt={photo.alt}
+									widths={[300, 500, 800]}
+									sizes="(min-width: 60rem) 30vw, 45vw"
+								/>
+							</figure>
+						))}
+					</div>
+				</section>
+			))
+		}
 
 		<h2 class="videos-heading">סרטונים</h2>
 		<div class="videos-grid">
 			{
 				videos.map((video) => (
 					<figure class="card">
-						<video controls preload="metadata" src={withBase(video.src)} />
+						<video controls preload="metadata" poster={withBase(video.poster)} src={withBase(video.src)} />
 						<figcaption>{video.title}</figcaption>
 					</figure>
 				))
@@ -70,12 +103,16 @@ const videos = [
 </BaseLayout>
 
 <style>
+	.photo-section {
+		margin-top: 2.5rem;
+	}
+
 	.gallery-grid,
 	.videos-grid {
 		display: grid;
 		gap: 1rem;
 		grid-template-columns: repeat(auto-fit, minmax(14rem, 1fr));
-		margin-top: 1.5rem;
+		margin-top: 1rem;
 	}
 
 	.gallery-grid .card,
