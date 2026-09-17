@@ -19,7 +19,7 @@ import { WEEKDAY_TIMES } from '../data/prayerTimes';
 			<h2>ימות החול</h2>
 
 			<div class="card special-weekday-times" id="special-weekday-times" hidden>
-				<h3>זמני חול &ndash; עשרת ימי תשובה (עד ערב יום כיפור, כולל)</h3>
+				<h3>זמני חול &ndash; עשרת ימי תשובה (עד י"ח תשרי, כולל)</h3>
 				<dl>
 					<div><dt>סליחות</dt><dd>05:05</dd></div>
 					<div><dt>קרבנות</dt><dd>05:55</dd></div>
@@ -28,6 +28,34 @@ import { WEEKDAY_TIMES } from '../data/prayerTimes';
 					<div><dt>אשרי</dt><dd>18:30</dd></div>
 					<div><dt>ערבית</dt><dd>צמוד</dd></div>
 				</dl>
+			</div>
+
+			<div class="card special-weekday-times" id="yom-kippur-times" hidden>
+				<h3>זמני יום הכיפורים תשפ"ז</h3>
+				<div class="yk-days">
+					<div class="yk-day">
+						<h4>ערב יום כיפור &ndash; יום ראשון, ט' תשרי (20/09)</h4>
+						<dl>
+							<div><dt>סליחות</dt><dd>05:05</dd></div>
+							<div><dt>שחרית (הנץ החמה 06:26) + התרת נדרים + שיעור</dt><dd>05:55</dd></div>
+							<div><dt>מנחה גדולה (+ התרת נדרים למי שלא עשה בבוקר)</dt><dd>13:30</dd></div>
+							<div><dt>הדלקת נרות ותחילת הצום (שקיעה 18:41)</dt><dd>18:21</dd></div>
+							<div><dt>לך אלי תשוקתי (עם טלית), דרשה, כל נדרי, ערבית, שיעור</dt><dd>18:30</dd></div>
+						</dl>
+					</div>
+					<div class="yk-day">
+						<h4>יום כיפור &ndash; יום שני, י' תשרי (21/09)</h4>
+						<dl>
+							<div><dt>שחרית מניין ותיקין</dt><dd>05:20</dd></div>
+							<div><dt>שיעור</dt><dd>06:00</dd></div>
+							<div><dt>שחרית + שיעור לאחר מוסף</dt><dd>07:00</dd></div>
+							<div><dt>מנחה</dt><dd>15:45</dd></div>
+							<div><dt>נעילה (זמן משוער) + ערבית מוצאי יום כיפור + ברכת הלבנה</dt><dd>17:45</dd></div>
+							<div><dt>סיום הצום</dt><dd>19:11</dd></div>
+							<div><dt>רבינו תם</dt><dd>19:52</dd></div>
+						</dl>
+					</div>
+				</div>
 			</div>
 
 			<div class="grid weekday-grid" id="regular-weekday-times">
@@ -122,23 +150,49 @@ import { WEEKDAY_TIMES } from '../data/prayerTimes';
 		font-weight: 700;
 		color: var(--color-primary);
 	}
+
+	.yk-days {
+		display: grid;
+		gap: 1.5rem;
+		grid-template-columns: repeat(auto-fit, minmax(16rem, 1fr));
+		margin-top: 0.5rem;
+	}
+
+	.yk-day h4 {
+		margin: 0 0 0.4rem;
+		color: var(--color-primary);
+	}
 </style>
 
 <script>
 	import { toIsraelIsoDate } from '../lib/shabbatCompute';
 
-	// זמני חול מיוחדים לעשרת ימי תשובה, כפי שנמסרו על ידי הקהילה — בתוקף
-	// מ-15/09/2026 עד ערב יום כיפור (20/09/2026) כולל. אחרי התאריך הזה חוזרים
-	// אוטומטית ללוח קיץ/חורף הרגיל, בלי צורך בהסרה ידנית.
-	const ACTIVE_FROM = '2026-09-15';
-	const ACTIVE_UNTIL = '2026-09-20';
+	// זמני חול מיוחדים לימות החול, בתוקף בטווחי תאריכים נפרדים שאינם חופפים.
+	// שים לב: יום הכיפורים השנה חל ביום ראשון-שני (לא בשבת), ולכן הלוח הזה
+	// מוצג כאן בעמוד ימות החול בלבד — ולא דרך specialSchedule.ts/ShabbatSchedule,
+	// כדי לא להסתיר את לוח השבת השבועי האמיתי של השבת הקרובה.
+	const TEN_DAYS_ACTIVE_FROM = '2026-09-15';
+	const TEN_DAYS_ACTIVE_UNTIL = '2026-09-19';
+	const YOM_KIPPUR_ACTIVE_FROM = '2026-09-20';
+	const YOM_KIPPUR_ACTIVE_UNTIL = '2026-09-21';
+
+	// .weekday-grid sets display:grid, which (being an author-stylesheet rule)
+	// overrides the UA stylesheet's [hidden]{display:none} — so toggling the
+	// `hidden` property alone doesn't reliably hide an element. Clear/set both
+	// the attribute and an explicit inline style, which wins regardless of any
+	// competing class-based display rule.
+	function setVisible(id: string, visible: boolean) {
+		const el = document.querySelector<HTMLElement>(`#${id}`);
+		if (!el) return;
+		el.hidden = !visible;
+		el.style.display = visible ? '' : 'none';
+	}
 
 	const todayIsrael = toIsraelIsoDate(new Date());
-	if (todayIsrael >= ACTIVE_FROM && todayIsrael <= ACTIVE_UNTIL) {
-		document.querySelector<HTMLElement>('#special-weekday-times')!.hidden = false;
-		// .weekday-grid sets display:grid, which (being an author-stylesheet rule)
-		// overrides the UA stylesheet's [hidden]{display:none} — so the hidden
-		// property alone doesn't actually hide it. Force it via inline style instead.
-		document.querySelector<HTMLElement>('#regular-weekday-times')!.style.display = 'none';
-	}
+	const isTenDays = todayIsrael >= TEN_DAYS_ACTIVE_FROM && todayIsrael <= TEN_DAYS_ACTIVE_UNTIL;
+	const isYomKippur = todayIsrael >= YOM_KIPPUR_ACTIVE_FROM && todayIsrael <= YOM_KIPPUR_ACTIVE_UNTIL;
+
+	setVisible('special-weekday-times', isTenDays);
+	setVisible('yom-kippur-times', isYomKippur);
+	setVisible('regular-weekday-times', !isTenDays && !isYomKippur);
 </script>
