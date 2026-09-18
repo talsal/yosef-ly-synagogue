@@ -9,75 +9,76 @@ const LIVE_SITE_URL = 'https://talsal.github.io/yosef-ly-synagogue/';
 const features = [
 	{
 		icon: '🕯️',
-		title: 'Live prayer & holiday schedule',
-		body: 'Shabbat and weekday times compute automatically from the date — no one has to remember to update the site every week just because the clock changed.',
+		title: 'Horaires de prière et de fêtes, à jour',
+		body: 'Les horaires de Shabbat et de semaine se calculent automatiquement selon la date — personne n’a besoin de penser à mettre à jour le site juste parce que l’heure a changé.',
 	},
 	{
 		icon: '🔎',
-		title: 'Seat finder',
-		body: 'Members search their own name — or someone else’s seat number — against a visual floor plan, instead of calling the office.',
+		title: 'Recherche de place assise',
+		body: 'Les membres cherchent leur propre nom — ou le numéro de place de quelqu’un d’autre — sur un plan visuel de la salle, au lieu d’appeler le secrétariat.',
 	},
 	{
 		icon: '📝',
-		title: 'Self-serve community forms',
-		body: 'Memorial and get-well lists that members submit themselves — no gatekeeper, no waiting on a volunteer to relay a WhatsApp message.',
+		title: 'Formulaires en libre-service',
+		body: 'Listes de mémoriaux et de rétablissement que les membres remplissent eux-mêmes — sans intermédiaire, sans attendre qu’un bénévole relaie un message WhatsApp.',
 	},
 	{
 		icon: '⚡',
-		title: 'Weekly updates in minutes',
-		body: 'This week’s aliyot results or a roster swap go from a shorthand WhatsApp message to a published update in a couple of minutes, not a couple of days.',
+		title: 'Mises à jour hebdomadaires en quelques minutes',
+		body: 'Les résultats de vente d’alyot de la semaine ou un changement de tour de service passent d’un message WhatsApp abrégé à une mise à jour publiée en quelques minutes, pas en quelques jours.',
 	},
 	{
 		icon: '♿',
-		title: 'Accessibility built in',
-		body: 'WCAG 2.1 AA from day one — proper contrast, screen-reader labels, keyboard navigation — not bolted on after a complaint.',
+		title: 'Accessibilité intégrée',
+		body: 'Conforme WCAG 2.1 AA dès le premier jour — contraste correct, étiquettes pour lecteurs d’écran, navigation au clavier — pas ajoutée après une plainte.',
 	},
 	{
 		icon: '📣',
-		title: 'A tasteful ad slot',
-		body: 'A rotating placement for community-run businesses, styled to match the site instead of looking like a generic banner ad — a small, real source of upkeep funding.',
+		title: 'Un espace publicitaire de bon goût',
+		body: 'Un emplacement rotatif pour les commerces tenus par des membres de la communauté, conçu pour s’harmoniser avec le site plutôt que de ressembler à une bannière générique — une petite source réelle de financement pour l’entretien.',
 	},
 ];
 ---
 
 <!doctype html>
-<html lang="en" dir="ltr">
+<html lang="fr" dir="ltr">
 	<head>
 		<meta charset="utf-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1" />
 		<meta
 			name="description"
-			content="A real, live synagogue website built by Tal Salman — case study and inquiry page for other communities."
+			content="Un vrai site web de synagogue, en direct, construit par Tal Salman — étude de cas et page de contact pour d'autres communautés."
 		/>
-		<title>Synagogue Websites, Built to Be Used | Tal Salman</title>
+		<title>Des sites web pour synagogues, faits pour être utilisés | Tal Salman</title>
 	</head>
 	<body>
 		<header class="page-header">
 			<div class="container header-inner">
 				<span class="wordmark">Tal Salman</span>
 				<div class="header-links">
+					<a class="header-lang" href={withBase('/demo-en')}>English</a>
 					<a class="header-lang" href={withBase('/demo-he')}>עברית</a>
-					<a class="header-lang" href={withBase('/demo-fr')}>Français</a>
-					<a class="header-cta" href="#contact">Get in touch</a>
+					<a class="header-cta" href="#contact">Me contacter</a>
 				</div>
 			</div>
 		</header>
 
 		<main>
 			<section class="hero container">
-				<p class="eyebrow">Case study &mdash; בית הכנסת יוסף-לי, Modi&rsquo;in, Israel</p>
-				<h1>I build websites for synagogues that communities actually use every week.</h1>
+				<p class="eyebrow">Étude de cas &mdash; בית הכנסת יוסף-לי, Modi&rsquo;in, Israël</p>
+				<h1>Je conçois des sites web pour synagogues que les communautés utilisent vraiment chaque semaine.</h1>
 				<p class="hero-sub">
-					Not a template with your logo dropped in. A real site with live Shabbat times, a seat
-					finder, self-serve community forms, and a workflow that turns a WhatsApp message into a
-					published update in minutes &mdash; built and actively maintained for a real, working
-					congregation.
+					Pas un énième site-modèle générique, adapté à toutes les communautés de la même façon.
+					Un vrai site avec les horaires de Shabbat à jour automatiquement, une recherche de
+					place assise, des formulaires en libre-service, et un processus qui transforme un
+					message WhatsApp en mise à jour publiée en quelques minutes &mdash; construit et
+					activement maintenu pour une communauté bien réelle.
 				</p>
 				<div class="hero-actions">
 					<a class="button" href={LIVE_SITE_URL} target="_blank" rel="noopener noreferrer">
-						View the live site &rarr;
+						Voir le site en direct &rarr;
 					</a>
-					<a class="button button-outline" href="#contact">Get in touch</a>
+					<a class="button button-outline" href="#contact">Me contacter</a>
 				</div>
 			</section>
 
@@ -103,11 +104,14 @@ const features = [
 						</div>
 					</div>
 				</div>
-				<p class="browser-caption">A preview of the real homepage — click above to see it live, in full.</p>
+				<p class="browser-caption">
+					Un aperçu de la vraie page d’accueil &mdash; cliquez ci-dessus pour la voir en direct,
+					dans son intégralité.
+				</p>
 			</section>
 
 			<section class="container features-section">
-				<h2>What’s actually in it</h2>
+				<h2>Ce qu’il y a vraiment dedans</h2>
 				<div class="features-grid">
 					{
 						features.map((f) => (
@@ -125,21 +129,25 @@ const features = [
 
 			<section class="container proof-section">
 				<div class="proof-card">
-					<h2>This isn’t a mockup</h2>
+					<h2>Ce n’est pas une maquette</h2>
 					<ul class="proof-list">
-						<li>Live since August 2026, actively used every week by a real congregation.</li>
-						<li>Content updated from real WhatsApp messages &mdash; the actual workflow a shul runs on.</li>
-						<li>Iterated on real usage data, not guesses &mdash; traffic, click-throughs, and bounce rates all inform what gets built next.</li>
+						<li>En ligne depuis août 2026, activement utilisé chaque semaine par une vraie congrégation.</li>
+						<li>Contenu mis à jour à partir de vrais messages WhatsApp &mdash; le processus réel qu’utilise une synagogue.</li>
+						<li>
+							Amélioré à partir de données d’usage réelles, pas de suppositions &mdash; trafic,
+							clics et taux de rebond orientent ce qui est construit ensuite.
+						</li>
 					</ul>
 				</div>
 			</section>
 
 			<section class="container contact-section" id="contact">
 				<div class="contact-card">
-					<h2>Want something like this for your community?</h2>
+					<h2>Vous voulez quelque chose comme ça pour votre communauté ?</h2>
 					<p>
-						I build and maintain sites like this one for synagogues &mdash; tell me a bit about
-						your community and what you need, and we’ll figure out what fits.
+						Je construis et maintiens des sites comme celui-ci pour des synagogues &mdash;
+						parlez-moi un peu de votre communauté et de vos besoins, et nous trouverons ce qui
+						convient.
 					</p>
 					<div class="contact-links">
 						<a class="button" href="mailto:tal.salman@gmail.com">tal.salman@gmail.com</a>
@@ -151,7 +159,7 @@ const features = [
 
 		<footer class="page-footer">
 			<div class="container">
-				<p>Built by Tal Salman &middot; this page and the live example are both real, working code.</p>
+				<p>Construit par Tal Salman &middot; cette page et l’exemple en direct sont tous deux du vrai code, fonctionnel.</p>
 			</div>
 		</footer>
 	</body>
