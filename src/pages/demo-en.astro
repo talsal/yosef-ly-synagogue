@@ -6,6 +6,12 @@ import { withBase } from '../data/site';
 
 const LIVE_SITE_URL = 'https://talsal.github.io/yosef-ly-synagogue/';
 
+const languages = [
+	{ code: 'en', label: 'English', href: withBase('/demo-en') },
+	{ code: 'he', label: 'עברית', href: withBase('/demo-he') },
+	{ code: 'fr', label: 'Français', href: withBase('/demo-fr') },
+];
+
 const features = [
 	{
 		icon: '🕯️',
@@ -56,8 +62,17 @@ const features = [
 			<div class="container header-inner">
 				<span class="wordmark">Tal Salman</span>
 				<div class="header-links">
-					<a class="header-lang" href={withBase('/demo-he')}>עברית</a>
-					<a class="header-lang" href={withBase('/demo-fr')}>Français</a>
+					{
+						languages.map((lang) => (
+							<a
+								class="header-lang"
+								href={lang.href}
+								aria-current={lang.code === 'en' ? 'page' : undefined}
+							>
+								{lang.label}
+							</a>
+						))
+					}
 					<a class="header-cta" href="#contact">Get in touch</a>
 				</div>
 			</div>
@@ -195,6 +210,13 @@ const features = [
 
 	.header-lang:hover {
 		color: var(--color-accent);
+	}
+
+	.header-lang[aria-current='page'] {
+		color: var(--color-primary);
+		font-weight: 700;
+		text-decoration: underline;
+		text-underline-offset: 0.2em;
 	}
 
 	.header-cta {
