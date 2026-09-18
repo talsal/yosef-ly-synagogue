@@ -1,0 +1,426 @@
+---
+import { Image } from 'astro:assets';
+import exteriorFullTwilight from '../assets/images/exterior-full-twilight.jpeg';
+import '../styles/global.css';
+
+const LIVE_SITE_URL = 'https://talsal.github.io/yosef-ly-synagogue/';
+
+const features = [
+	{
+		icon: '🕯️',
+		title: 'Live prayer & holiday schedule',
+		body: 'Shabbat and weekday times compute automatically from the date — no one has to remember to update the site every week just because the clock changed.',
+	},
+	{
+		icon: '🔎',
+		title: 'Seat finder',
+		body: 'Members search their own name — or someone else’s seat number — against a visual floor plan, instead of calling the office.',
+	},
+	{
+		icon: '📝',
+		title: 'Self-serve community forms',
+		body: 'Memorial and get-well lists that members submit themselves — no gatekeeper, no waiting on a volunteer to relay a WhatsApp message.',
+	},
+	{
+		icon: '⚡',
+		title: 'Weekly updates in minutes',
+		body: 'This week’s aliyot results or a roster swap go from a shorthand WhatsApp message to a published update in a couple of minutes, not a couple of days.',
+	},
+	{
+		icon: '♿',
+		title: 'Accessibility built in',
+		body: 'WCAG 2.1 AA from day one — proper contrast, screen-reader labels, keyboard navigation — not bolted on after a complaint.',
+	},
+	{
+		icon: '📣',
+		title: 'A tasteful ad slot',
+		body: 'A rotating placement for community-run businesses, styled to match the site instead of looking like a generic banner ad — a small, real source of upkeep funding.',
+	},
+];
+---
+
+<!doctype html>
+<html lang="en" dir="ltr">
+	<head>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<meta
+			name="description"
+			content="A real, live synagogue website built by Tal Salman — case study and inquiry page for other communities."
+		/>
+		<title>Synagogue Websites, Built to Be Used | Tal Salman</title>
+	</head>
+	<body>
+		<header class="page-header">
+			<div class="container header-inner">
+				<span class="wordmark">Tal Salman</span>
+				<a class="header-cta" href="#contact">Get in touch</a>
+			</div>
+		</header>
+
+		<main>
+			<section class="hero container">
+				<p class="eyebrow">Case study &mdash; בית הכנסת יוסף-לי, Modi&rsquo;in, Israel</p>
+				<h1>I build websites for synagogues that communities actually use every week.</h1>
+				<p class="hero-sub">
+					Not a template with your logo dropped in. A real site with live Shabbat times, a seat
+					finder, self-serve community forms, and a workflow that turns a WhatsApp message into a
+					published update in minutes &mdash; built and actively maintained for a real, working
+					congregation.
+				</p>
+				<div class="hero-actions">
+					<a class="button" href={LIVE_SITE_URL} target="_blank" rel="noopener noreferrer">
+						View the live site &rarr;
+					</a>
+					<a class="button button-outline" href="#contact">Get in touch</a>
+				</div>
+			</section>
+
+			<section class="container browser-section">
+				<div class="browser-frame">
+					<div class="browser-chrome">
+						<span class="browser-dot"></span>
+						<span class="browser-dot"></span>
+						<span class="browser-dot"></span>
+						<span class="browser-url">talsal.github.io/yosef-ly-synagogue</span>
+					</div>
+					<div class="browser-body" dir="rtl" lang="he">
+						<Image
+							src={exteriorFullTwilight}
+							alt="בית הכנסת יוסף-לי בשעת בין הערביים"
+							widths={[400, 700, 1000]}
+							sizes="(min-width: 60rem) 50rem, 100vw"
+							class="browser-photo"
+						/>
+						<div class="browser-overlay">
+							<p class="browser-eyebrow">שכונת מוריה, מודיעין</p>
+							<p class="browser-title">בית הכנסת יוסף-לי</p>
+						</div>
+					</div>
+				</div>
+				<p class="browser-caption">A preview of the real homepage — click above to see it live, in full.</p>
+			</section>
+
+			<section class="container features-section">
+				<h2>What’s actually in it</h2>
+				<div class="features-grid">
+					{
+						features.map((f) => (
+							<div class="feature-card">
+								<span class="feature-icon" aria-hidden="true">
+									{f.icon}
+								</span>
+								<h3>{f.title}</h3>
+								<p>{f.body}</p>
+							</div>
+						))
+					}
+				</div>
+			</section>
+
+			<section class="container proof-section">
+				<div class="proof-card">
+					<h2>This isn’t a mockup</h2>
+					<ul class="proof-list">
+						<li>Live since August 2026, actively used every week by a real congregation.</li>
+						<li>Content updated from real WhatsApp messages &mdash; the actual workflow a shul runs on.</li>
+						<li>Iterated on real usage data, not guesses &mdash; traffic, click-throughs, and bounce rates all inform what gets built next.</li>
+					</ul>
+				</div>
+			</section>
+
+			<section class="container contact-section" id="contact">
+				<div class="contact-card">
+					<h2>Want something like this for your community?</h2>
+					<p>
+						I build and maintain sites like this one for synagogues &mdash; tell me a bit about
+						your community and what you need, and we’ll figure out what fits.
+					</p>
+					<div class="contact-links">
+						<a class="button" href="mailto:tal.salman@gmail.com">tal.salman@gmail.com</a>
+						<a class="button button-outline" href="tel:+972505991972">+972 50-599-1972</a>
+					</div>
+				</div>
+			</section>
+		</main>
+
+		<footer class="page-footer">
+			<div class="container">
+				<p>Built by Tal Salman &middot; this page and the live example are both real, working code.</p>
+			</div>
+		</footer>
+	</body>
+</html>
+
+<style>
+	body {
+		direction: ltr;
+		text-align: left;
+	}
+
+	.page-header {
+		border-bottom: 1px solid var(--color-border);
+		background: var(--color-surface);
+	}
+
+	.header-inner {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		padding-block: 1rem;
+	}
+
+	.wordmark {
+		font-weight: 800;
+		color: var(--color-primary);
+		font-size: 1.1rem;
+	}
+
+	.header-cta {
+		font-weight: 700;
+		text-decoration: none;
+	}
+
+	.hero {
+		padding-block: 3.5rem 2.5rem;
+		max-width: 46rem;
+	}
+
+	.eyebrow {
+		color: var(--color-accent);
+		font-weight: 700;
+		letter-spacing: 0.02em;
+		max-width: none;
+	}
+
+	.hero h1 {
+		font-size: clamp(2rem, 4.5vw, 2.9rem);
+		text-wrap: balance;
+		margin-top: 0.5rem;
+	}
+
+	.hero-sub {
+		font-size: 1.1rem;
+		color: var(--color-text-muted);
+		max-width: 42rem;
+	}
+
+	.hero-actions {
+		display: flex;
+		gap: 1rem;
+		flex-wrap: wrap;
+		margin-top: 1.5rem;
+	}
+
+	.button-outline {
+		background: transparent;
+		border: 2px solid var(--color-primary);
+		color: var(--color-primary);
+	}
+
+	.button-outline:hover {
+		background: var(--color-primary);
+		color: #fff;
+	}
+
+	.browser-section {
+		padding-block: 1rem 3rem;
+	}
+
+	.browser-frame {
+		border-radius: calc(var(--radius) * 1.2);
+		overflow: hidden;
+		border: 1px solid var(--color-border);
+		box-shadow: 0 20px 45px -25px rgba(20, 29, 53, 0.4);
+		max-width: 50rem;
+		margin-inline: auto;
+	}
+
+	.browser-chrome {
+		display: flex;
+		align-items: center;
+		gap: 0.4rem;
+		padding: 0.65rem 0.85rem;
+		background: var(--color-accent-light);
+		border-bottom: 1px solid var(--color-border);
+	}
+
+	.browser-dot {
+		width: 0.6rem;
+		height: 0.6rem;
+		border-radius: 50%;
+		background: var(--color-border);
+	}
+
+	.browser-url {
+		margin-inline-start: 0.75rem;
+		font-size: 0.8rem;
+		color: var(--color-text-muted);
+		background: var(--color-surface);
+		border: 1px solid var(--color-border);
+		border-radius: 999px;
+		padding: 0.2rem 0.85rem;
+	}
+
+	.browser-body {
+		position: relative;
+	}
+
+	.browser-photo {
+		width: 100%;
+		aspect-ratio: 16 / 8;
+		object-fit: cover;
+		filter: brightness(0.6);
+	}
+
+	.browser-overlay {
+		position: absolute;
+		inset: 0;
+		display: flex;
+		flex-direction: column;
+		justify-content: center;
+		padding-inline: 2rem;
+		color: #fff;
+	}
+
+	.browser-eyebrow {
+		color: var(--color-accent-light);
+		font-weight: 700;
+		max-width: none;
+		margin: 0 0 0.3rem;
+	}
+
+	.browser-title {
+		font-size: clamp(1.5rem, 4vw, 2.2rem);
+		font-weight: 800;
+		max-width: none;
+		margin: 0;
+	}
+
+	.browser-caption {
+		text-align: center;
+		color: var(--color-text-muted);
+		font-size: 0.9rem;
+		margin-top: 0.85rem;
+		max-width: none;
+	}
+
+	.features-section {
+		padding-block: 2.5rem;
+	}
+
+	.features-section h2,
+	.proof-section h2,
+	.contact-section h2 {
+		text-align: center;
+	}
+
+	.features-grid {
+		display: grid;
+		gap: 1.25rem;
+		grid-template-columns: repeat(auto-fit, minmax(16rem, 1fr));
+		margin-top: 2rem;
+	}
+
+	.feature-card {
+		background: var(--color-surface);
+		border: 1px solid var(--color-border);
+		border-radius: var(--radius);
+		padding: 1.5rem;
+	}
+
+	.feature-icon {
+		font-size: 1.75rem;
+		display: block;
+		margin-bottom: 0.5rem;
+	}
+
+	.feature-card h3 {
+		margin: 0 0 0.4rem;
+		color: var(--color-primary);
+		font-size: 1.1rem;
+	}
+
+	.feature-card p {
+		color: var(--color-text-muted);
+		margin: 0;
+		font-size: 0.95rem;
+	}
+
+	.proof-section {
+		padding-block: 1rem 2.5rem;
+	}
+
+	.proof-card {
+		background: linear-gradient(140deg, var(--color-primary) 0%, var(--color-primary-dark) 100%);
+		color: #f7f2e4;
+		border-radius: var(--radius);
+		padding: 2.5rem;
+		max-width: 42rem;
+		margin-inline: auto;
+		text-align: center;
+	}
+
+	.proof-card h2 {
+		color: #fff;
+		margin-top: 0;
+	}
+
+	.proof-list {
+		list-style: none;
+		margin: 1.5rem 0 0;
+		padding: 0;
+		display: grid;
+		gap: 0.85rem;
+		text-align: left;
+	}
+
+	.proof-list li {
+		padding-inline-start: 1.5rem;
+		position: relative;
+		color: rgba(247, 242, 228, 0.9);
+	}
+
+	.proof-list li::before {
+		content: '✓';
+		position: absolute;
+		left: 0;
+		color: var(--color-accent);
+		font-weight: 800;
+	}
+
+	.contact-section {
+		padding-block: 1rem 4rem;
+	}
+
+	.contact-card {
+		text-align: center;
+		max-width: 34rem;
+		margin-inline: auto;
+	}
+
+	.contact-card p {
+		color: var(--color-text-muted);
+		margin-inline: auto;
+	}
+
+	.contact-links {
+		display: flex;
+		gap: 1rem;
+		justify-content: center;
+		flex-wrap: wrap;
+		margin-top: 1.5rem;
+	}
+
+	.page-footer {
+		border-top: 1px solid var(--color-border);
+		padding-block: 1.5rem;
+		color: var(--color-text-muted);
+		font-size: 0.85rem;
+		text-align: center;
+	}
+
+	.page-footer p {
+		max-width: none;
+	}
+</style>
