@@ -14,6 +14,8 @@ export interface DailyZmanim {
 	chatzot: string;
 	minchaGedola: string;
 	sunset: string;
+	/** שקיעה כ-ISO גולמי, כדי לאפשר חישוב זמנים יחסיים אליה (למשל מנחה = שקיעה פחות 20 דקות) */
+	sunsetIso: string;
 	tzeitHakochavim: string;
 }
 
@@ -27,6 +29,12 @@ function formatTime(iso: string): string {
 		minute: '2-digit',
 		timeZone: 'Asia/Jerusalem',
 	}).format(new Date(iso));
+}
+
+/** מחזיר זמן בפורמט HH:MM, X דקות לפני זמן ה-ISO הנתון (למשל מנחה = שקיעה פחות 20 דקות) */
+export function formatTimeMinusMinutes(iso: string, minutes: number): string {
+	const date = new Date(new Date(iso).getTime() - minutes * 60_000);
+	return formatTime(date.toISOString());
 }
 
 export async function fetchDailyZmanim(): Promise<DailyZmanim | null> {
@@ -45,6 +53,7 @@ export async function fetchDailyZmanim(): Promise<DailyZmanim | null> {
 		chatzot: formatTime(t.chatzot),
 		minchaGedola: formatTime(t.minchaGedola),
 		sunset: formatTime(t.sunset),
+		sunsetIso: t.sunset,
 		tzeitHakochavim: formatTime(t.tzeit7083deg),
 	};
 }

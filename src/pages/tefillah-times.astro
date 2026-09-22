@@ -3,7 +3,6 @@ import DailyZmanim from '../components/DailyZmanim.astro';
 import HolidayList from '../components/HolidayList.astro';
 import ShabbatSchedule from '../components/ShabbatSchedule.astro';
 import BaseLayout from '../layouts/BaseLayout.astro';
-import { WEEKDAY_TIMES } from '../data/prayerTimes';
 ---
 
 <BaseLayout title="זמני תפילות" description="לוח זמני תפילה לימות החול ולשבת בבית הכנסת יוסף-לי">
@@ -58,23 +57,14 @@ import { WEEKDAY_TIMES } from '../data/prayerTimes';
 				</div>
 			</div>
 
-			<div class="grid weekday-grid" id="regular-weekday-times">
-				<div class="card">
-					<h3>קיץ</h3>
-					<dl>
-						<div><dt>שחרית</dt><dd>{WEEKDAY_TIMES.summer.shacharit || 'יעודכן בקרוב'}</dd></div>
-						<div><dt>מנחה</dt><dd>{WEEKDAY_TIMES.summer.mincha || 'יעודכן בקרוב'}</dd></div>
-						<div><dt>ערבית</dt><dd>{WEEKDAY_TIMES.summer.arvit || 'יעודכן בקרוב'}</dd></div>
-					</dl>
-				</div>
-				<div class="card">
-					<h3>חורף</h3>
-					<dl>
-						<div><dt>שחרית</dt><dd>{WEEKDAY_TIMES.winter.shacharit || 'יעודכן בקרוב'}</dd></div>
-						<div><dt>מנחה</dt><dd>{WEEKDAY_TIMES.winter.mincha || 'יעודכן בקרוב'}</dd></div>
-						<div><dt>ערבית</dt><dd>{WEEKDAY_TIMES.winter.arvit || 'יעודכן בקרוב'}</dd></div>
-					</dl>
-				</div>
+			<div class="card weekday-card" id="regular-weekday-times">
+				<h3>זמני חול</h3>
+				<dl>
+					<div><dt>שחרית</dt><dd>6:45</dd></div>
+					<div><dt>מנחה</dt><dd data-field="mincha">יעודכן בקרוב</dd></div>
+					<div><dt>ערבית</dt><dd>צמוד למנחה</dd></div>
+				</dl>
+				<p class="section-note">מנחה מתעדכן אוטומטית מדי יום ל-20 דקות לפני השקיעה.</p>
 			</div>
 		</section>
 
@@ -98,28 +88,22 @@ import { WEEKDAY_TIMES } from '../data/prayerTimes';
 		margin-top: -0.5rem;
 	}
 
-	.weekday-grid {
-		display: grid;
-		gap: 1rem;
-		grid-template-columns: repeat(auto-fit, minmax(14rem, 1fr));
+	.weekday-card dl {
+		margin: 0.5rem 0 0;
 	}
 
-	.weekday-grid dl {
-		margin: 0;
-	}
-
-	.weekday-grid dl > div {
+	.weekday-card dl > div {
 		display: flex;
 		justify-content: space-between;
 		padding-block: 0.35rem;
 		border-bottom: 1px dashed var(--color-border);
 	}
 
-	.weekday-grid dt {
+	.weekday-card dt {
 		color: var(--color-text-muted);
 	}
 
-	.weekday-grid dd {
+	.weekday-card dd {
 		margin: 0;
 		font-weight: 600;
 	}
@@ -166,6 +150,7 @@ import { WEEKDAY_TIMES } from '../data/prayerTimes';
 
 <script>
 	import { toIsraelIsoDate } from '../lib/shabbatCompute';
+	import { fetchDailyZmanim, formatTimeMinusMinutes } from '../lib/zmanim';
 
 	// זמני חול מיוחדים לימות החול, בתוקף בטווחי תאריכים נפרדים שאינם חופפים.
 	// שים לב: יום הכיפורים השנה חל ביום ראשון-שני (לא בשבת), ולכן הלוח הזה
@@ -193,8 +178,22 @@ import { WEEKDAY_TIMES } from '../data/prayerTimes';
 	const todayIsrael = toIsraelIsoDate(new Date());
 	const isTenDays = todayIsrael >= TEN_DAYS_ACTIVE_FROM && todayIsrael <= TEN_DAYS_ACTIVE_UNTIL;
 	const isYomKippur = todayIsrael >= YOM_KIPPUR_ACTIVE_FROM && todayIsrael <= YOM_KIPPUR_ACTIVE_UNTIL;
+	const isRegular = !isTenDays && !isYomKippur;
 
 	setVisible('special-weekday-times', isTenDays);
 	setVisible('yom-kippur-times', isYomKippur);
-	setVisible('regular-weekday-times', !isTenDays && !isYomKippur);
+	setVisible('regular-weekday-times', isRegular);
+
+	// מנחה בימות חול רגילים = 20 דקות לפני השקיעה, מחושב מחדש כל יום לפי
+	// השקיעה האמיתית (ולא זמן קבוע לפי עונה) — ערבית תמיד צמוד אחריה.
+	if (isRegular) {
+		const minchaEl = document.querySelector<HTMLElement>('[data-field="mincha"]');
+		if (minchaEl) {
+			fetchDailyZmanim()
+				.then((zmanim) => {
+					if (zmanim) minchaEl.textContent = formatTimeMinusMinutes(zmanim.sunsetIso, 20);
+				})
+				.catch(() => {});
+		}
+	}
 </script>
