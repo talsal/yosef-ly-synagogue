@@ -57,6 +57,14 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 				</div>
 			</div>
 
+			<div class="card special-weekday-times" id="sukkot-cholhamoed-times" hidden>
+				<h3>זמני חול &ndash; חול המועד סוכות</h3>
+				<dl>
+					<div><dt>שחרית (הודו)</dt><dd>08:00</dd></div>
+					<div><dt>מנחה + ערבית</dt><dd>18:15</dd></div>
+				</dl>
+			</div>
+
 			<div class="card weekday-card" id="regular-weekday-times">
 				<h3>זמני חול</h3>
 				<dl>
@@ -162,6 +170,11 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 	// יום הכיפורים, לצד לוח עשרת ימי תשובה — שני הלוחות מוצגים יחד בטווח החופף.
 	const YOM_KIPPUR_ACTIVE_FROM = '2026-09-17';
 	const YOM_KIPPUR_ACTIVE_UNTIL = '2026-09-21';
+	// חול המועד סוכות: מיום ראשון (16 תשרי) עד יום שישי-הושענא רבה (21 תשרי,
+	// שיש לו סדר יום משלו ולכן לא נכלל כאן). שבת סוכות עצמה (25-26/09)
+	// מטופלת דרך specialSchedule.ts/ShabbatSchedule, לא כאן.
+	const SUKKOT_CHOLHAMOED_ACTIVE_FROM = '2026-09-27';
+	const SUKKOT_CHOLHAMOED_ACTIVE_UNTIL = '2026-10-01';
 
 	// .weekday-grid sets display:grid, which (being an author-stylesheet rule)
 	// overrides the UA stylesheet's [hidden]{display:none} — so toggling the
@@ -178,10 +191,13 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 	const todayIsrael = toIsraelIsoDate(new Date());
 	const isTenDays = todayIsrael >= TEN_DAYS_ACTIVE_FROM && todayIsrael <= TEN_DAYS_ACTIVE_UNTIL;
 	const isYomKippur = todayIsrael >= YOM_KIPPUR_ACTIVE_FROM && todayIsrael <= YOM_KIPPUR_ACTIVE_UNTIL;
-	const isRegular = !isTenDays && !isYomKippur;
+	const isSukkotCholHamoed =
+		todayIsrael >= SUKKOT_CHOLHAMOED_ACTIVE_FROM && todayIsrael <= SUKKOT_CHOLHAMOED_ACTIVE_UNTIL;
+	const isRegular = !isTenDays && !isYomKippur && !isSukkotCholHamoed;
 
 	setVisible('special-weekday-times', isTenDays);
 	setVisible('yom-kippur-times', isYomKippur);
+	setVisible('sukkot-cholhamoed-times', isSukkotCholHamoed);
 	setVisible('regular-weekday-times', isRegular);
 
 	// מנחה בימות חול רגילים = 20 דקות לפני השקיעה, מחושב מחדש כל יום לפי
