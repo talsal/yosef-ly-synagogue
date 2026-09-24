@@ -1,5 +1,6 @@
-// רשימת עסקים של חברי קהילה, מוצגים באתר בתשלום. מבנה: שם, תחום, תיאור קצר,
-// ולינק יצירת קשר (אתר/אינסטגרם/וואטסאפ).
+// רשימת פריטים ללוח המודעות המתחלף בעמוד הבית. שני סוגים מתחלפים באותו
+// מנגנון: 'ad' — עסק של חבר קהילה, בתשלום; 'community' — הודעת שירות
+// לציבור, חינמית (למשל השאלת ציוד, טרמפים וכו'), בלי contactHref/מחיר.
 export interface CommunityBusiness {
 	name: string;
 	category: string;
@@ -8,8 +9,10 @@ export interface CommunityBusiness {
 	contactHref: string;
 	/** אמוג'י כתחליף ללוגו/תמונה אמיתית, עד שיהיו לנו נכסי עיצוב אמיתיים מהמפרסם */
 	icon: string;
-	/** צבע תג האייקון — נבחר מפלטת המותג כדי שכל מפרסם יבלוט קצת אחרת בלי לצאת מהעיצוב */
+	/** צבע תג האייקון — נבחר מפלטת המותג כדי שכל פריט יבלוט קצת אחרת בלי לצאת מהעיצוב */
 	accent: string;
+	/** 'ad' — עסק בתשלום (מוצג כ"פרסומת"). 'community' — הודעת שירות לציבור, חינם (מוצג כ"הודעת קהילה") */
+	kind: 'ad' | 'community';
 }
 
 export const COMMUNITY_BUSINESSES: CommunityBusiness[] = [
@@ -22,5 +25,6 @@ export const COMMUNITY_BUSINESSES: CommunityBusiness[] = [
 		contactHref: 'https://www.instagram.com/oman_haparketim_vehakeramika/',
 		icon: '🪵',
 		accent: '#c9a24b',
+		kind: 'ad',
 	},
 ];

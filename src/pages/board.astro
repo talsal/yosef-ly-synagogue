@@ -1,0 +1,159 @@
+---
+// לוח מודעות: עסקים של חברי קהילה (בתשלום, מתויגים "פרסומת") והודעות שירות
+// לציבור (חינם, מתויגות "הודעת קהילה") — שני הסוגים מוצגים יחד ברשימה אחת,
+// לפי data/communityBusinesses.ts. לא מוצג בעמוד הבית בכוונה, כדי שעמוד
+// הבית יישאר ממוקד בקהילה עצמה ולא בתוכן מסחרי.
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { COMMUNITY_BUSINESSES } from '../data/communityBusinesses';
+---
+
+<BaseLayout title="לוח מודעות" description="עסקי קהילה והודעות שירות לציבור באתר בית הכנסת יוסף-לי">
+	<div class="container section">
+		<h1>לוח מודעות</h1>
+		<p>
+			עסקים של חברי הקהילה, לצד הודעות שירות לציבור. פונים ישירות דרך הפרטים בכל כרטיס.
+		</p>
+
+		{
+			COMMUNITY_BUSINESSES.length === 0 ? (
+				<p class="empty-state">אין כרגע מודעות פעילות.</p>
+			) : (
+				<div class="board-grid">
+					{COMMUNITY_BUSINESSES.map((biz) => (
+						<a
+							class="board-card"
+							href={biz.contactHref}
+							target="_blank"
+							rel={biz.kind === 'ad' ? 'noopener noreferrer sponsored' : 'noopener noreferrer'}
+						>
+							<span class="board-label">{biz.kind === 'ad' ? 'פרסומת' : 'הודעת קהילה'}</span>
+							<span class="board-icon" style={`background: ${biz.accent}`}>
+								{biz.icon}
+							</span>
+							<span class="board-category">{biz.category}</span>
+							<span class="board-name">{biz.name}</span>
+							<span class="board-desc">{biz.description}</span>
+							<span class="board-cta">{biz.contactLabel} &larr;</span>
+						</a>
+					))}
+				</div>
+			)
+		}
+
+		<div class="card cta">
+			<h2>יש לכם עסק ורוצים להופיע כאן?</h2>
+			<p>מקום לעסק שלכם בלוח, מול קהילה שכבר מכירה ובוטחת בכם.</p>
+			<p class="note">לפרטים ומחיר יש לפנות לטל &mdash; <a href="tel:0505991972">050-599-1972</a> / <a href="mailto:tal.salman@gmail.com">tal.salman@gmail.com</a></p>
+		</div>
+	</div>
+</BaseLayout>
+
+<style>
+	.empty-state {
+		color: var(--color-text-muted);
+	}
+
+	.board-grid {
+		display: grid;
+		gap: 1.25rem;
+		grid-template-columns: repeat(auto-fit, minmax(16rem, 1fr));
+		margin: 1.5rem 0;
+	}
+
+	.board-card {
+		position: relative;
+		display: flex;
+		flex-direction: column;
+		align-items: flex-start;
+		text-align: right;
+		text-decoration: none;
+		color: #f7f2e4;
+		background: linear-gradient(140deg, var(--color-primary) 0%, var(--color-primary-dark) 100%);
+		border-radius: var(--radius);
+		padding: 1.9rem 1.25rem 1.25rem;
+		gap: 0.5rem;
+		box-shadow: 0 12px 28px -16px rgba(20, 29, 53, 0.55);
+		transition: transform 0.15s ease;
+	}
+
+	.board-card:hover {
+		transform: translateY(-2px);
+	}
+
+	.board-label {
+		position: absolute;
+		top: 0.85rem;
+		left: 1.1rem;
+		font-size: 0.7rem;
+		font-weight: 700;
+		color: #d9c48d;
+		letter-spacing: 0.06em;
+	}
+
+	.board-icon {
+		width: 3rem;
+		height: 3rem;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		border-radius: 50%;
+		font-size: 1.4rem;
+		box-shadow: 0 4px 10px -3px rgba(0, 0, 0, 0.4);
+		margin-top: 0.5rem;
+	}
+
+	.board-category {
+		font-size: 0.7rem;
+		font-weight: 700;
+		letter-spacing: 0.05em;
+		color: #d9c48d;
+	}
+
+	.board-name {
+		font-size: 1.15rem;
+		font-weight: 800;
+	}
+
+	.board-desc {
+		font-size: 0.88rem;
+		color: rgba(247, 242, 228, 0.82);
+	}
+
+	.board-cta {
+		margin-top: 0.5rem;
+		font-weight: 700;
+		font-size: 0.85rem;
+		background: var(--color-accent);
+		color: #fff;
+		padding: 0.5rem 1.1rem;
+		border-radius: var(--radius);
+		white-space: nowrap;
+		transition: background 0.2s ease;
+	}
+
+	.board-card:hover .board-cta {
+		background: #c9a24b;
+	}
+
+	.cta {
+		text-align: center;
+		background: var(--color-primary);
+		color: #fff;
+		border-color: var(--color-primary);
+	}
+
+	.cta h2 {
+		color: #fff;
+		margin: 0 0 0.4rem;
+	}
+
+	.cta a {
+		color: var(--color-accent-light);
+	}
+
+	.cta .note {
+		color: #d9dce6;
+		font-size: 0.9rem;
+		margin-top: 0.5rem;
+	}
+</style>
