@@ -11,7 +11,6 @@
  */
 
 import { getToranimForShabbat } from '../data/toranim';
-import { truncateSurname } from './privacy';
 
 const OFFSET_MINUTES = {
 	shirHashirim: -12, // ליל שבת: שיר השירים, לפני כניסת שבת
@@ -70,10 +69,7 @@ export function computeWeeklySchedule(candleLighting: Date, havdalah: Date): Wee
 	const shabbatDate = toIsraelIsoDate(addMinutes(candleLighting, 24 * 60));
 	const toranim = getToranimForShabbat(shabbatDate);
 	const toranimText = toranim
-		? toranim
-				.map((name) => truncateSurname(name))
-				.map(noBreak)
-				.join(' – ')
+		? toranim.map(noBreak).join(' – ')
 		: 'יעודכן ע"י הוועד';
 
 	return {

@@ -168,6 +168,18 @@ import seatingFloorPlan from '../assets/images/seating-floor-plan-mens.png';
 		}
 	}
 
+	// שמות במאגר מכילים שמות משפחה מקוצרים (למשל "אברה׳"). כדי שחיפוש לפי
+	// שם משפחה מלא ונכון עדיין ימצא את האיש הנכון, מילה מקוצרת (המסתיימת ב-׳)
+	// נחשבת התאמה גם כשה-token שהוקלד הוא שם מלא שמתחיל באותה תחילית.
+	function nameMatchesToken(name: string, token: string): boolean {
+		if (name.includes(token)) return true;
+		return name.split(/\s+/).some((word) => {
+			if (!word.endsWith('׳')) return false;
+			const prefix = word.slice(0, -1);
+			return prefix.length > 0 && token.startsWith(prefix);
+		});
+	}
+
 	function updateMap(matches: (typeof MENS_SEATING)[number][]) {
 		if (!mapSection || !pinsLayer) return;
 
@@ -205,7 +217,7 @@ import seatingFloorPlan from '../assets/images/seating-floor-plan-mens.png';
 
 		const tokens = query.split(/\s+/).filter(Boolean);
 		const matches = MENS_SEATING.filter((entry) =>
-			tokens.every((token) => entry.name.includes(token)),
+			tokens.every((token) => nameMatchesToken(entry.name, token)),
 		);
 
 		if (matches.length === 0) {
