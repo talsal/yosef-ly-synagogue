@@ -1,8 +1,13 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
 import { withBase, ALIYOT_AUCTION_API_URL } from '../data/site';
+import { TORANIM_TABLE } from '../data/toranim';
 
 const isConfigured = !ALIYOT_AUCTION_API_URL.includes('PASTE_');
+// מיפוי תאריך -> שם פרשה, כדי לתייג באיזו שבת מדובר (לדוגמה: אחרי חג
+// שמחת תורה, השבת הראשונה היא פרשת בראשית). מועבר ל-client-side כי
+// ה-weekStart בפועל מחושב שם (תלוי בתאריך של המבקר, לא בזמן ה-build).
+const parashaByDate = Object.fromEntries(TORANIM_TABLE.map((entry) => [entry.date, entry.parasha]));
 ---
 
 <BaseLayout
@@ -16,6 +21,8 @@ const isConfigured = !ALIYOT_AUCTION_API_URL.includes('PASTE_');
 			מכל יום ראשון ועד יום שישי בשעה 10:00, אפשר להציע מחיר לכל אחת משבע העליות ולמפטיר. כל אחד
 			יכול להעלות הצעה גבוהה יותר מהמוביל הנוכחי, בכל שלב עד הסגירה.
 		</p>
+
+		{isConfigured && <p id="parasha-line" class="parasha-line"></p>}
 
 		{
 			!isConfigured ? (
@@ -49,6 +56,11 @@ const isConfigured = !ALIYOT_AUCTION_API_URL.includes('PASTE_');
 <style>
 	.empty-state {
 		color: var(--color-text-muted);
+	}
+
+	.parasha-line {
+		font-weight: 700;
+		color: var(--color-primary);
 	}
 
 	.closed-banner {
@@ -175,7 +187,7 @@ const isConfigured = !ALIYOT_AUCTION_API_URL.includes('PASTE_');
 
 {
 	isConfigured && (
-		<script define:vars={{ apiUrl: ALIYOT_AUCTION_API_URL }}>
+		<script define:vars={{ apiUrl: ALIYOT_AUCTION_API_URL, parashaByDate }}>
 			const ALIYOT_ORDER = ['כהן', 'לוי', 'שלישי', 'רביעי', 'חמישי', 'שישי', 'שביעי', 'מפטיר'];
 
 			const loadingEl = document.getElementById('loading-state');
@@ -183,6 +195,16 @@ const isConfigured = !ALIYOT_AUCTION_API_URL.includes('PASTE_');
 			const closedBannerEl = document.getElementById('closed-banner');
 			const rowsEl = document.getElementById('rows');
 			const printBtn = document.getElementById('print-btn');
+			const parashaLineEl = document.getElementById('parasha-line');
+
+			function renderParashaLine(weekStart) {
+				if (!parashaLineEl) return;
+				const parasha = parashaByDate[weekStart];
+				const dateLabel = new Intl.DateTimeFormat('he-IL', { day: 'numeric', month: 'long', year: 'numeric' }).format(
+					new Date(`${weekStart}T12:00:00`),
+				);
+				parashaLineEl.textContent = parasha ? `השבת הקרובה: פרשת ${parasha} (${dateLabel})` : `השבת הקרובה: ${dateLabel}`;
+			}
 
 			printBtn?.addEventListener('click', () => window.print());
 
@@ -289,6 +311,7 @@ const isConfigured = !ALIYOT_AUCTION_API_URL.includes('PASTE_');
 					loadingEl.hidden = true;
 					errorEl.hidden = true;
 					closedBannerEl.hidden = !data.isClosed;
+					renderParashaLine(data.weekStart);
 					renderRows(data);
 				} catch (err) {
 					loadingEl.hidden = true;
