@@ -40,6 +40,11 @@ export const REFUAH_FORM_URL =
 export const REFUAH_SHEET_CSV_URL =
 	'https://docs.google.com/spreadsheets/d/e/2PACX-1vRySlN2g_-wxY6rnH-LCiYRiG17PPivLjYMCNeMGEzbZnH85jC5V9VJIoEjH8VedsaGA2uS4bIYKoJz/pub?output=csv';
 
+// כתובת ה-Web App של Google Apps Script שמפעיל את המכירה הפומבית השבועית של
+// עליות לתורה (src/pages/aliyot-auction.astro). יש להחליף לאחר הפריסה בפועל
+// -- ראו הוראות ההקמה שנמסרו לגבאי.
+export const ALIYOT_AUCTION_API_URL = 'PASTE_APPS_SCRIPT_WEB_APP_URL_HERE';
+
 export interface NavItem {
 	label: string;
 	href: string;
@@ -58,6 +63,7 @@ export const NAV_ITEMS: NavItem[] = [
 	{ label: 'תרומות', href: '/donations' },
 	{ label: 'לוח מודעות', href: '/board' },
 	{ label: 'עליות לתורה', href: '/aliyot' },
+	{ label: 'מכירה פומבית', href: '/aliyot-auction' },
 	{ label: 'תורנים', href: '/toranim' },
 	{ label: 'מקומות ישיבה', href: '/seating' },
 	{ label: 'אודות', href: '/about' },
