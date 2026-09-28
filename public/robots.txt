@@ -4,5 +4,6 @@ Disallow: /yosef-ly-synagogue/seating
 Disallow: /yosef-ly-synagogue/aliyot
 Disallow: /yosef-ly-synagogue/memorials
 Disallow: /yosef-ly-synagogue/refuah
+Disallow: /yosef-ly-synagogue/gallery
 
 Sitemap: https://talsal.github.io/yosef-ly-synagogue/sitemap-index.xml

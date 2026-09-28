@@ -11,7 +11,9 @@ export default defineConfig({
 			// עמודים עם מידע אישי רגיש (noindex) — מוחרגים גם מהסייטמאפ, כדי
 			// שלא לשלוח למנועי חיפוש אות סותר ("שלחתי אותך לכאן" מול "אל תאנדקס").
 			filter: (page) =>
-				!['seating', 'aliyot', 'memorials', 'refuah'].some((path) => page.includes(`/${path}`)),
+				!['seating', 'aliyot', 'memorials', 'refuah', 'gallery'].some((path) =>
+					page.includes(`/${path}`),
+				),
 		}),
 	],
 	vite: {
