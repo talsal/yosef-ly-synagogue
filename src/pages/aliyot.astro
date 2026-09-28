@@ -46,7 +46,11 @@ const monthlySummary = summarize(entries, (d) => `${d.getFullYear()}-${d.getMont
 const yearlySummary = summarize(entries, (d) => `${d.getFullYear()}`, yearFormat);
 ---
 
-<BaseLayout title="מכירת עליות לתורה" description="היסטוריית מכירת העליות לתורה בבית הכנסת יוסף-לי">
+<BaseLayout
+	title="מכירת עליות לתורה"
+	description="היסטוריית מכירת העליות לתורה בבית הכנסת יוסף-לי"
+	noindex
+>
 	<div class="container section">
 		<p class="bsd">בס&quot;ד</p>
 		<h1>מכירת עליות לתורה</h1>

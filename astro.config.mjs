@@ -6,7 +6,14 @@ export default defineConfig({
 	site: 'https://talsal.github.io',
 	base: '/yosef-ly-synagogue',
 	trailingSlash: 'never',
-	integrations: [sitemap()],
+	integrations: [
+		sitemap({
+			// עמודים עם מידע אישי רגיש (noindex) — מוחרגים גם מהסייטמאפ, כדי
+			// שלא לשלוח למנועי חיפוש אות סותר ("שלחתי אותך לכאן" מול "אל תאנדקס").
+			filter: (page) =>
+				!['seating', 'aliyot', 'memorials', 'refuah'].some((path) => page.includes(`/${path}`)),
+		}),
+	],
 	vite: {
 		build: {
 			// מיניפיקציית ה-CSS של esbuild כותבת מדיה קווריז בתחביר range syntax
