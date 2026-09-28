@@ -3,31 +3,31 @@ date: 2026-09-05
 parasha: נצבים-וילך
 sales:
   - aliyah: פתיחה
-    name: פלומו ניסים
+    name: פלומו נ׳
     price: 200
   - aliyah: הולכה
-    name: מקסימוב רוני
+    name: מקסימוב ר׳
     price: 101
   - aliyah: הגבהה
-    name: ישראל בכר
+    name: ישראל ב׳
     price: 180
   - aliyah: כהן
-    name: טרבלסי יואב
+    name: טרבלסי י׳
     price: 100
   - aliyah: לוי
-    name: מלכה יגאל
+    name: מלכה י׳
     price: 150
   - aliyah: שלישי
-    name: מלכה יגאל
+    name: מלכה י׳
     price: 250
   - aliyah: רביעי
-    name: טרבלסי יואב
+    name: טרבלסי י׳
     price: 300
   - aliyah: חמישי
-    name: ישראל עזריאל
+    name: ישראל ע׳
     price: 200
   - aliyah: שישי
-    name: יוני לוי
+    name: יוני ל׳
     price: 200
   - aliyah: שביעי
     name: ''

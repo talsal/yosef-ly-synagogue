@@ -31,6 +31,9 @@ const events = defineCollection({
 	}),
 });
 
+// sale.name is already truncated to given name + surname initial (e.g. "רן ע׳")
+// in the content files -- not just at render time -- because the repo is public
+// and these names aren't shown on the site at all anyway (see aliyot.astro).
 const aliyot = defineCollection({
 	loader: glob({ pattern: '**/*.md', base: './src/content/aliyot' }),
 	schema: z.object({
