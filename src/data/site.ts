@@ -43,7 +43,8 @@ export const REFUAH_SHEET_CSV_URL =
 // כתובת ה-Web App של Google Apps Script שמפעיל את המכירה הפומבית השבועית של
 // עליות לתורה (src/pages/aliyot-auction.astro). יש להחליף לאחר הפריסה בפועל
 // -- ראו הוראות ההקמה שנמסרו לגבאי.
-export const ALIYOT_AUCTION_API_URL = 'PASTE_APPS_SCRIPT_WEB_APP_URL_HERE';
+export const ALIYOT_AUCTION_API_URL =
+	'https://script.google.com/macros/s/AKfycbxXmzMmQzj4JsH3POmOqmE-9rWUoM8-w1oYlOEROaU8ALSZ9w72YwwMGIGUC_GwSeWQBA/exec';
 
 export interface NavItem {
 	label: string;

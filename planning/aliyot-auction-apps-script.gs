@@ -33,6 +33,18 @@ function getWeekStatus() {
 	return { weekStart, isClosed };
 }
 
+// Google Sheets מזהה אוטומטית "2026-10-03" כתאריך ומאחסן אותו כ-Date בפועל
+// (למרות שבתא זה נראה כמו טקסט רגיל) -- getValues() מחזיר או מחרוזת או
+// אובייקט Date בהתאם, אז צריך לנרמל את שתי הצורות לפני השוואה. לא ניתן
+// להשתמש ב-instanceof Date -- אובייקטים שמגיעים משירות ה-Sheets לא עוברים
+// אותה בדיקה (quirk ידוע של Apps Script), לכן בודקים לפי duck-typing.
+function normalizeWeekStart(value) {
+	if (value && typeof value.getFullYear === 'function') {
+		return Utilities.formatDate(value, TZ, 'yyyy-MM-dd');
+	}
+	return String(value);
+}
+
 function getSheet() {
 	const ss = SpreadsheetApp.getActiveSpreadsheet();
 	let sheet = ss.getSheetByName(SHEET_NAME);
@@ -49,7 +61,7 @@ function buildStatus() {
 	const data = sheet.getDataRange().getValues();
 	const map = {};
 	for (let i = 1; i < data.length; i++) {
-		if (data[i][0] === weekStart) {
+		if (normalizeWeekStart(data[i][0]) === weekStart) {
 			map[data[i][1]] = { name: data[i][2], price: Number(data[i][3]) || 0 };
 		}
 	}
@@ -84,7 +96,7 @@ function placeBid(p) {
 		let currentPrice = 0;
 		let currentName = '';
 		for (let i = 1; i < data.length; i++) {
-			if (data[i][0] === weekStart && data[i][1] === aliyah) {
+			if (normalizeWeekStart(data[i][0]) === weekStart && data[i][1] === aliyah) {
 				rowNum = i + 1;
 				currentPrice = Number(data[i][3]) || 0;
 				currentName = data[i][2] || '';
