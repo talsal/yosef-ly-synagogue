@@ -75,13 +75,11 @@ const yearlySummary = summarize(entries, (d) => `${d.getFullYear()}`, yearFormat
 							{latest.data.sales.map((sale) => (
 								<div class="sale-row">
 									<span class="aliyah-name">{sale.aliyah}</span>
-									<span class="buyer-name">{sale.name || 'לא נמכר'}</span>
-									<span class="price">{sale.price ? `${sale.price} ₪` : ''}</span>
+									<span class="price">{sale.price ? `${sale.price} ₪` : 'לא נמכר'}</span>
 								</div>
 							))}
 							<div class="sale-row total-row">
 								<span class="aliyah-name">סה&quot;כ</span>
-								<span class="buyer-name"></span>
 								<span class="price">{totalOf(latest.data.sales)} ₪</span>
 							</div>
 						</div>
@@ -137,13 +135,11 @@ const yearlySummary = summarize(entries, (d) => `${d.getFullYear()}`, yearFormat
 									{entry.data.sales.map((sale) => (
 										<div class="sale-row">
 											<span class="aliyah-name">{sale.aliyah}</span>
-											<span class="buyer-name">{sale.name || 'לא נמכר'}</span>
-											<span class="price">{sale.price ? `${sale.price} ₪` : ''}</span>
+											<span class="price">{sale.price ? `${sale.price} ₪` : 'לא נמכר'}</span>
 										</div>
 									))}
 									<div class="sale-row total-row">
 										<span class="aliyah-name">סה&quot;כ</span>
-										<span class="buyer-name"></span>
 										<span class="price">{totalOf(entry.data.sales)} ₪</span>
 									</div>
 								</div>
@@ -225,13 +221,8 @@ const yearlySummary = summarize(entries, (d) => `${d.getFullYear()}`, yearFormat
 		flex: 1;
 	}
 
-	.buyer-name {
-		flex: 1.5;
-		text-align: center;
-	}
-
 	.price {
-		flex: 0.6;
+		flex: none;
 		text-align: left;
 		font-weight: 700;
 		color: var(--color-accent);
