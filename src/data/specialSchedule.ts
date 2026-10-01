@@ -126,7 +126,7 @@ export const SPECIAL_SCHEDULES: SpecialSchedule[] = [
 				label: 'שבת קודש / שמיני עצרת ושמחת תורה',
 				dateLabel: '03/10/2026',
 				items: [
-					{ time: '06:30', text: "שיעור ר' רונן" },
+					{ time: '06:45', text: "שיעור ר' רונן" },
 					{ time: '07:45', text: 'שחרית-קרבנות' },
 					{ time: '11:00', text: 'קידוש (מיד בסיום התפילה)' },
 					{ time: 'תורנים', text: 'שי יצחקוב ומשה מזרחי' },
