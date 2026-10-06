@@ -86,11 +86,3 @@ export function getToranimForShabbat(isoDate: string): [string, string] | null {
 	const index = (((lastIndex + weeksAhead) % cycle.length) + cycle.length) % cycle.length;
 	return cycle[index];
 }
-
-// מחזיר את שם הפרשה לשבת נתונה (yyyy-mm-dd) אם היא נמצאת בטווח הטבלה --
-// בשונה מהתורנים, שמות הפרשות לא חוזרים במחזור קבוע, אז אין המשך אוטומטי
-// מעבר לטווח. משמש למשל בעמוד המכירה הפומבית (aliyot-auction.astro).
-export function getParashaForShabbat(isoDate: string): string | null {
-	const exact = TORANIM_TABLE.find((entry) => entry.date === isoDate);
-	return exact ? exact.parasha : null;
-}
