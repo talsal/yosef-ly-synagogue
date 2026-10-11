@@ -72,7 +72,7 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 					<div><dt>מנחה</dt><dd data-field="mincha">יעודכן בקרוב</dd></div>
 					<div><dt>ערבית</dt><dd>צמוד למנחה</dd></div>
 				</dl>
-				<p class="section-note">מנחה מתעדכן אוטומטית מדי יום ל-20 דקות לפני השקיעה.</p>
+				<p class="section-note">מנחה מתעדכן אוטומטית מדי יום ל-25 דקות לפני השקיעה.</p>
 			</div>
 		</section>
 
@@ -200,14 +200,14 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 	setVisible('sukkot-cholhamoed-times', isSukkotCholHamoed);
 	setVisible('regular-weekday-times', isRegular);
 
-	// מנחה בימות חול רגילים = 20 דקות לפני השקיעה, מחושב מחדש כל יום לפי
+	// מנחה בימות חול רגילים = 25 דקות לפני השקיעה, מחושב מחדש כל יום לפי
 	// השקיעה האמיתית (ולא זמן קבוע לפי עונה) — ערבית תמיד צמוד אחריה.
 	if (isRegular) {
 		const minchaEl = document.querySelector<HTMLElement>('[data-field="mincha"]');
 		if (minchaEl) {
 			fetchDailyZmanim()
 				.then((zmanim) => {
-					if (zmanim) minchaEl.textContent = formatTimeMinusMinutes(zmanim.sunsetIso, 20);
+					if (zmanim) minchaEl.textContent = formatTimeMinusMinutes(zmanim.sunsetIso, 25);
 				})
 				.catch(() => {});
 		}

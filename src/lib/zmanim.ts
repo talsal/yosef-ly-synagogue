@@ -14,7 +14,7 @@ export interface DailyZmanim {
 	chatzot: string;
 	minchaGedola: string;
 	sunset: string;
-	/** שקיעה כ-ISO גולמי, כדי לאפשר חישוב זמנים יחסיים אליה (למשל מנחה = שקיעה פחות 20 דקות) */
+	/** שקיעה כ-ISO גולמי, כדי לאפשר חישוב זמנים יחסיים אליה (למשל מנחה = שקיעה פחות 25 דקות) */
 	sunsetIso: string;
 	tzeitHakochavim: string;
 }
@@ -31,7 +31,7 @@ function formatTime(iso: string): string {
 	}).format(new Date(iso));
 }
 
-/** מחזיר זמן בפורמט HH:MM, X דקות לפני זמן ה-ISO הנתון (למשל מנחה = שקיעה פחות 20 דקות) */
+/** מחזיר זמן בפורמט HH:MM, X דקות לפני זמן ה-ISO הנתון (למשל מנחה = שקיעה פחות 25 דקות) */
 export function formatTimeMinusMinutes(iso: string, minutes: number): string {
 	const date = new Date(new Date(iso).getTime() - minutes * 60_000);
 	return formatTime(date.toISOString());
