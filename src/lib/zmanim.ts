@@ -13,6 +13,8 @@ export interface DailyZmanim {
 	sofZmanShma: string;
 	sofZmanTfilla: string;
 	chatzot: string;
+	/** חצות הלילה הקרוב: 12 שעות אחרי חצות היום (אותה נקודה במעגל השמש) */
+	chatzotNight: string;
 	minchaGedola: string;
 	sunset: string;
 	tzeitHakochavim: string;
@@ -44,6 +46,7 @@ export async function fetchDailyZmanim(): Promise<DailyZmanim | null> {
 		sofZmanShma: formatTime(t.sofZmanShma),
 		sofZmanTfilla: formatTime(t.sofZmanTfilla),
 		chatzot: formatTime(t.chatzot),
+		chatzotNight: formatTime(new Date(new Date(t.chatzot).getTime() + 12 * 3_600_000).toISOString()),
 		minchaGedola: formatTime(t.minchaGedola),
 		sunset: formatTime(t.sunset),
 		tzeitHakochavim: formatTime(t.tzeit7083deg),
