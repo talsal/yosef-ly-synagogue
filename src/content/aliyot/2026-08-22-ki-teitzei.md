@@ -21,7 +21,7 @@ sales:
     name: ניר ד׳
     price: 260
   - aliyah: רביעי
-    name: רענן י׳
+    name: יהונתן ר׳
     price: 200
   - aliyah: חמישי
     name: משה מ׳
