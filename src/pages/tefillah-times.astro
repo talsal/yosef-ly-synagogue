@@ -68,11 +68,11 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 			<div class="card weekday-card" id="regular-weekday-times">
 				<h3>זמני חול</h3>
 				<dl>
-					<div><dt>שחרית</dt><dd>6:45</dd></div>
+					<div><dt>שחרית (הודו)</dt><dd>7:00</dd></div>
 					<div><dt>מנחה</dt><dd data-field="mincha">יעודכן בקרוב</dd></div>
 					<div><dt>ערבית</dt><dd>צמוד למנחה</dd></div>
 				</dl>
-				<p class="section-note">מנחה מתעדכן אוטומטית מדי יום ל-28 דקות לפני השקיעה.</p>
+				<p class="section-note">מנחה אחידה לכל השבוע (ראשון–חמישי), מתעדכנת אוטומטית מדי שבוע לפי השקיעה המוקדמת בשבוע.</p>
 			</div>
 		</section>
 
@@ -158,7 +158,7 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 
 <script>
 	import { toIsraelIsoDate } from '../lib/shabbatCompute';
-	import { fetchDailyZmanim, formatTimeMinusMinutes } from '../lib/zmanim';
+	import { fetchDailyZmanim, fetchWeeklyMincha } from '../lib/zmanim';
 
 	// זמני חול מיוחדים לימות החול, בתוקף בטווחי תאריכים נפרדים שאינם חופפים.
 	// שים לב: יום הכיפורים השנה חל ביום ראשון-שני (לא בשבת), ולכן הלוח הזה
@@ -200,14 +200,15 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 	setVisible('sukkot-cholhamoed-times', isSukkotCholHamoed);
 	setVisible('regular-weekday-times', isRegular);
 
-	// מנחה בימות חול רגילים = 28 דקות לפני השקיעה, מחושב מחדש כל יום לפי
-	// השקיעה האמיתית (ולא זמן קבוע לפי עונה) — ערבית תמיד צמוד אחריה.
+	// מנחה בימות חול רגילים: זמן אחיד לכל השבוע (ראשון–חמישי) -- 20 דקות לפני
+	// השקיעה המוקדמת בשבוע, מעוגל כלפי מטה ל-5 דקות (ראו lib/weekdayMincha.ts).
+	// ערבית תמיד צמוד אחריה.
 	if (isRegular) {
 		const minchaEl = document.querySelector<HTMLElement>('[data-field="mincha"]');
 		if (minchaEl) {
-			fetchDailyZmanim()
-				.then((zmanim) => {
-					if (zmanim) minchaEl.textContent = formatTimeMinusMinutes(zmanim.sunsetIso, 28);
+			fetchWeeklyMincha()
+				.then((mincha) => {
+					if (mincha) minchaEl.textContent = mincha;
 				})
 				.catch(() => {});
 		}

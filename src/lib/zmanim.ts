@@ -1,6 +1,7 @@
 /** זמני היום ההלכתיים לפי הקואורדינטות המדויקות של בית הכנסת. רץ client-side. */
 
 import { SYNAGOGUE_COORDS } from '../data/site';
+import { computeWeeklyMincha, weekdayDatesFor } from './weekdayMincha';
 
 const ZMANIM_URL =
 	`https://www.hebcal.com/zmanim?cfg=json&latitude=${SYNAGOGUE_COORDS.latitude}` +
@@ -14,8 +15,6 @@ export interface DailyZmanim {
 	chatzot: string;
 	minchaGedola: string;
 	sunset: string;
-	/** שקיעה כ-ISO גולמי, כדי לאפשר חישוב זמנים יחסיים אליה (למשל מנחה = שקיעה פחות 28 דקות) */
-	sunsetIso: string;
 	tzeitHakochavim: string;
 }
 
@@ -29,12 +28,6 @@ function formatTime(iso: string): string {
 		minute: '2-digit',
 		timeZone: 'Asia/Jerusalem',
 	}).format(new Date(iso));
-}
-
-/** מחזיר זמן בפורמט HH:MM, X דקות לפני זמן ה-ISO הנתון (למשל מנחה = שקיעה פחות 28 דקות) */
-export function formatTimeMinusMinutes(iso: string, minutes: number): string {
-	const date = new Date(new Date(iso).getTime() - minutes * 60_000);
-	return formatTime(date.toISOString());
 }
 
 export async function fetchDailyZmanim(): Promise<DailyZmanim | null> {
@@ -53,7 +46,22 @@ export async function fetchDailyZmanim(): Promise<DailyZmanim | null> {
 		chatzot: formatTime(t.chatzot),
 		minchaGedola: formatTime(t.minchaGedola),
 		sunset: formatTime(t.sunset),
-		sunsetIso: t.sunset,
 		tzeitHakochavim: formatTime(t.tzeit7083deg),
 	};
+}
+
+/** מנחה אחידה לכל שבוע (ראשון–חמישי) -- ראו lib/weekdayMincha.ts. null אם אחת הבקשות נכשלה. */
+export async function fetchWeeklyMincha(): Promise<string | null> {
+	const todayIsrael = new Intl.DateTimeFormat('en-CA', { timeZone: 'Asia/Jerusalem' }).format(new Date());
+	const responses = await Promise.all(
+		weekdayDatesFor(todayIsrael).map((date) => fetch(`${ZMANIM_URL}&date=${date}`)),
+	);
+	if (responses.some((res) => !res.ok)) return null;
+	const sunsets: Date[] = [];
+	for (const res of responses) {
+		const data: ZmanimResponse = await res.json();
+		if (!data.times.sunset) return null;
+		sunsets.push(new Date(data.times.sunset));
+	}
+	return computeWeeklyMincha(sunsets);
 }
