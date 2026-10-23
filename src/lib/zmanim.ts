@@ -68,3 +68,11 @@ export async function fetchWeeklyMincha(): Promise<string | null> {
 	}
 	return computeWeeklyMincha(sunsets);
 }
+
+/** שקיעה מדויקת (לפי קואורדינטות בית הכנסת) ליום נתון, yyyy-mm-dd לפי שעון ישראל. */
+export async function fetchSunsetForDate(isoDate: string): Promise<Date | null> {
+	const res = await fetch(`${ZMANIM_URL}&date=${isoDate}`);
+	if (!res.ok) return null;
+	const data: ZmanimResponse = await res.json();
+	return data.times.sunset ? new Date(data.times.sunset) : null;
+}

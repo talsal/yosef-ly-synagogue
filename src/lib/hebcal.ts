@@ -1,4 +1,23 @@
-/** שליפת כניסת/יציאת שבת ופרשת השבוע למודיעין דרך Hebcal API. רץ client-side. */
+/**
+ * שליפת כניסת/יציאת שבת ופרשת השבוע למודיעין דרך Hebcal API. רץ client-side.
+ *
+ * הקהילה פועלת לפי לוחות מודיעין: כניסת שבת = שקיעה פחות 18 דקות, צאת שבת =
+ * שקיעה ועוד 33 דקות (נבדק מול 17:41/18:31 של 23-24.10 ומול 19:07/19:57 של
+ * 14-15.8) -- Hebcal נותן 17:39/18:35, אז ליום שישי/שבת רגילים מחשבים מהשקיעה
+ * המדויקת. בערבי חג ובמוצאי חג נשארים עם הזמנים של Hebcal.
+ */
+import { fetchSunsetForDate } from './zmanim';
+
+const CANDLE_MINUTES_BEFORE_SUNSET = 18;
+const HAVDALAH_MINUTES_AFTER_SUNSET = 33;
+
+function israelIsoDate(date: Date): string {
+	return new Intl.DateTimeFormat('en-CA', { timeZone: 'Asia/Jerusalem' }).format(date);
+}
+
+function weekdayOfIsoDate(iso: string): number {
+	return new Date(`${iso}T12:00:00Z`).getUTCDay(); // 0=ראשון ... 5=שישי, 6=שבת
+}
 
 // טווח רחב (לא רק "השבת הקרובה") כדי לא להישבר כששבת חופפת לחג רב-יומי
 // (למשל ראש השנה): ה-endpoint הצר של /shabbat לפעמים מחזיר הדלקת נרות של
@@ -69,8 +88,23 @@ export async function fetchShabbatTimes(): Promise<ShabbatTimes | null> {
 			new Date(item.date).getTime() <= new Date(havdalah.date).getTime(),
 	);
 
-	const candleLightingDate = new Date(candle.date);
-	const havdalahDate = new Date(havdalah.date);
+	let candleLightingDate = new Date(candle.date);
+	let havdalahDate = new Date(havdalah.date);
+
+	const candleIso = israelIsoDate(candleLightingDate);
+	const havdalahIso = israelIsoDate(havdalahDate);
+	if (weekdayOfIsoDate(candleIso) === 5 && weekdayOfIsoDate(havdalahIso) === 6) {
+		const [fridaySunset, saturdaySunset] = await Promise.all([
+			fetchSunsetForDate(candleIso).catch(() => null),
+			fetchSunsetForDate(havdalahIso).catch(() => null),
+		]);
+		if (fridaySunset) {
+			candleLightingDate = new Date(fridaySunset.getTime() - CANDLE_MINUTES_BEFORE_SUNSET * 60_000);
+		}
+		if (saturdaySunset) {
+			havdalahDate = new Date(saturdaySunset.getTime() + HAVDALAH_MINUTES_AFTER_SUNSET * 60_000);
+		}
+	}
 
 	return {
 		parasha: parasha?.hebrew ?? parasha?.title ?? '',
