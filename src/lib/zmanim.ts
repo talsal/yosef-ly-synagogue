@@ -2,7 +2,7 @@
 
 import { SYNAGOGUE_COORDS } from '../data/site';
 import { MODIIN_LUACH } from '../data/modiinLuach';
-import { computeWeekdayMincha, floorToFive, shabbatDateFor } from './weekdayMincha';
+import { computeWeekdayMincha, minusTwentyMinutes, shabbatDateFor } from './weekdayMincha';
 
 const ZMANIM_URL =
 	`https://www.hebcal.com/zmanim?cfg=json&latitude=${SYNAGOGUE_COORDS.latitude}` +
@@ -54,12 +54,12 @@ export async function fetchDailyZmanim(): Promise<DailyZmanim | null> {
 	};
 }
 
-/** מנחה אחידה לימות החול: כניסת השבת הקרובה לפי לוח מודיעין, מעוגלת כלפי מטה ל-5 דקות (ראו lib/weekdayMincha.ts). null אם השליפה נכשלה. */
+/** מנחה אחידה לימות החול: 20 דקות לפני השקיעה של השבת הקרובה לפי לוח מודיעין (ראו lib/weekdayMincha.ts). null אם השליפה נכשלה. */
 export async function fetchWeeklyMincha(): Promise<string | null> {
 	const todayIsrael = new Intl.DateTimeFormat('en-CA', { timeZone: 'Asia/Jerusalem' }).format(new Date());
 	const shabbatIso = shabbatDateFor(todayIsrael);
 	const luach = MODIIN_LUACH[shabbatIso];
-	if (luach) return floorToFive(luach.candle);
+	if (luach) return minusTwentyMinutes(luach.sunset);
 	const shabbatSunset = await fetchSunsetForDate(shabbatIso);
 	return shabbatSunset ? computeWeekdayMincha(shabbatSunset) : null;
 }
