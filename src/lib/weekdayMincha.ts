@@ -1,7 +1,8 @@
 /**
- * מנחה בימות החול: זמן אחיד לכל השבוע (ראשון–חמישי) -- 20 דקות לפני השקיעה
- * של השבת הקרובה, מעוגל לחמש הדקות הקרובות. הכלל מתאים לשלושה שבועות שהגבאים
- * קבעו בפועל: 17:45 (11.10), 17:40 (18.10), 16:15 (שבוע 25.11).
+ * מנחה בימות החול: זמן אחיד לכל השבוע (ראשון–חמישי) = כניסת השבת הקרובה לפי
+ * לוח מודיעין (data/modiinLuach.ts), מעוגלת כלפי מטה ל-5 דקות -- מתאים לכל
+ * השבועות שהגבאים קבעו (17:45, 17:40, 16:15). מחוץ לטווח הלוח: 20 דקות לפני
+ * השקיעה של Hebcal, מעוגל ל-5 דקות.
  */
 
 const MINUTES_BEFORE_SUNSET = 20;
@@ -27,4 +28,11 @@ export function computeWeekdayMincha(shabbatSunset: Date): string {
 	const rounded = Math.round(minutes / ROUND_MINUTES) * ROUND_MINUTES;
 	const pad = (n: number) => String(n).padStart(2, '0');
 	return `${pad(Math.floor(rounded / 60) % 24)}:${pad(rounded % 60)}`;
+}
+
+/** "16:18" -> "16:15" */
+export function floorToFive(hhmm: string): string {
+	const total = Number(hhmm.slice(0, 2)) * 60 + Number(hhmm.slice(3));
+	const floored = Math.floor(total / ROUND_MINUTES) * ROUND_MINUTES;
+	return `${String(Math.floor(floored / 60)).padStart(2, '0')}:${String(floored % 60).padStart(2, '0')}`;
 }

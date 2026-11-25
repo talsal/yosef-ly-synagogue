@@ -1,15 +1,11 @@
 /**
  * שליפת כניסת/יציאת שבת ופרשת השבוע למודיעין דרך Hebcal API. רץ client-side.
  *
- * הקהילה פועלת לפי לוחות מודיעין: כניסת שבת = שקיעה פחות 18 דקות, צאת שבת =
- * שקיעה ועוד 33 דקות (נבדק מול 17:41/18:31 של 23-24.10 ומול 19:07/19:57 של
- * 14-15.8) -- Hebcal נותן 17:39/18:35, אז ליום שישי/שבת רגילים מחשבים מהשקיעה
- * המדויקת. בערבי חג ובמוצאי חג נשארים עם הזמנים של Hebcal.
+ * הקהילה פועלת לפי לוח מודיעין (data/modiinLuach.ts): ליום שישי/שבת רגילים
+ * מחליפים את שעות Hebcal (שמתרחקות ממנו ב-2-4 דקות) בשעות הלוח. מחוץ לטווח
+ * הלוח, או בערבי חג, נשארים עם הזמנים של Hebcal.
  */
-import { fetchSunsetForDate } from './zmanim';
-
-const CANDLE_MINUTES_BEFORE_SUNSET = 18;
-const HAVDALAH_MINUTES_AFTER_SUNSET = 33;
+import { MODIIN_LUACH } from '../data/modiinLuach';
 
 function israelIsoDate(date: Date): string {
 	return new Intl.DateTimeFormat('en-CA', { timeZone: 'Asia/Jerusalem' }).format(date);
@@ -17,6 +13,11 @@ function israelIsoDate(date: Date): string {
 
 function weekdayOfIsoDate(iso: string): number {
 	return new Date(`${iso}T12:00:00Z`).getUTCDay(); // 0=ראשון ... 5=שישי, 6=שבת
+}
+
+/** מחליף את שעת היום של תאריך Hebcal בשעה "HH:MM" מהלוח, באותו הפרש UTC של המקור. */
+function withLuachTime(hebcalIso: string, hhmm: string): Date {
+	return new Date(`${hebcalIso.slice(0, 11)}${hhmm}:00${hebcalIso.slice(19)}`);
 }
 
 // טווח רחב (לא רק "השבת הקרובה") כדי לא להישבר כששבת חופפת לחג רב-יומי
@@ -91,19 +92,15 @@ export async function fetchShabbatTimes(): Promise<ShabbatTimes | null> {
 	let candleLightingDate = new Date(candle.date);
 	let havdalahDate = new Date(havdalah.date);
 
-	const candleIso = israelIsoDate(candleLightingDate);
-	const havdalahIso = israelIsoDate(havdalahDate);
-	if (weekdayOfIsoDate(candleIso) === 5 && weekdayOfIsoDate(havdalahIso) === 6) {
-		const [fridaySunset, saturdaySunset] = await Promise.all([
-			fetchSunsetForDate(candleIso).catch(() => null),
-			fetchSunsetForDate(havdalahIso).catch(() => null),
-		]);
-		if (fridaySunset) {
-			candleLightingDate = new Date(fridaySunset.getTime() - CANDLE_MINUTES_BEFORE_SUNSET * 60_000);
-		}
-		if (saturdaySunset) {
-			havdalahDate = new Date(saturdaySunset.getTime() + HAVDALAH_MINUTES_AFTER_SUNSET * 60_000);
-		}
+	const shabbatIso = israelIsoDate(havdalahDate);
+	const luach = MODIIN_LUACH[shabbatIso];
+	if (
+		luach &&
+		weekdayOfIsoDate(israelIsoDate(candleLightingDate)) === 5 &&
+		weekdayOfIsoDate(shabbatIso) === 6
+	) {
+		candleLightingDate = withLuachTime(candle.date, luach.candle);
+		havdalahDate = withLuachTime(havdalah.date, luach.motzash);
 	}
 
 	return {
