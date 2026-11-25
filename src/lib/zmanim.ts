@@ -1,7 +1,7 @@
 /** זמני היום ההלכתיים לפי הקואורדינטות המדויקות של בית הכנסת. רץ client-side. */
 
 import { SYNAGOGUE_COORDS } from '../data/site';
-import { computeWeeklyMincha, weekdayDatesFor } from './weekdayMincha';
+import { computeWeekdayMincha, shabbatDateFor } from './weekdayMincha';
 
 const ZMANIM_URL =
 	`https://www.hebcal.com/zmanim?cfg=json&latitude=${SYNAGOGUE_COORDS.latitude}` +
@@ -53,20 +53,11 @@ export async function fetchDailyZmanim(): Promise<DailyZmanim | null> {
 	};
 }
 
-/** מנחה אחידה לכל שבוע (ראשון–חמישי) -- ראו lib/weekdayMincha.ts. null אם אחת הבקשות נכשלה. */
+/** מנחה אחידה לימות החול -- 20 דקות לפני השקיעה של השבת הקרובה (ראו lib/weekdayMincha.ts). null אם השליפה נכשלה. */
 export async function fetchWeeklyMincha(): Promise<string | null> {
 	const todayIsrael = new Intl.DateTimeFormat('en-CA', { timeZone: 'Asia/Jerusalem' }).format(new Date());
-	const responses = await Promise.all(
-		weekdayDatesFor(todayIsrael).map((date) => fetch(`${ZMANIM_URL}&date=${date}`)),
-	);
-	if (responses.some((res) => !res.ok)) return null;
-	const sunsets: Date[] = [];
-	for (const res of responses) {
-		const data: ZmanimResponse = await res.json();
-		if (!data.times.sunset) return null;
-		sunsets.push(new Date(data.times.sunset));
-	}
-	return computeWeeklyMincha(sunsets);
+	const shabbatSunset = await fetchSunsetForDate(shabbatDateFor(todayIsrael));
+	return shabbatSunset ? computeWeekdayMincha(shabbatSunset) : null;
 }
 
 /** שקיעה מדויקת (לפי קואורדינטות בית הכנסת) ליום נתון, yyyy-mm-dd לפי שעון ישראל. */

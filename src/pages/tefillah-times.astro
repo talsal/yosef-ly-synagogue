@@ -72,7 +72,7 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 					<div><dt>מנחה</dt><dd data-field="mincha">יעודכן בקרוב</dd></div>
 					<div><dt>ערבית</dt><dd>צמוד למנחה</dd></div>
 				</dl>
-				<p class="section-note">מנחה אחידה לכל השבוע (ראשון–חמישי), מתעדכנת אוטומטית מדי שבוע לפי השקיעה המוקדמת בשבוע.</p>
+				<p class="section-note">מנחה אחידה לכל השבוע (ראשון–חמישי): 20 דקות לפני השקיעה של השבת הקרובה, מתעדכנת אוטומטית מדי שבוע.</p>
 			</div>
 		</section>
 
@@ -201,7 +201,7 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 	setVisible('regular-weekday-times', isRegular);
 
 	// מנחה בימות חול רגילים: זמן אחיד לכל השבוע (ראשון–חמישי) -- 20 דקות לפני
-	// השקיעה המוקדמת בשבוע, מעוגל כלפי מטה ל-5 דקות (ראו lib/weekdayMincha.ts).
+	// השקיעה של השבת הקרובה (ראו lib/weekdayMincha.ts).
 	// ערבית תמיד צמוד אחריה.
 	if (isRegular) {
 		const minchaEl = document.querySelector<HTMLElement>('[data-field="mincha"]');
