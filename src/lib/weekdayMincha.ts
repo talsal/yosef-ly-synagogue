@@ -1,9 +1,11 @@
 /**
  * מנחה בימות החול: זמן אחיד לכל השבוע (ראשון–חמישי) -- 20 דקות לפני השקיעה
- * של השבת הקרובה (בלי עיגול).
+ * של השבת הקרובה, מעוגל לחמש הדקות הקרובות. הכלל מתאים לשלושה שבועות שהגבאים
+ * קבעו בפועל: 17:45 (11.10), 17:40 (18.10), 16:15 (שבוע 25.11).
  */
 
 const MINUTES_BEFORE_SUNSET = 20;
+const ROUND_MINUTES = 5;
 
 /** תאריך השבת שקובעת את מנחת השבוע: מיום שישי/שבת מציגים את מנחת השבוע הבא (ראשון–חמישי הקרובים). */
 export function shabbatDateFor(todayIsrael: string): string {
@@ -21,5 +23,8 @@ export function computeWeekdayMincha(shabbatSunset: Date): string {
 		hourCycle: 'h23',
 		timeZone: 'Asia/Jerusalem',
 	}).formatToParts(mincha);
-	return `${parts.find((p) => p.type === 'hour')!.value}:${parts.find((p) => p.type === 'minute')!.value}`;
+	const minutes = Number(parts.find((p) => p.type === 'hour')!.value) * 60 + Number(parts.find((p) => p.type === 'minute')!.value);
+	const rounded = Math.round(minutes / ROUND_MINUTES) * ROUND_MINUTES;
+	const pad = (n: number) => String(n).padStart(2, '0');
+	return `${pad(Math.floor(rounded / 60) % 24)}:${pad(rounded % 60)}`;
 }
