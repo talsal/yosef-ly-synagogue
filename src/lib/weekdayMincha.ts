@@ -1,6 +1,6 @@
 /**
  * מנחה בימות החול: זמן אחיד לכל השבוע (ראשון–חמישי) = 15 דקות לפני השקיעה
- * של יום חמישי של אותו שבוע, מעוגל ל-5 הדקות הקרובות (לפי הגבאי).
+ * של יום חמישי של אותו שבוע, מעוגל כלפי מעלה ל-5 דקות (לפי הגבאי).
  * דוגמה: שקיעה 16:38 → 16:23 → 16:25.
  *
  * השקיעה ביום חמישי נלקחת מ-Hebcal ומכוילת ללוח מודיעין: מוסיפים לה את
@@ -41,8 +41,8 @@ export function hhmmToMinutes(hhmm: string): number {
 	return Number(hhmm.slice(0, 2)) * 60 + Number(hhmm.slice(3));
 }
 
-/** שקיעה (בדקות מתחילת היום) → זמן מנחה "HH:MM": פחות 15 דקות, מעוגל ל-5 הקרובות. */
+/** שקיעה (בדקות מתחילת היום) → זמן מנחה "HH:MM": פחות 15 דקות, מעוגל כלפי מעלה ל-5. */
 export function computeWeekdayMincha(sunsetMinutes: number): string {
-	const total = Math.round((sunsetMinutes - MINUTES_BEFORE_SUNSET) / ROUND_TO) * ROUND_TO;
+	const total = Math.ceil((sunsetMinutes - MINUTES_BEFORE_SUNSET) / ROUND_TO) * ROUND_TO;
 	return `${String(Math.floor(total / 60)).padStart(2, '0')}:${String(total % 60).padStart(2, '0')}`;
 }
