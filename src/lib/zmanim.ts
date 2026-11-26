@@ -2,7 +2,7 @@
 
 import { SYNAGOGUE_COORDS } from '../data/site';
 import { MODIIN_LUACH } from '../data/modiinLuach';
-import { computeWeekdayMincha, minusTwentyMinutes, shabbatDateFor } from './weekdayMincha';
+import { computeWeekdayMincha, hhmmToMinutes, israelMinutesOfDay, shabbatDateFor, thursdayDateFor } from './weekdayMincha';
 
 const ZMANIM_URL =
 	`https://www.hebcal.com/zmanim?cfg=json&latitude=${SYNAGOGUE_COORDS.latitude}` +
@@ -54,14 +54,19 @@ export async function fetchDailyZmanim(): Promise<DailyZmanim | null> {
 	};
 }
 
-/** מנחה אחידה לימות החול: 20 דקות לפני השקיעה של השבת הקרובה לפי לוח מודיעין (ראו lib/weekdayMincha.ts). null אם השליפה נכשלה. */
+/** מנחה אחידה לימות החול: 15 דקות לפני השקיעה של יום חמישי, מעוגל ל-5 (ראו lib/weekdayMincha.ts). null אם השליפה נכשלה. */
 export async function fetchWeeklyMincha(): Promise<string | null> {
 	const todayIsrael = new Intl.DateTimeFormat('en-CA', { timeZone: 'Asia/Jerusalem' }).format(new Date());
 	const shabbatIso = shabbatDateFor(todayIsrael);
 	const luach = MODIIN_LUACH[shabbatIso];
-	if (luach) return minusTwentyMinutes(luach.sunset);
-	const shabbatSunset = await fetchSunsetForDate(shabbatIso);
-	return shabbatSunset ? computeWeekdayMincha(shabbatSunset) : null;
+	const [thursdaySunset, shabbatSunset] = await Promise.all([
+		fetchSunsetForDate(thursdayDateFor(todayIsrael)),
+		luach ? fetchSunsetForDate(shabbatIso) : Promise.resolve(null),
+	]);
+	if (!thursdaySunset) return null;
+	// כיול ללוח מודיעין: ההפרש בין הלוח ל-Hebcal באותה שבת
+	const correction = luach && shabbatSunset ? hhmmToMinutes(luach.sunset) - israelMinutesOfDay(shabbatSunset) : 0;
+	return computeWeekdayMincha(israelMinutesOfDay(thursdaySunset) + correction);
 }
 
 /** שקיעה מדויקת (לפי קואורדינטות בית הכנסת) ליום נתון, yyyy-mm-dd לפי שעון ישראל. */

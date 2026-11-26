@@ -72,7 +72,7 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 					<div><dt>מנחה</dt><dd data-field="mincha">יעודכן בקרוב</dd></div>
 					<div><dt>ערבית</dt><dd>צמוד למנחה</dd></div>
 				</dl>
-				<p class="section-note">מנחה אחידה לכל השבוע (ראשון–חמישי): בדיוק 20 דקות לפני השקיעה של השבת הקרובה (לפי לוח מודיעין), מתעדכנת אוטומטית מדי שבוע.</p>
+				<p class="section-note">מנחה אחידה לכל השבוע (ראשון–חמישי): 15 דקות לפני השקיעה של יום חמישי, מעוגל ל-5 דקות, מתעדכנת אוטומטית מדי שבוע.</p>
 			</div>
 		</section>
 
@@ -200,8 +200,8 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 	setVisible('sukkot-cholhamoed-times', isSukkotCholHamoed);
 	setVisible('regular-weekday-times', isRegular);
 
-	// מנחה בימות חול רגילים: זמן אחיד לכל השבוע (ראשון–חמישי) -- 20 דקות לפני
-	// השקיעה של השבת הקרובה (ראו lib/weekdayMincha.ts).
+	// מנחה בימות חול רגילים: זמן אחיד לכל השבוע (ראשון–חמישי) -- 15 דקות לפני
+	// השקיעה של יום חמישי, מעוגל ל-5 (ראו lib/weekdayMincha.ts).
 	// ערבית תמיד צמוד אחריה.
 	if (isRegular) {
 		const minchaEl = document.querySelector<HTMLElement>('[data-field="mincha"]');
